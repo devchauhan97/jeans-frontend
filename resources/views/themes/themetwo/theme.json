@@ -1,0 +1,8 @@
+{
+    "name": "themetwo",
+    "author": "Karlo Mikuš",
+    "description": "Default theme description",
+    "version": "1.0",
+    "namespace": "themetwo",
+    "parent": null
+}

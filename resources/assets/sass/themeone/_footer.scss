@@ -1,0 +1,134 @@
+.footer-content{
+	padding-top:30px;
+	padding-bottom:30px;
+	.footer-block{
+		display:flex;
+		justify-content:center;
+		
+		.single-footer{
+			width:50%;
+		}	
+	}
+    .single-footer{
+		h5{
+			font-size:$font-size-md;
+			margin-bottom:30px;
+		}
+		.contact-list{
+            li{
+                display:flex;
+				align-items:center;
+                list-style: none;
+                font-size: ($font-size-base + 0.075);
+                margin-bottom: 10px;
+
+                .fa{
+					display:flex;
+					align-items:center;
+					justify-content:center;
+					margin-right:10px;
+					font-size:$font-size-md;
+					background-color:$gray-200;
+                    color:$red;
+					height:30px;
+                    width: 30px;
+                }
+            }
+        }
+        .links-list{
+            li{
+                list-style: none;
+                display: block;
+				margin-bottom:7px;
+
+                a{
+					display:block;
+                    font-size: $font-size-base;
+                    color:$gray-700;
+                    .fa{
+                        margin-right: 4px;
+                    }
+					
+					&:hover{
+						color:$red;
+					}
+                }
+            }
+        }
+        .cat-list{
+			li{
+				display:inline-block;
+				margin-bottom:5px;
+				margin-right:5px;
+				
+				a{
+					display:block;
+					font-size:($font-size-sm - 0.0500 );
+					border-radius:4px;
+					background-color:$gray-200;
+					padding-left:10px;
+					padding-right:10px;
+					padding-top:5px;
+					padding-bottom:5px;
+					color:$gray-700;
+					text-decoration:none;
+					
+					
+					&:hover{
+						background-color:$red;
+						color:set-text-color($red);
+					}
+				}
+			}
+		}
+		p{
+            font-size: $font-size-base;
+        }
+    }
+}
+
+.footer{
+	.footer-image,  .footer-info{
+		display:flex;
+		align-items:center;
+	}
+    .footer-image{
+		justify-content:flex-start;
+    }
+	.footer-info{
+		justify-content:flex-end;
+        p{
+            font-size: $font-size-sm;
+			margin-bottom:0;
+        }
+    }
+	.container{
+		position:relative;
+		.floating-top{
+			opacity: 0;
+			position: fixed;
+			right:15px;
+			bottom: 15px;
+			z-index:9999;
+
+			a{
+				text-align:center;
+				width: 50px;
+				line-height: 44px;
+				height: 50px;
+				background-color:$white;
+				border-radius: 200px;
+				color:$gray-700;
+				border:1px solid $gray-400;
+				font-size: $font-size-lg;
+				text-decoration: none;
+				
+				&:hover{
+					background-color:$red;
+					border-color:$red;
+					color:set-text-color($red);
+				}
+			}
+		}
+	}
+}

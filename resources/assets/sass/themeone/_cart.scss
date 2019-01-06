@@ -1,0 +1,124 @@
+.cart-area{
+	display:block;
+	min-height:550px;
+	margin-bottom:40px;
+	
+	.cart-left{
+		padding-left:30px;
+		padding-right:30px;
+
+		form{
+			display:block;
+			width:100%;
+		}
+		
+		.table{
+
+			
+			.item{
+				.cart-thumb{
+					float: left;
+					width: 80px;
+					height:80px;
+					display: block;
+					overflow:hidden;
+					border-radius:$border-radius-sm;
+					border:1px solid $gray-400;
+					margin-right:15px;
+					
+					.img-fluid{
+						position:relative;
+						top:50%;
+						transform:translateY(-50%);
+					}
+				}
+				.cart-product-detail{
+					float:left;
+					
+					.title{
+						display:block;
+						font-size:$font-size-base;
+						color:$gray-700;
+						font-weight:500;
+						text-decoration:none;
+						margin-bottom:15px;
+						
+						&:hover{
+							color:$red;
+						}
+					}
+					ul{
+						padding-left:17px;
+						margin-bottom:0;
+						
+						li{
+							font-size:$font-size-base;
+							color:$black;
+							span{
+								display:inline-block;
+								margin-left:15px;
+								color:$gray-500;
+							}
+						}
+					}
+				}
+			}
+			
+			.price, .subtotal{
+				span{
+					font-size:$font-size-lg;
+					font-weight:700;
+					color:lighten($gray-700, 15%);
+				}
+			}
+			
+			.Qty{
+				.input-group{
+					float:right;
+					width:130px;
+					.input-group-btn{
+						border:1px solid $gray-400;
+						.btn{
+							cursor:pointer;
+							
+							.fa{
+								font-size:$font-size-base;
+								color:lighten($gray-700, 15%);
+							}
+						}
+						.btn:focus, .btn.focus {
+							 box-shadow:none; 
+						}
+					}
+					input{
+						background-color:$gray-200;
+						padding-left:5px;
+						padding-right:5px;
+						text-align:center;
+						min-width:50px;
+						
+					}
+				}
+			}
+			
+			.buttons{
+				padding-bottom:30px;
+				
+				.btn-default{
+					border-color:$gray-400;
+					
+					&:focus, &.focus{
+						background-color:$gray-200;
+						box-shadow:none; 
+					}
+				}
+			}
+		}
+		.left{
+			text-align:left;
+		}
+	}
+	.cart-right{
+
+	}
+}

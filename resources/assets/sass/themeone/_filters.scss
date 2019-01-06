@@ -1,0 +1,119 @@
+.filters{
+    .card{
+        background-color:$white;
+		border:1px solid $gray-400;
+		margin-bottom:15px;
+		border-radius:0;
+
+        .card-header{
+          	background-color:$gray-200;
+			padding:0.5625rem;
+			margin-bottom: -1px;
+            
+			h2{
+				font-size:$font-size-md;
+				margin-bottom:0;
+				
+				&:before {
+					position: absolute;
+					right:9px;
+					font-size: 26px;
+					top: 3px;
+					width: 20px;
+					color:$gray-700;
+					text-align: center;
+				}
+			}
+        }
+        .card-header h2[aria-expanded="false"]:before {
+            content: "+";
+        }
+        .card-header h2[aria-expanded="true"]:before {
+            content: "-";
+        }
+		
+		.categories{
+			border-bottom:none;
+			border-left:none;
+			border-right:none;
+		}
+		.card-title{
+			margin-top: 10px;
+			margin-bottom: 0;
+			padding-left: 10px;
+			font-weight: 500;
+			font-size: 16px;
+			color:$gray-700;
+		}
+        .card-body{
+            padding:0.5625rem;
+            
+			#slider-range{
+				margin-top:15px;
+				height:0.4rem;
+				margin-left:10px;
+				margin-right:10px;
+				
+				.ui-slider-handle {
+					top: -.4em;
+					border-radius:20px;
+					
+					&:active, &:focus{
+						outline:none;
+					}
+				}
+				.ui-state-active{
+					border:none;
+					background-color:$red;
+				}
+			}
+			#slider-values{
+				display:flex;
+				justify-content:center;
+				margin-top:15px;
+				.slider-value-0{
+					&:after {
+						content: "-";
+						margin-left:5px;
+						margin-right:5px;
+					}
+				}
+				.slider-value-0, .slider-value-1{
+					display:flex;
+					justify-content:center;
+					align-items:center;
+					width:30%;
+					
+					input{
+						border:1px solid $red;
+						margin-left:5px;
+						margin-right:5px;
+						text-align:center;
+						width:40px;
+					}
+				}
+			}
+			
+			
+            .list{
+                padding-left: 0;
+                margin-bottom: 0;
+
+                li{
+                    list-style: none;
+                }
+            }
+			
+			
+        }
+		.button{
+			border-top: 1px solid $gray-400;
+			text-align: right;
+			padding:9px;
+		}
+		/*&.last{
+			margin-bottom:0;
+			border-bottom:none;
+		}*/
+    }
+}

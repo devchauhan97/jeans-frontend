@@ -1,0 +1,410 @@
+ol,
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+select {
+  border: none;
+  outline: none;
+  background: none;
+
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  -webkit-tap-highlight-color: transparent;
+}
+.btn, .form-control, select{
+	border-radius:0 !important;
+}
+.alert.fade {
+   -webkit-transition: opacity 5.00s linear !important;
+      -moz-transition: opacity 5.00s linear !important;
+       -ms-transition: opacity 5.00s linear !important;
+        -o-transition: opacity 5.00s linear !important;
+           transition: opacity 5.00s linear !important;
+ }
+
+
+body[dir="ltr"]{
+	.spaceright-0{
+		padding-right:0;
+	}
+	.spaceleft-0{
+		padding-left:0;
+	}
+}
+
+.loader{
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+	height:100%;
+	background-color:$white;
+	opacity:0.8;
+	z-index:99999;
+	
+	img{
+		
+	}
+}
+
+.navbar-toggler{
+	font-family:$font-family-sans-serif;
+	font-size:$font-size-base !important;
+	width: 100%;
+    height: 40px;   
+}
+
+#navbar{
+	.navbar-toggler{
+		background-color:solid-darken($blue) !important;
+		color:set-text-color(solid-darken($blue));
+		margin-bottom:15px;
+	}
+}
+#categories{
+	.navbar-toggler{
+		background-color:solid-darken($gray-200) !important;
+		color:set-text-color(solid-darken($gray-200));
+	}
+}
+
+
+/* Scrollbar Appearce ----------------
+-------------------------*/
+*::-webkit-scrollbar {
+    width:3px;
+}
+*::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+*::-webkit-scrollbar-thumb {
+  background-color:lighten($red, 5%);
+}
+
+*::-moz-scrollbar {
+    width:3px;
+}
+*::-moz-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+*::-moz-scrollbar-thumb {
+  background-color:lighten($red, 5%);
+}
+
+/* Title ----------------
+-------------------------*/
+
+
+.title-h3{
+	margin-bottom:15px;
+}
+.title-h5{
+	color: $gray-700;
+}
+
+/* Buttons ----------------
+-------------------------*/
+
+.btn{
+	font-weight:500 !important;
+	text-transform:uppercase;
+	
+	&:focus, &.focus{
+		box-shadow:none !important;
+	}
+}
+.btn-dark{
+	&:hover{
+		background-color:darken($gray-800, 10%) !important;
+		border-color:darken($gray-800, 10%) !important;
+	}
+}
+.btn-secondary{
+	&:hover{
+		background-color:darken($red, 10%) !important;
+		border-color:darken($red, 10%) !important;
+	}
+}
+.button{
+	border-top:3px solid $gray-400;
+	text-align:right;
+	padding-top:15px;
+}
+
+
+/* Tables ----------------
+-------------------------*/
+
+
+.table{
+	tbody + tbody {
+		border-top: 3px solid $gray-400;
+	}
+	thead th{
+		font-size:$font-size-base;
+		color:$gray-700;
+		text-transform:uppercase;
+		border-top:none;
+		border-bottom: 3px solid $gray-400;
+	}
+	
+	thead th[align="right"]{
+		text-align:right;
+	}
+}
+
+/* jQuery Dropdown ----------------
+-------------------------*/
+
+#category_id-menu{
+	height: 313px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+#change_language-menu{
+	margin-top:6px;
+	.ui-menu-item-wrapper{
+		padding:5px 9px 5px 40px;
+		
+		.ui-icon{
+			background-size:contain;
+			width:20px;
+			left:9px;
+			height:14px;
+		}
+	}
+}
+
+.ui-selectmenu-menu{
+	.ui-menu{
+		border-radius:0;
+	}
+	.ui-menu-item{
+		.ui-menu-item-wrapper{
+			padding:5px 9px;
+		}
+		.ui-state-active{
+			background-color:$gray-400;
+			color:$gray-700;
+			border-color:$gray-400;
+		}
+	}
+}
+
+.form-validate{
+    .form-group{
+        margin-bottom: 25px;
+		
+        .help-block{
+			display:flex;
+            position: absolute;
+            color: red;
+            font-size: 12px;
+        }
+    }
+}
+
+
+.alert{
+	padding:0.75rem 1.25rem !important;
+	width:100%;
+	
+	&.alert-dismissible{
+		.close{
+			position:static;
+			padding:0 5px;
+			cursor:pointer;
+		}
+	}
+}
+
+.heading {
+    margin-bottom: 40px;
+    h2 {
+        color:$gray-700;
+        font-size: 24px;
+        margin: 0px;
+        margin-bottom: 20px;
+		
+		small{
+			float:right;
+			font-weight:normal;
+			font-size:$font-size-md;
+    		line-height: 28px;
+			
+			a{
+				color:$gray-500;
+				text-decoration:none;
+				
+				&:hover{
+					color:$red;
+				}
+			}
+		}
+    }
+    hr{
+        position: relative;
+        margin: 0px;
+        &:before {
+            height: 2px;
+            background: $red;
+            content: "";
+            position: absolute;
+            top: -1px;
+            width: 90px;
+            left: 0px;
+        }
+    }
+}
+
+.breadcum-area{
+	background-image:url('../images/bar_bg.jpg');
+	background-repeat:no-repeat;
+	background-size:cover;
+	background-color:$white;
+	padding:20px;
+	margin-bottom:30px;
+	display:flex;
+	justify-content:flex-start;
+	align-items:center;
+	
+	.breadcum-inner{
+		
+		h3{
+			font-size:$font-size-md;
+			color:$red;
+			text-transform:uppercase;
+			margin-bottom:0;
+		}
+		.breadcrumb{
+			display:inline-block;
+			background-color:transparent;
+			margin-bottom:0;
+			padding:0;
+			
+			
+			.breadcrumb-item{
+				
+				font-size:$font-size-base;
+				display:inline-block;
+				a{
+					color:$gray-700;
+					text-decoration:none;
+					
+					&:hover{
+						color:$red;
+					}
+				}
+			}
+			.active{
+				color:$red;
+			}
+		}
+	}	
+}
+
+
+/* Order Summary Cart and checkout page  ----------------
+---------------------------------------------------------*/
+
+.order-summary-outer{
+	padding:15px;
+	border:1px solid $gray-400;
+
+	.order-summary{
+		
+		.table{
+			margin-bottom:0;
+			thead th{
+				font-size:$font-size-base;
+				color:$gray-700;
+				text-transform:uppercase;
+				border-top:none;
+				border-bottom: 3px solid $gray-400;
+			}
+			tbody th{
+				font-size:$font-size-base;
+				font-weight:500;
+				text-transform:uppercase;
+			}
+			tbody .last{
+				font-weight:700;
+			}
+		}
+	}
+	.coupons{
+		padding-top:15px;
+		padding-bottom:15px;
+		margin-bottom:15px;
+		border-top:3px solid $gray-400;
+		border-bottom:3px solid $gray-400;
+		padding-left:10px;
+		padding-right:10px;
+		
+		#apply_coupon{
+
+			label{
+				font-size:$font-size-base;
+				font-weight:700;
+				text-transform:uppercase;
+			}
+		}
+	}
+}
+
+
+/* Picture Loader  ----------------
+---------------------------------------------------------*/
+
+
+.uploader{
+	padding-top:30px;
+	padding-bottom:15px;
+	
+	.upload-picture{
+		position: relative;
+		background-color:$white;
+		border:1px solid $gray-400;
+		width: 150px;
+		height: 150px;
+		margin-left: auto;
+		margin-right: auto;
+		border-radius: 200px;
+		overflow: hidden;
+		margin-top: 30px;
+		
+		.upload-choose-icon {
+			position: absolute;
+			opacity: 1.0;
+			top: 50%;
+			left: 50%;
+			margin-top: -40px;
+			margin-left: -40px;
+			width: 80px;
+			height: 80px;
+		}
+	
+		.inputFile {
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			overflow: hidden;
+			cursor: pointer;
+			
+		}
+	}
+}

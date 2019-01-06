@@ -1,0 +1,24 @@
+.my-order-area{
+	min-height:500px;
+	.my-orders{
+		.table th, .table td {
+			vertical-align:middle;
+		}
+		.table{
+			tbody + tbody {
+				border-top: 3px solid $gray-400;
+			}
+			thead th{
+				font-size:$font-size-base;
+				color:$gray-700;
+				text-transform:uppercase;
+				border-top:none;
+				border-bottom: 3px solid $gray-400;
+			}
+			
+			thead th[align="right"]{
+				text-align:right;
+			}
+		}
+	}
+}

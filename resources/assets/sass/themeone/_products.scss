@@ -1,0 +1,230 @@
+.products-area{
+    padding-bottom:30px;
+    padding-top:30px;
+	
+    .nav{
+		border-bottom:1px solid $gray-400;
+		.nav-link{
+			background-color: $gray-200;
+			font-size: $font-size-base;
+			color: $gray-700;
+			text-align: center;
+			font-weight:500;
+			width: 140px;
+			margin-right: 1px;
+			margin-bottom: 2px;
+			border-top-width:0;
+			border-left-width:0;
+			border-right-width:0;
+			border-bottom-width:0;
+		}
+        .nav-item.show .nav-link, .nav-link.active,
+        .nav-link:focus, .nav-link:hover{
+            background-color: $red;
+            color:set-text-color($red); 
+        }
+    }
+    
+    .tab-content{
+        /*padding-top: 15px;
+        padding-bottom: 15px;
+		*/
+		
+		position:relative;
+		
+		.overlay{
+			position: absolute;
+			height:100%;
+			width: 100%;
+			background-color: $white;
+			z-index: 99;
+			left: 0;
+			top: 0;
+			display:flex;
+			justify-content:center;
+			align-items:center;
+			
+			img{
+				width:300px;
+			}
+		}
+        
+        .owl-carousel{
+            .owl-stage-outer{
+				margin-left: -8px;
+				margin-right: -8px;
+				padding-left: 8px;
+				
+				.owl-stage{
+					height: 356px;
+					overflow: hidden;
+					padding: 10px 0;
+				}
+				
+                .owl-item{
+                    .product{
+						padding-left:0;
+						
+						.img-fluid{
+							width:212px;
+							max-width:none;
+						}
+					}
+                }
+            }
+			
+            .owl-nav{
+                position: absolute;
+                right:0;
+                top:-37px;
+				.disabled{
+					opacity:0.2;
+					
+					&:hover{
+						background-color:$white;
+						border-color:$gray-400;
+						.fa{
+							&::before{
+								color: $gray-700;
+							}
+						}
+					}
+				}
+                div{
+                    display: inline-block;
+                    border-color: $gray-400;
+                    border-width: 1px;
+                    border-style: solid;
+                    margin-left: 5px;
+                    height:35px;
+                    width: 35px;
+                    text-align: center;
+                    line-height: 35px;
+                    border-radius: 4px;
+					
+                    .fa{
+						display: flex;
+						justify-content: center;
+						align-items: center;
+						height: 100%;
+						width: 100%;
+						
+						&::before{
+							line-height:11px;
+							color: $gray-700;
+							font-size:$font-size-lg;
+						}
+                    }
+					&:hover{
+						background-color:$red;
+						border-color:$red;
+						.fa{
+							&::before{
+								color:set-text-color($red); 
+							}
+						}
+					}
+                }
+            }
+        } 
+    }
+}
+
+.products{
+	padding-right:15px;
+	width:100%;
+	
+	.product.product-2x{
+		float: left;
+		position:relative;
+		margin-bottom:15px;
+		width:40%;
+		
+		.product-featured-tag{
+			position: absolute;
+			top:15px;
+			left:30px;
+			z-index: 9;
+			background:#1cc48f;
+			border-radius:50px;
+			font-size:$font-size-sm;
+			color:$white;
+			padding: 2px 10px;
+		}
+		
+		.buttons-liked{
+			position:absolute;
+			right:15px;
+			top:15px;
+			z-index:9;
+			.fa{
+				display:flex;
+				align-items:center;
+				justify-content:center;
+				height:40px;
+				width:40px;
+				border-radius:200px;
+				border:1px solid $gray-400;
+				background-color:$white;
+				color:$red;
+				text-decoration:none;
+				margin-left:5px;
+				margin-right:5px;
+			}
+			.badge{
+				font-family:$font-family-sans-serif;
+				position:absolute;
+				right:0;
+				top:0;
+				border-radius: 50px;
+			}
+		}
+		article{
+			padding-left:15px;
+			padding-right:15px;
+			padding-bottom:15px;
+			padding-top:40px;
+			height:336px;
+			.thumb{
+				position:absolute;
+				right:15px;
+				bottom:15px;
+				height:auto;
+				width:35%;
+			}
+			.title{
+				font-size:$font-size-lg;
+				justify-content:flex-start;
+			}
+			.price{
+				font-size:($font-size-lg + 1);
+				justify-content:flex-start;
+				margin-bottom:5px;
+			}
+			.block{
+				float:left;
+				width:65%;
+				.option-name{
+					color:$gray-700;
+					display: block;
+					width: 100%;
+					float: left;
+				}
+				.option-value{
+					color:$gray-500;
+					margin-right:5px;
+					float: left;
+					margin-bottom:15px;
+				}
+			}
+			
+			.buttons{
+				float:left;
+				width:100%;
+			}
+		}
+	}
+}
+
+
+

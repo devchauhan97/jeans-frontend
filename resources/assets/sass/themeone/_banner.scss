@@ -1,0 +1,36 @@
+.banner-area{
+	background-color:$gray-200;
+	padding-top:30px;
+	padding-bottom:30px;
+    padding-left:45px;
+    padding-right: 45px;
+    
+   
+    .banner-single{
+		display:flex;
+		position:relative;
+		align-items:center;
+		padding-left:35px;
+		padding-right:15px;
+        border-right: 1px solid $gray-300;
+		
+        .fa{
+			position:absolute;
+			left:-15px;
+            color: $red;
+            font-size:35px;
+			margin-bottom:0;
+        }
+        .title{
+            font-size:$font-size-base;
+			margin-bottom:0;
+        }
+        p{
+			font-size:$font-size-base;
+            margin-bottom: 0;
+        }
+    }
+    .banner-single.last{
+        border-right-width: 0;
+    }
+}
