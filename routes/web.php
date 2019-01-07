@@ -125,7 +125,7 @@ Route::post('/language/', array(
 	
 	
 	Route::get('login/{social}', 'CustomersController@socialLogin');
-	Route::get('login/{social}/callback', 'CustomersController@handleSocialLoginCallback');
+	Route::get('callback/{social}', 'CustomersController@handleSocialLoginCallback');
 	Route::post('/commentsOrder', 'OrdersController@commentsOrder');
 	
 	//zones

@@ -344,7 +344,7 @@ class CustomersController extends DataController
 		}			
 		
 			$img = file_get_contents($user->getAvatar());
-			$dir="resources/assets/images/user_profile/";
+			$dir="user_profile/";
 			if (!file_exists($dir) and !is_dir($dir)) {
 				mkdir($dir);
 			} 

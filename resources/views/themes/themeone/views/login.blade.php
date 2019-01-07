@@ -58,8 +58,8 @@
 	                     @endif
 						<div class="signin-divide"><span>Or</span></div>
 						<!--Facebook-->
-                @if($result['commonContent']['setting'][2]->value==1)
-                <a href="login/facebook"  class="facebook-btn lgbtn"><i class="fa fa-facebook"></i>
+		                @if($result['commonContent']['setting'][2]->value==1)
+		                <a href="login/facebook"  class="facebook-btn lgbtn"><i class="fa fa-facebook"></i>
 						
 		                Sign in With Facebook
 		                </a>
