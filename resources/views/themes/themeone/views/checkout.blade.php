@@ -60,6 +60,7 @@
                       <div class="tab-pane fade @if(session('step') == 0) show active @endif" id="pills-shipping" role="tabpanel" aria-labelledby="shipping-tab">
                         
                         <form name="signup" enctype="multipart/form-data" class="form-validate" action="{{ URL::to('/checkout_shipping_address')}}" method="post">
+                          <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="form-row">
                               <div class="form-group col-md-6">
                                 <label for="firstName">@lang('website.First Name')</label>
@@ -121,8 +122,6 @@
                             <div class="button"><button type="submit" class="btn btn-dark">@lang('website.Continue')</button></div>
                     	</form>
                       </div>
-                      
-                      
                       
                       <div class="tab-pane fade @if(session('step') == 1) show active @endif" id="pills-billing" role="tabpanel" aria-labelledby="billing-tab">
                         <form name="signup" enctype="multipart/form-data" action="{{ URL::to('/checkout_billing_address')}}" method="post">

@@ -116,9 +116,9 @@ Route::post('/language/', array(
 	
 	Route::get('/login', 'CustomersController@login');
 	Route::get('/signup', 'CustomersController@signup');
-	Route::post('/process-login', 'CustomersController@processLogin');
+	Route::post('/customer/login', 'CustomersController@customerLogin');
 	Route::get('/logout', 'CustomersController@logout');
-	Route::post('/signupProcess', 'CustomersController@signupProcess');
+	Route::post('/customer/signup', 'CustomersController@customerSignup');
 	Route::get('/forgotPassword', 'CustomersController@forgotPassword');
 	Route::get('/recoverPassword', 'CustomersController@recoverPassword');
 	Route::post('/processPassword', 'CustomersController@processPassword');
@@ -129,7 +129,7 @@ Route::post('/language/', array(
 	Route::post('/commentsOrder', 'OrdersController@commentsOrder');
 	
 	//zones
-	Route::post('/ajaxZones', 'ShippingAddressController@ajaxZones');
+	Route::get('/zones', 'ShippingAddressController@ajaxZones');
 	
 	//likeMyProduct
 	Route::post('likeMyProduct', 'CustomersController@likeMyProduct');

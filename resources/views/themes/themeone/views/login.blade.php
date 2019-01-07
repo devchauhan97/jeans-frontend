@@ -1,11 +1,11 @@
 @extends('layouts')
 @section('customcss')
 @if(!empty(session("theme")))
-        <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    @else
-        
-    @endif
-    <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+@else
+    
+@endif
+<link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
 <!-- <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
  <!-- <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
@@ -34,17 +34,17 @@
                     </button>
                 </div>
                    @endif
-					<form class="sign-in form-validate" name="signup" enctype="multipart/form-data"  action="{{ URL::to('/process-login')}}" method="post">
+					<form class="sign-in form-validate" name="signup" enctype="multipart/form-data"  action="{{ URL::to('/customer/login')}}" method="post">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 						<div class="form-group">
 							<label>Email Address:</label>
-							<input type="email" name="email" id="emaill" class="" placeholder="Enter you mail id" value="{{old('emaill')}}">
-							<small class="text-danger">{{ $errors->first('email') }}</small>
+							<input type="email" name="log_email" id="log_email" class="" placeholder="Enter you mail id" value="{{old('log_email')}}">
+							<small class="text-danger">{{ $errors->first('log_email') }}</small>
 						</div>
 						<div class="form-group">
 							<label>Password:</label>
-							<input type="password" name="password" id="passwordl" class="" placeholder="Enter you password">
-							<small class="text-danger">{{ $errors->first('password') }}</small>
+							<input type="password" name="log_password" id="log_password" class="" placeholder="Enter you password">
+							<small class="text-danger">{{ $errors->first('log_password') }}</small>
 						</div>
 						<button class="sign-btn lgbtn" type="submit" name="signin">Sign In</button>
 					</form>
@@ -95,17 +95,28 @@
                           </button>
 					</div>
 				@endif
-					<form   enctype="multipart/form-data" class="sign-in" action="{{ URL::to('/signupProcess')}}" method="post">
+					<form   enctype="multipart/form-data" class="sign-in" action="{{ URL::to('/customer/signup')}}" method="post">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 						<div>
+							<label>First Name:</label>
+							<input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name') }}">
+							<small class="text-danger">{{ $errors->first('first_name') }}</small>
+						</div>
+						<div>
+							<label>Last Name:</label>
+							<input type="text" name="last_name" id="last_name" class="form-control" value="{{ old('last_name') }}">
+							<small class="text-danger">{{ $errors->first('last_name') }}</small>
+						</div>
+
+						<div>
 							<label>Email Address:</label>
-							<input type="text" name="emaill" id="email" class="form-control" value="{{ old('email') }}">
-							<small class="text-danger">{{ $errors->first('emaill') }}</small>
+							<input type="text" name="email" id="email" class="form-control" value="{{ old('email') }}">
+							<small class="text-danger">{{ $errors->first('email') }}</small>
 						</div>
 						<div>
 							<label>Password:</label>
-							<input type="password" class="form-control password" name="passwordl" id="password">
-							<small class="text-danger">{{ $errors->first('passwordl') }}</small>
+							<input type="password" class="form-control password" name="password" id="password">
+							<small class="text-danger">{{ $errors->first('password') }}</small>
 						</div>
 						<ul class="req-char">
 							<li>8 characters minimum</li>
@@ -114,9 +125,9 @@
 						</ul>
 						<div>
 							<label>Confirm Password:</label>
-							<input type="password" class="form-control password" name="re_passwordl" id="re_password">
+							<input type="password" class="form-control password" name="re_password" id="re_password">
 							<span class="help-block error-content" hidden>@lang('website.Please re-enter your password')</span>
-							<small class="text-danger">{{ $errors->first('re_passwordl') }}</small>
+							<small class="text-danger">{{ $errors->first('re_password') }}</small>
 						</div>
 						<button class="sign-btn register lgbtn" type="submit">Register</button>
 					</form>

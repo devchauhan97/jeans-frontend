@@ -1503,9 +1503,9 @@ function getZones() {
 	jQuery('#loader').css('display','flex');
 	var country_id = jQuery('#entry_country_id').val();
 	jQuery.ajax({
-		url: '{{ URL::to("/ajaxZones")}}',
-		type: "POST",
-		//data: '&country_id='+country_id,
+		url: '{{ URL::to("/zones")}}',
+		type: "GET",
+		//data: '&country_id='+country_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),
 		 data: {'country_id': country_id},
 		
 		success: function (res) {

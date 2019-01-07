@@ -90,36 +90,38 @@ class CustomersController extends DataController
 	}
 	
 	//login
-	public function processLogin(Request $request){
+	public function customerLogin(Request $request) {
 	// dd($request);
 		$old_session = Session::getId();		
 		$result = array();		
 		
 		$validator = Validator::make(
 			array(
-					'email'    => $request->email,
-					'password' => $request->password
+					'log_email'    => $request->log_email,
+					'log_password' => $request->log_password
 				), 
 			array(
-					'email'    => 'required | email',
-					'password' => 'required',
+					'log_email'    => 'required | email',
+					'log_password' => 'required',
 				),
 			array(
-				'email.required'=>'Email must be required!',
-				'email.email'=>'Email must be valid!',
-				 'password.required'=>'Password must be required!'
+					'log_email.required'=>'Email must be required!',
+					'log_email.email'=>'Email must be valid!',
+					'log_password.required'=>'Password must be required!'
 			    )
 		       );
-		
-		
-		//validate 
-		if($validator->fails()){
+ 		//validate 
+		if($validator->fails()) {
+
 			return redirect('login')->withErrors($validator)->withInput();
-		}else{
+
+		} else {
+
 			//check authentication of email and password
-			$customerInfo = array("email" => $request->email, "password" => $request->password);
+			$customerInfo = array("email" => $request->log_email, "password" => $request->log_password);
 			
 			if(auth()->guard('customer')->attempt($customerInfo)) {
+
 				$customer = auth()->guard('customer')->user();
 				
 				//set session				
@@ -130,8 +132,8 @@ class CustomersController extends DataController
 					['session_id', '=', $old_session],
 				])->get();
 				
-				if(count($cart)>0){					
-					foreach($cart as $cart_data){						
+				if(count($cart)>0) {					
+					foreach($cart as $cart_data) {						
 						$exist = Basket::where([
 							['customers_id', '=', $customer->customers_id],
 							['products_id', '=', $cart_data->products_id],
@@ -147,24 +149,23 @@ class CustomersController extends DataController
 				BasketAttribute::where('session_id','=', $old_session)->update([
 					'customers_id'	=>	$customer->customers_id
 					]);
-				
-				
 				//insert device id
-				if(!empty(session('device_id'))){					
+				if(!empty(session('device_id'))) {					
 					DB::table('devices')->where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
 				}
 						
 				$result['customers'] = DB::table('customers')->where('customers_id', $customer->customers_id)->get();					
 				return redirect()->intended('/')->with('result', $result);
-			}else{
+
+			} else {
+
 				return redirect('login')->with('loginError',Lang::get("website.Email or password is incorrect"));
 			}
 		}
 	}
-		
 	
-	
-	public function profile(Request $request){
+	public function profile(Request $request) {
+
 		$title = array('pageTitle' => Lang::get("website.Profile"));
 		$result = array();	
 		$result['commonContent'] = $this->commonContent();
@@ -172,7 +173,7 @@ class CustomersController extends DataController
 		return view("profile", $title)->with('result', $result); 
 	}
 	
-	public function updateMyProfile(Request $request){
+	public function updateMyProfile(Request $request) {
 		
 		$customers_id								=	auth()->guard('customer')->user()->customers_id; 
 		$customers_firstname            			=   $request->customers_firstname;
@@ -760,117 +761,110 @@ class CustomersController extends DataController
 	}
 	
 	
-	public function signupProcess(Request $request){
+	public function customerSignup(Request $request)	{
 
 		$old_session = Session::getId();
 				
-		$email = $request->emaill;
-		$password = $request->passwordl;
-		//$token = $request->token;
+		$email = $request->email;
+		$password = $request->password;
+		 
 		$date = date('y-md h:i:s');
 		
 		$validator = Validator::make(
 			array(
-				'emaill' => $request->emaill,
-				'passwordl' => $request->passwordl,
-				're_passwordl' => $request->re_passwordl,
+
+				'first_name' 	=> $request->first_name,
+				'email' 		=> $request->email,
+				'password' 		=> $request->password,
+				're_password' 	=> $request->re_password,
 				
-			),array(				
-				'emaill' 	=> 'required | email',
-				'passwordl'  => 'required|min:8|regex:/^.+@.+$/i',
-				're_passwordl' => 'required | same:passwordl',
+			),array(
+				'first_name' 	=> 'required',				
+				'email' 		=> 'required | email|unique:customers',
+				'password'  	=> 'required|min:8|regex:/^.+@.+$/i',
+				're_password' 	=> 'required | same:password',
 			 ),
 			array(
-				'emaill.required'=>'Email must be required!',
-				'emaill.email'=>'Email must be valid!',
-				'passwordl.required'=>'Password must be required!',
-				'passwordl.min'=>'Password must be minimum eight characters!',
-				'passwordl.regex'=>'Password must be contain alpha numeric!',
-				're_passwordl.required'=>'Confirm Password must be required!',
-				're_passwordl.same' =>'Password and Confirm Password must be matched!'
+				// 'emaill.required'		=>'Email must be required!',
+				// 'emaill.email'			=>'Email must be valid!',
+				// 'passwordl.required'	=>'Password must be required!',
+				// 'passwordl.min'			=>'Password must be minimum eight characters!',
+				// 'passwordl.regex'		=>'Password must be contain alpha numeric!',
+				// 're_passwordl.required'	=>'Confirm Password must be required!',
+				// 're_passwordl.same' 	=>'Password and Confirm Password must be matched!'
+			  
 			  )
 		     );
 
-		if($validator->fails()){
-		//dd($request);
-			return redirect('login')->withErrors($validator)->withInput();
-		}else{
-			
-			//echo "Value is completed";
+		if($validator->fails())	{
+
+		 	return redirect('login')->withErrors($validator)->withInput();
+
+		} else { 
+
 			$data = array(				
-				'email' => $request->emaill,
-				'password' => Hash::make($password),				
-				'created_at' => $date,
-				'updated_at' => $date,
-			 );		
+						'customers_firstname' => $request->first_name,
+						'customers_lastname' => $request->last_name,
+						'email' => $request->email,
+						'password' => Hash::make($password),				
+					  );		
 			
-			//eheck email already exit
-			$user_email = Signup::select('email')->where('email', $email)->get();
-			//dd($user_email);	
-			if(count($user_email)>0){
-				//dd($data);
-				return redirect('/login')->withInput($request->input())->with('error', Lang::get("website.Email already exist"));
-			}else{
-				//  for($i=1;$i<=5;$i++)
-				// {
-				//  	Signup::insert($data);
-				//  }
-				if(Signup::insert($data)){					
-					
-					//check authentication of email and password
-					$customerInfo = array("email" => $request->emaill, "password" => $request->passwordl);
-										
-					if(auth()->guard('customer')->attempt($customerInfo)) {
-						$customer = auth()->guard('customer')->user();
-						
-						//set session
-						session(['customers_id' => $customer->customers_id]);
+				 
+			if(Signup::insert($data)) {					
+				
+				//check authentication of email and password
+				$customerInfo = array("email" => $request->email, "password" => $request->password);
+									
+				if(auth()->guard('customer')->attempt($customerInfo)) {
 
-						//cart 
-						$cart = Basket::where([
-							['session_id', '=', $old_session],
-						])->get();
+					$customer = auth()->guard('customer')->user();
+					//set session
+					session(['customers_id' => $customer->customers_id]);
+					//cart 
+					$cart = Basket::where([
+						['session_id', '=', $old_session],
+					])->get();
 
-						if(count($cart)>0){
-							foreach($cart as $cart_data){
-								$exist =  Basket::where([
-									['customers_id', '=', $customer->customers_id],
-									['products_id', '=', $cart_data->products_id],
-									['is_order', '=', '0'],
-								])->delete();
-							}
+					if(count($cart)>0) {
+						foreach($cart as $cart_data) {
+							$exist =  Basket::where([
+								['customers_id', '=', $customer->customers_id],
+								['products_id', '=', $cart_data->products_id],
+								['is_order', '=', '0'],
+							])->delete();
 						}
-
-						Basket::where('session_id','=', $old_session)->update([
-							'customers_id'	=>	$customer->customers_id
-							]);
-
-						 Basket::where('session_id','=', $old_session)->update([
-							'customers_id'	=>	$customer->customers_id
-							]);
-
-						//insert device id
-						if(!empty(session('device_id'))){					
-							Device::where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
-						}
-						
-						$customers = Signup::where('customers_id', $customer->customers_id)->get();
-						$result['customers'] = $customers;
-						//email and notification			
-						//$myVar = new AlertController();
-						//$alertSetting = $myVar->createUserAlert($customers);
-						
-						return redirect()->intended('/')->with('result', $result);
-					}else{
-						return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
 					}
 
+					Basket::where('session_id','=', $old_session)->update([
+						'customers_id'	=>	$customer->customers_id
+						]);
+
+					 Basket::where('session_id','=', $old_session)->update([
+						'customers_id'	=>	$customer->customers_id
+						]);
+
+					//insert device id
+					if(!empty(session('device_id'))){					
+						Device::where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
+					}
 					
-				}else{
-					return redirect('/signup')->with('error', Lang::get("website.something is wrong"));
+					$customers = Signup::where('customers_id', $customer->customers_id)->get();
+					$result['customers'] = $customers;
+					//email and notification			
+					//$myVar = new AlertController();
+					//$alertSetting = $myVar->createUserAlert($customers);
+					
+					return redirect()->intended('/')->with('result', $result);
+				} else {
+
+					return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
 				}
-			}		
-			
+
+				
+			} else {
+
+				return redirect('/signup')->with('error', Lang::get("website.something is wrong"));
+			}
 		}
 	}
 	
