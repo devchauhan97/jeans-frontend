@@ -103,7 +103,7 @@
 				</div>
 
 				<div class="button">
-                	<a href="{{ URL::to('/forgotPassword')}}" class="btn btn-link ml-1 mr-4">@lang('website.Forgot Password')</a>
+                	<a href="{{ URL::to('/forgot/password')}}" class="btn btn-link ml-1 mr-4">@lang('website.Forgot Password')</a>
                 	<button type="submit" class="btn btn-dark" style="min-width:90px;">@lang('website.Login')</button>
                 </div>			
 			</form>

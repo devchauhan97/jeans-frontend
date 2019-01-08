@@ -117,7 +117,7 @@
 					</div>
 					<hr class="featurette-divider">
 					<div class="form-group row">
-						<label for="inputPassword" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.Email Adrress')</label>
+						<label for="inputPassword" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.Email Address')</label>
 						<div class="col-sm-8">
 							<input type="text" name="email" id="email" class="form-control email-validate" value="{{ old('email') }}">
 							<span class="help-block error-content" hidden>@lang('website.Please enter your valid email address')</span>

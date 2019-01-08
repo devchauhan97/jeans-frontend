@@ -15,7 +15,7 @@
                     <a href="{{ URL::to('/orders')}}">@lang('website.Orders')</a>
                 </li>
                 <li>
-                    <a href="{{ URL::to('/shipping-address')}}">@lang('website.Shipping Address')</a>
+                    <a href="{{ URL::to('/shipping/address')}}">@lang('website.Shipping Address')</a>
                 </li>
                 <li>
                     <a href="{{ URL::to('/logout')}}">@lang('website.Logout')</a>

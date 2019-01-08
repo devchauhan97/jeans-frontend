@@ -1,10 +1,10 @@
 @extends('layouts')
 @section('customcss')
 @if(!empty(session("theme")))
-        <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    @else
-        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    @endif
+    <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+@else
+    <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+@endif
 <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
 <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
@@ -71,7 +71,7 @@
                                     <div class="product">
                                     
                                         <article>
-                                            <div class="thumb"><img class="img-fluid" src="{{asset('').$products->products_image}}" alt="{{$products->products_name}}"></div>
+                                            <div class="thumb"><img class="img-fluid" src="{{getFtpImage($products->products_image)}}" alt="{{$products->products_name}}"></div>
                                         <?php
                                             $current_date = date("Y-m-d", strtotime("now"));
                                             

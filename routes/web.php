@@ -119,9 +119,9 @@ Route::post('/language/', array(
 	Route::post('/customer/login', 'CustomersController@customerLogin');
 	Route::get('/logout', 'CustomersController@logout');
 	Route::post('/customer/signup', 'CustomersController@customerSignup');
-	Route::get('/forgotPassword', 'CustomersController@forgotPassword');
+	Route::get('/forgot/password', 'CustomersController@forgotPassword');
 	Route::get('/recoverPassword', 'CustomersController@recoverPassword');
-	Route::post('/processPassword', 'CustomersController@processPassword');
+	Route::post('/password/email', 'CustomersController@processPassword');
 	
 	
 	Route::get('login/{social}', 'CustomersController@socialLogin');
@@ -148,12 +148,12 @@ Route::post('/language/', array(
 		Route::get('/wishlist', 'CustomersController@wishlist');
 		Route::post('/loadMoreWishlist', 'CustomersController@loadMoreWishlist');
 		Route::get('/profile', 'CustomersController@profile');
-		Route::post('/updateMyProfile', 'CustomersController@updateMyProfile');
-		Route::post('/updateMyPassword', 'CustomersController@updateMyPassword');		
+		Route::post('/updateprofile', 'CustomersController@updateProfile');
+		Route::post('/updatepassword', 'CustomersController@updatePassword');		
 		
-		Route::get('/shipping-address', 'ShippingAddressController@shippingAddress');
+		Route::get('/shipping/address', 'ShippingAddressController@shippingAddress');
 		Route::post('/addMyAddress', 'ShippingAddressController@addMyAddress');
-		Route::post('/myDefaultAddress', 'ShippingAddressController@myDefaultAddress');		
+		Route::post('/default/address', 'ShippingAddressController@myDefaultAddress');		
 		
 		Route::post('/update-address', 'ShippingAddressController@updateAddress');
 		Route::post('/delete-address', 'ShippingAddressController@deleteAddress');
@@ -167,7 +167,7 @@ Route::post('/language/', array(
 		Route::get('/orders', 'OrdersController@orders');	
 		Route::post('/myorders', 'OrdersController@myorders');	
 		Route::get('/stripeForm', 'OrdersController@stripeForm');	
-		Route::get('/view-order/{id}', 'OrdersController@viewOrder');
+		Route::get('/view/order/{id}', 'OrdersController@viewOrder');
 	});
 });
 

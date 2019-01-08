@@ -29,7 +29,7 @@
                                     <li class="nav-item"> <a href="{{ URL::to('/wishlist')}}" class="nav-link -before">@lang('website.Wishlist')</a> </li>
                                     <li class="nav-item"> <a href="{{ URL::to('/orders')}}" class="nav-link -before">@lang('website.Orders')</a> </li>
                                     
-                                    <li class="nav-item"> <a href="{{ URL::to('/shipping-address')}}" class="nav-link -before">@lang('website.Shipping Address')</a> </li>
+                                    <li class="nav-item"> <a href="{{ URL::to('/shipping/address')}}" class="nav-link -before">@lang('website.Shipping Address')</a> </li>
                                     <li class="nav-item"> <a href="{{ URL::to('/logout')}}" class="nav-link -before">@lang('website.Logout')</a> </li>
                                 @else
                                     <li class="nav-item"><div class="nav-link">@lang('website.Welcome Guest')</div></li>

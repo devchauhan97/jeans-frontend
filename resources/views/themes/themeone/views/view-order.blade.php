@@ -130,7 +130,7 @@
                                                 <tr>
                                                     <td align="left" class="item">
                                                         <div class="cart-thumb">
-                                                            <img class="img-fluid" src="{{asset('').$products->image}}" alt="{{$products->products_name}}" alt="">
+                                                            <img class="img-fluid" src="{{getFtpImage($products->image)}}" alt="{{$products->products_name}}" alt="">
                                                         </div>
                                                         <div class="cart-product-detail">
                                                             <div class="title">{{$products->products_name}} {{$products->model}}</div>

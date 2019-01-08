@@ -212,7 +212,7 @@ return [
 		
 	'Last Name'=>'Last Name',
 		
-	'Email Adrress'=>'Email Adrress',
+	'Email Address'=>'Email Address',
 		
 	'Please enter your valid email address'=>'Please enter your valid email address.',
 		
@@ -496,6 +496,8 @@ return [
 	'Please enter your password and should be at least 6 characters long'=>'Please enter your password and should be at least 6 characters long.',
 		
 	'New Password'=>'New Password',
+	
+	'Old Password'=>'Old Password',
 		
 	'Current Password'=>'Current Password',
 		

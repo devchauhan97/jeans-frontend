@@ -1323,12 +1323,12 @@ jQuery(document).on('focusout','.qty',function(){
 		jQuery('#loader').css('display','flex');
 		var address_id = jQuery(this).attr('address_id');
 		jQuery.ajax({
-			url: '{{ URL::to("/myDefaultAddress")}}',
+			url: '{{ URL::to("/default/address")}}',
 			type: "POST",
-			data: '&address_id='+address_id,
+			data: '&address_id='+address_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),
 			
 			success: function (res) {
-				 window.location = 'shipping-address?action=default';
+				 window.location = '{{ URL::to("shipping/address?action=default")}}';
 			},
 
 		});
@@ -1347,7 +1347,7 @@ jQuery(document).on('focusout','.qty',function(){
 			data: '&address_id='+address_id,
 			
 			success: function (res) {
-				window.location = 'shipping-address?action=detele';
+				window.location = 'shipping/address?action=detele';
 			},
 		});
 	});
@@ -1472,7 +1472,7 @@ function paymentMethods(){
 	jQuery.ajax({
 		url: '{{ URL::to("/paymentComponent")}}',
 		type: "POST",
-		data: '&payment_method='+payment_method,			
+		data: '&payment_method='+payment_method+'&_token='+$('meta[name="csrf-token"]').attr('content'),			
 		success: function (res) {
 			//jQuery('#loader').hide();
 		},

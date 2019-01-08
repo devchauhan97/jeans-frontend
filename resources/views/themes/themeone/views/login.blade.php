@@ -48,7 +48,7 @@
 						</div>
 						<button class="sign-btn lgbtn" type="submit" name="signin">Sign In</button>
 					</form>
-						<a href="#" class="forgot-psd">Forgot your password?</a>
+						<a href="{{Url::to('forgot/password')}}" class="forgot-psd">Forgot your password?</a>
 						<div class="signin-divide"><span>Or</span></div>
 						@if($result['commonContent']['setting'][61]->value==1)
 				<!--Google +-->
@@ -98,7 +98,7 @@
 					<form   enctype="multipart/form-data" class="sign-in" action="{{ URL::to('/customer/signup')}}" method="post">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 						<div>
-							<label>First Name:</label>
+							<label>First Name <strong>*</strong> :</label>
 							<input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name') }}">
 							<small class="text-danger">{{ $errors->first('first_name') }}</small>
 						</div>
@@ -109,12 +109,22 @@
 						</div>
 
 						<div>
-							<label>Email Address:</label>
+							<label>@lang('website.Email Address') <strong>*</strong> :</label>
 							<input type="text" name="email" id="email" class="form-control" value="{{ old('email') }}">
 							<small class="text-danger">{{ $errors->first('email') }}</small>
 						</div>
+						<div >
+							<label > @lang('website.Gender') <strong>*</strong> </label>
+							    <select class="custom-select field-validate" name="gender" id="inlineFormCustomSelect">
+									<option selected value="">@lang('website.Choose...')</option>
+									<option value="Male" @if(!empty(old('gender')) and old('gender')== 'Male') selected @endif)>@lang('website.Male')</option>
+									<option value="Female" @if(!empty(old('gender')) and old('gender')== 'Female') selected @endif>@lang('website.Female')</option>
+								</select>
+								<small class="text-danger">{{ $errors->first('gender') }}</small>
+							 
+						</div>
 						<div>
-							<label>Password:</label>
+							<label>Password <strong>*</strong>:</label>
 							<input type="password" class="form-control password" name="password" id="password">
 							<small class="text-danger">{{ $errors->first('password') }}</small>
 						</div>
@@ -124,7 +134,7 @@
 							<li>At least one number</li>
 						</ul>
 						<div>
-							<label>Confirm Password:</label>
+							<label>Confirm Password <strong>*</strong>:</label>
 							<input type="password" class="form-control password" name="re_password" id="re_password">
 							<span class="help-block error-content" hidden>@lang('website.Please re-enter your password')</span>
 							<small class="text-danger">{{ $errors->first('re_password') }}</small>

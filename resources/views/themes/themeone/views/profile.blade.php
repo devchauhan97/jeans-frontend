@@ -43,7 +43,9 @@
                         
                          <div class="row">
                             <div class="col-sm-12">
-                                <form name="updateMyProfile" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('updateMyProfile')}}" method="post">
+                                <form name="updateprofile" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('updateprofile')}}" method="post">
+
+                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
                                     @if( count($errors) > 0)
                                         @foreach($errors->all() as $error)
                                             <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -103,7 +105,7 @@
                                             <div class="upload-picture">
                                                 <div class="uploaded-image" id="uploaded_image">
                                                 @if(!empty(auth()->guard('customer')->user()->customers_picture))
-                                                	<img src="{{asset('').auth()->guard('customer')->user()->customers_picture}}" width="150px" height="150px" class="upload-preview">
+                                                	<img src="{{getFtpImage(auth()->guard('customer')->user()->customers_picture)}}" width="150px" height="150px" class="upload-preview">
                                                     <input type="hidden" name="customers_old_picture" value="{{ auth()->guard('customer')->user()->customers_picture }}">
                                                 @else
                                                 	<input type="hidden" name="customers_old_picture" value="">
@@ -130,8 +132,8 @@
                                     <div class="form-group row">
                                         <label for="lastName" class="col-sm-4 col-form-label">@lang('website.Last Name')</label>
                                         <div class="col-sm-8">
-                                            <input type="text" name="customers_lastname" placeholder="@lang('website.Last Name')" class="form-control field-validate" id="lastName" value="{{ auth()->guard('customer')->user()->customers_lastname }}">
-                                            <span class="help-block error-content" hidden>@lang('website.Please enter your last name')</span>
+                                            <input type="text" name="customers_lastname" placeholder="@lang('website.Last Name')" class="form-control" id="lastName" value="{{ auth()->guard('customer')->user()->customers_lastname }}">
+                                            
                                         </div>
                                     </div>
                                   
@@ -139,8 +141,8 @@
                                         <label for="gender" class="col-sm-4 col-form-label">@lang('website.Gender')</label>
                                         <div class="col-sm-8">
                                             <select class="custom-select field-validation" name="customers_gender" id="gender">
-                                                <option value="0" @if(auth()->guard('customer')->user()->customers_gender == 0) selected @endif>@lang('website.Male')</option>
-                                                <option value="1"  @if(auth()->guard('customer')->user()->customers_gender == 1) selected @endif>@lang('website.Female')</option>
+                                                <option value="Male" @if(auth()->guard('customer')->user()->customers_gender == 'Male') selected @endif>@lang('website.Male')</option>
+                                                <option value="Female"  @if(auth()->guard('customer')->user()->customers_gender == 'Female') selected @endif>@lang('website.Female')</option>
                                             </select>
                                             <span class="help-block error-content" hidden>@lang('website.Please select your gender')</span>
                                         </div>                                        
@@ -167,12 +169,27 @@
                                                                 
                                 <h5 class="title-h5" style="margin-top:30px;">@lang('website.Change Password')</h5>
                                 <hr class="featurette-divider">
-                                <form name="updateMyPassword" class="" enctype="multipart/form-data" action="{{ URL::to('/updateMyPassword')}}" method="post">
+                                <form name="updatepassword" class="" enctype="multipart/form-data" action="{{ URL::to('/updatepassword')}}" method="post">
+                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
+                                    <div class="form-group row">
+                                        <label for="old_password" class="col-sm-4 col-form-label">@lang('website.Old Password')</label>
+                                        <div class="col-sm-8">
+                                            <input name="old_password" type="password" class="form-control" id="old_password" placeholder="@lang('website.Old Password')">
+                                            <span class="help-block error-content" hidden>@lang('website.Please enter your old password and should be at least 6 characters long')</span>
+                                        </div>
+                                    </div>
                                     <div class="form-group row">
                                         <label for="new_password" class="col-sm-4 col-form-label">@lang('website.New Password')</label>
                                         <div class="col-sm-8">
                                             <input name="new_password" type="password" class="form-control" id="new_password" placeholder="@lang('website.New Password')">
                                             <span class="help-block error-content" hidden>@lang('website.Please enter your password and should be at least 6 characters long')</span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="confirm_password" class="col-sm-4 col-form-label">@lang('website.Confirm Password')</label>
+                                        <div class="col-sm-8">
+                                            <input name="confirm_password" type="password" class="form-control" id="confirm_password" placeholder="@lang('website.Confirm Password')">
+                                            <span class="help-block error-content" hidden>@lang('website.Please enter your Confirm password')</span>
                                         </div>
                                     </div>
                                     <div class="button">

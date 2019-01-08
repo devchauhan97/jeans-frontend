@@ -1,10 +1,10 @@
 @extends('layouts')
 @section('customcss')
 @if(!empty(session("theme")))
-        <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    @else
-        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    @endif
+    <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+@else
+    <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+@endif
 <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
 <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
@@ -81,7 +81,7 @@
                                                 <span class="badge badge-danger">{{$orders->orders_status}}</span>
                                             @endif
                                         </td>
-                                        <td align="right"><a class="btn btn-sm btn-dark" href="{{ URL::to('/view-order/'.$orders->orders_id)}}">@lang('website.View Order')</a></td>
+                                        <td align="right"><a class="btn btn-sm btn-dark" href="{{ URL::to('/view/order/'.$orders->orders_id)}}">@lang('website.View Order')</a></td>
                                     </tr>              
                                 @endforeach
                                 @else

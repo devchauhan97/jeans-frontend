@@ -72,7 +72,7 @@
                                         <tr>
                                           <td scope="row" align="center" valign="center"><input class="form-control default_address" address_id="{{$address_data->address_id}}" type="radio" name="default" @if($address_data->default_address == $address_data->address_id) checked @endif></td>
                                           <td align="left">{{$address_data->firstname}}, {{$address_data->lastname}}, {{$address_data->street}}, {{$address_data->city}}, {{$address_data->zone_name}}, {{$address_data->country_name}}, {{$address_data->postcode}}</td>
-                                          <td align="left"><a class="badge badge-light" href="{{ URL::to('/shipping-address?address_id='.$address_data->address_id)}}"><i class="fa fa-pencil" aria-hidden="true"></i> </a>
+                                          <td align="left"><a class="badge badge-light" href="{{ URL::to('/shipping/address?address_id='.$address_data->address_id)}}"><i class="fa fa-pencil" aria-hidden="true"></i> </a>
                                           @if($address_data->default_address != $address_data->address_id) 
                                           <a href="#" class="badge badge-danger deleteMyAddress" address_id ="{{ $address_data->address_id }}"><i class="fa fa-trash" aria-hidden="true"></i></a> @endif
                                           </td>
@@ -96,6 +96,7 @@
                                     <h5 class="title-h5">@if(!empty($result['editAddress'])) @lang('website.Edit Address') @else @lang('website.Add Address') @endif </h5>
                                     <hr class="featurette-divider">
                                     <form name="addMyAddress" class="form-validate" enctype="multipart/form-data" action="@if(!empty($result['editAddress'])) {{ URL::to('/update-address')}} @else {{ URL::to('/addMyAddress')}} @endif  " method="post">
+                                      <input type="hidden" name="_token" value="{{csrf_token()}}">
                                      @if(!empty($result['editAddress']))
                                      <input type="hidden" name="address_book_id" value="{{$result['editAddress'][0]->address_id}}">
                                      @endif

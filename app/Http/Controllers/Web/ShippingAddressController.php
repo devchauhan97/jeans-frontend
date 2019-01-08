@@ -197,48 +197,40 @@ class ShippingAddressController extends DataController
 	
 	
 	//update shipping address 
-	public function updateAddress(Request $request){
+	public function updateAddress(Request $request) {
 		
-		$customers_id            				=   auth()->guard('customer')->user()->customers_id;
-		$address_book_id            			=   $request->address_book_id;	
-		$entry_firstname            		    =   $request->entry_firstname;
-		$entry_lastname             		    =   $request->entry_lastname;
-		$entry_street_address       		    =   $request->entry_street_address;
-		$entry_suburb             				=   $request->entry_suburb;
-		$entry_postcode             			=   $request->entry_postcode;
-		$entry_city             				=   $request->entry_city;
-		$entry_state             				=   $request->entry_state;
-		$entry_country_id             			=   $request->entry_country_id;
-		$entry_zone_id             				=   $request->entry_zone_id;	
-		$entry_gender							=   $request->entry_gender;
-		$entry_company							=   $request->entry_company;
-		$customers_default_address_id			=   $request->customers_default_address_id;
-							
-		if(!empty($customers_id)){
+		$customers_id =   auth()->guard('customer')->user()->customers_id;
+		 
+
+		$customers_default_address_id =   $request->customers_default_address_id;
+
+		if(!empty($customers_id)) {
 		
 			$address_book_data = array(
-				'entry_firstname'               =>   $entry_firstname,
-				'entry_lastname'                =>   $entry_lastname,
-				'entry_street_address'          =>   $entry_street_address,
-				'entry_suburb'             		=>   $entry_suburb,
-				'entry_postcode'            	=>   $entry_postcode,
-				'entry_city'             		=>   $entry_city,
-				'entry_state'            		=>   $entry_state,
-				'entry_country_id'            	=>   $entry_country_id,
-				'entry_zone_id'             	=>   $entry_zone_id,
+				'entry_firstname'               =>   $request->entry_firstname,
+				'entry_lastname'                =>   $request->entry_lastname,
+				'entry_street_address'          =>   $request->entry_street_address,
+				'entry_suburb'             		=>   $request->entry_suburb,
+				'entry_postcode'            	=>   $request->entry_postcode,
+				'entry_city'             		=>   $request->entry_city,
+				'entry_state'            		=>   $request->entry_state,
+				'entry_country_id'            	=>   $request->entry_country_id,
+				'entry_zone_id'             	=>   $request->entry_zone_id,
 				'customers_id'             		=>   $customers_id,
-				'entry_gender'					=>   $entry_gender,
-				'entry_company'					=>   $entry_company
+				'entry_gender'					=>   $request->entry_gender,
+				'entry_company'					=>   $request->entry_company
 			);	
 			
 			//add address into address book
-			DB::table('address_book')->where('address_book_id', $address_book_id)->update($address_book_data);
+			DB::table('address_book')->where('address_book_id', $request->address_book_id)->update($address_book_data);
 			
 			//default address id
-			if($customers_default_address_id == '1'){
-				DB::table('customers')->where('customers_id', $customers_id)->update(['customers_default_address_id' => $address_book_id]);
+			if($customers_default_address_id == '1' ) {
+
+				DB::table('customers')->where('customers_id', $customers_id)->update(['customers_default_address_id' => $request->address_book_id]);
 			}
-			return redirect('shipping-address?action=update');
+
+			return redirect('shipping/address?action=update');
 		}
 					
 	}
@@ -268,12 +260,9 @@ class ShippingAddressController extends DataController
 		print 'success';
 					
 	}
-	
-	
-	
 	//update shipping address 
-	public function myDefaultAddress(Request $request){
-		
+	public function myDefaultAddress(Request $request) {
+		 
 		$customers_id   	=   auth()->guard('customer')->user()->customers_id;	
 		$address_book_id	=   $request->address_id;
 		

@@ -5,7 +5,7 @@
 					 @if (Auth::guard('customer')->check())
 					<li class="nav-item">
                                         <div class="">
-                                            <span class="p-pic"><img src="{{asset('').auth()->guard('customer')->user()->customers_picture}}" alt="image" width="20" height="20"></span>&nbsp;@lang('website.Welcome')&nbsp;{{ auth()->guard('customer')->user()->customers_firstname }}&nbsp;{{ auth()->guard('customer')->user()->customers_lastname }}!
+                                            <span class="p-pic"><img src="{{getFtpImage(auth()->guard('customer')->user()->customers_picture)}}" alt="image" width="20" height="20"></span>&nbsp;@lang('website.Welcome')&nbsp;{{ auth()->guard('customer')->user()->customers_firstname }}&nbsp;{{ auth()->guard('customer')->user()->customers_lastname }}!
                                         </div>
                                     </li>
                                     <li><a href="{{ URL::to('/logout')}}">Logout</a></li>
@@ -47,7 +47,7 @@
 			                <a href="{{ URL::to('/profile')}}">Profile</a>
 			                <a href="{{ URL::to('/wishlist')}}">My Wishlist</a>
 			                <a href="{{ URL::to('/orders')}}">My Orders</a>
-			                 <a href="{{ URL::to('/shipping-address')}}">Shipping Address</a>
+			                 <a href="{{ URL::to('/shipping/address')}}">Shipping Address</a>
 			                <a href="{{ URL::to('/logout')}}">Logout</a>
 			            </div>
 			            @else

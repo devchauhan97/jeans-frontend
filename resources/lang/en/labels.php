@@ -838,6 +838,7 @@ return [
 	'Re-EnterPassword' => 'Re-Enter Password',
 	'AdminPasswordRestriction' => 'Please enter minimum 6 characters.',
 	'NewPassword' => 'New Password',
+	'OldPassword'=>'Old Password',
 	'PhoneText' => 'Please enter your phone number.',
 	'ZipCode' => 'Zip Code',
 	'SelectZoneText' => 'Please enter your state.',

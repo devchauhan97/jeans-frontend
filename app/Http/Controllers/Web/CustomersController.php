@@ -28,6 +28,7 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 
 //for requesting a value 
 use Illuminate\Http\Request;
+
 use Illuminate\Routing\Controller;
 //for Carbon a value 
 use Carbon;
@@ -45,6 +46,8 @@ use App\Product;
 use App\LikedProduct;
 //email
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\CustomerPasswordUpdateRequest;
+use App\Http\Requests\CustomerSignupRequest;
 
 class CustomersController extends DataController
 {
@@ -173,78 +176,71 @@ class CustomersController extends DataController
 		return view("profile", $title)->with('result', $result); 
 	}
 	
-	public function updateMyProfile(Request $request) {
+	public function updateProfile(Request $request) {
 		
 		$customers_id								=	auth()->guard('customer')->user()->customers_id; 
-		$customers_firstname            			=   $request->customers_firstname;
-		$customers_lastname           				=   $request->customers_lastname;			
-		//$customers_email_address    		   		=   $request->customers_email_address;	
-		$customers_fax          		   			=   $request->customers_fax;	
-		$customers_newsletter          		   		=   $request->customers_newsletter;	
-		$customers_telephone          		   		=   $request->customers_telephone;	
-		$customers_gender          		   			=   $request->customers_gender;	
-		$customers_dob          		   			=   $request->customers_dob;
-		$customers_info_date_account_last_modified 	=   date('y-m-d h:i:s');
-		
+		//$customers_info_date_account_last_modified 	=   date('y-m-d h:i:s');
 		$extensions = array('gif','jpg','jpeg','png');
-		if($request->hasFile('picture') and in_array($request->picture->extension(), $extensions)){
+
+		if($request->hasFile('picture') and in_array($request->picture->extension(), $extensions)) {
+
 			$image = $request->picture;
 			$fileName = time().'.'.$image->getClientOriginalName();
-			$image->move('resources/assets/images/user_profile/', $fileName);
-			$customers_picture = 'resources/assets/images/user_profile/'.$fileName; 
+			$image->move(storage_path('app/public').'/user_profile/', $fileName);
+			$customers_picture = 'user_profile/'.$fileName; 
+
+			storeImage($customers_picture);
+
 		}	else{
-			$customers_picture = $request->customers_old_picture;;
+
+			$customers_picture = $request->customers_old_picture;
+
 		}	
-		
-		$customer_data = array(
-			'customers_firstname'			 =>  $customers_firstname,
-			'customers_lastname'			 =>  $customers_lastname,
-			'customers_fax'					 =>  $customers_fax,
-			'customers_newsletter'			 =>  $customers_newsletter,
-			'customers_telephone'			 =>  $customers_telephone,
-			'customers_gender'				 =>  $customers_gender,
-			'customers_dob'					 =>  $customers_dob,
-			'customers_picture'				 =>  $customers_picture
-		);
-					
 		//update into customer
-		Customer::where('customers_id', $customers_id)->update($customer_data);
+		Customer::where('customers_id', $customers_id)->update([
+			'customers_firstname'			 =>  $request->customers_firstname,
+			'customers_lastname'			 =>  $request->customers_lastname,
+			'customers_fax'					 =>  $request->customers_fax,
+			'customers_newsletter'			 =>  $request->customers_newsletter,
+			'customers_telephone'			 =>  $request->customers_telephone,
+			'customers_gender'				 =>  $request->customers_gender,
+			'customers_dob'					 =>  $request->customers_dob,
+			'customers_picture'				 =>  $request->customers_picture
+		]);
 				
-		CustomerInfo::where('customers_info_id', $customers_id)->update(['customers_info_date_account_last_modified'   => $customers_info_date_account_last_modified]);	
+		// CustomerInfo::where('customers_info_id', $customers_id)->update(['customers_info_date_account_last_modified'   => $customers_info_date_account_last_modified]);	
 		$message = Lang::get("website.Prfile has been updated successfully");
 		
 		return redirect()->back()->with('success', $message);
 			
 	}
 	
-	public function updateMyPassword(Request $request){
+	public function updatePassword(CustomerPasswordUpdateRequest $request) {
+
 		$old_session = Session::getId();
-		$customers_id            					=   auth()->guard('customer')->user()->customers_id;	
-		$new_password								=   $request->new_password;
-		$old_password								=   $request->old_password;
-		//$customers_email_address    		   		=   $request->customers_email_address;
-		$updated_at 								=   date('y-m-d h:i:s');	
-		$customers_info_date_account_last_modified 	=   date('y-m-d h:i:s');	
 		
-		
-		$customer_data = array(
-			'password'			=>  Hash::make($new_password),
-			'updated_at'		=>  date('y-m-d h:i:s'),
-		);
-		
-		$userData = Customer::where('customers_id', $customers_id)->update($customer_data);
+		$customers_id =   auth()->guard('customer')->user()->customers_id;
+
+		//$updated_at =   date('y-m-d h:i:s');
+
+		//$customers_info_date_account_last_modified 	=   date('y-m-d h:i:s');	
+		  
+
+		$userData = Customer::where('customers_id', $customers_id)->update(['password'			=>  Hash::make($request->new_password)]);
+
 		$user = Customer::where('customers_id', $customers_id)->get();
 		
 		//check authentication of email and password
 		$customerInfo = array("email" => $user[0]->email, "password" => $request->new_password);
 		
-		if(Auth::attempt($customerInfo)) {
 
-			$customer = Auth::User();
+		if(Auth::guard('customer')->attempt($customerInfo)) {
+
+			//$customer = Auth::User();
 			//set session
 
-			session(['customers_id' => $customer->customers_id]);
-
+			//session(['customers_id' => $customer->customers_id]);
+/*
 			//cart 
 			$cart = Basket::where([
 				['session_id', '=', $old_session],
@@ -273,24 +269,23 @@ class CustomersController extends DataController
 				]);
 
 
-			$result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();	
+			$result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();*/	
 			
 			
 			$message = Lang::get("website.Password has been updated successfully");
 			return redirect()->back()->with('success', $message);
 		}
 				
-		$userData = Customer::where('customers_id', $customers_id)->update($customer_data);
+		//$userData = Customer::where('customers_id', $customers_id)->update($customer_data);
 				
-		CustomerInfo::where('customers_info_id', $customers_id)->update(['customers_info_date_account_last_modified'   =>   $customers_info_date_account_last_modified]);
+		// CustomerInfo::where('customers_info_id', $customers_id)->update(['customers_info_date_account_last_modified'   =>   $customers_info_date_account_last_modified]);
 
 		$message = Lang::get("website.Password has been updated successfully");
-			
-		
 		
 	}
 	//logout
 	public function logout(REQUEST $request){
+
 		Auth::logout();
 		Auth::guard('customer')->logout();
 		session()->flush();
@@ -314,7 +309,8 @@ class CustomersController extends DataController
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleSocialLoginCallback($social){
+    public function handleSocialLoginCallback($social) {
+
 		$old_session = Session::getId();
 		
 		$user =Socialite::driver($social)->stateless()->user();
@@ -322,104 +318,72 @@ class CustomersController extends DataController
 		
 		// OAuth Two Providers
 		$token = $user->token;
-		if(!empty($user['gender'])){
-			if($user['gender']=='male'){
-				$customers_gender = '0';
-			}else{
-				$customers_gender = '1';
-			}
-		}else{
-			$customers_gender = '0';
-		}
-
+		 
+		//$customers_gender = @$user['gender'] ;
 		// All Providers
 		$social_id = $user->getId();	
 		
 		$customers_firstname = substr($user->getName(), 0, strpos($user->getName(), ' '));
 		$customers_lastname = str_replace($customers_firstname.' ', '', $user->getName());
 		
-		$email = $user->getEmail();		
-		if(empty($email)){
+		$email = $user->getEmail();	
+
+		if(empty($email)) {
 			$email = '';	
 		}			
 		
-			$img = file_get_contents($user->getAvatar());
-			$dir="user_profile/";
-			if (!file_exists($dir) and !is_dir($dir)) {
-				mkdir($dir);
-			} 
+		$img = file_get_contents($user->getAvatar());
+		$dir="user_profile/";
+		if (!file_exists($dir) and !is_dir($dir)) {
+			mkdir($dir);
+		} 
 
-			$uploadfile = $dir."/pic_".time().".jpg";
-			$temp_upload_path = base_path().'/'.$uploadfile;
-			file_put_contents($temp_upload_path, $img);
-			$profile_photo=$uploadfile;		
-			
-		if($social == 'facebook'){
-			
-			$customer_data = array(
+		$uploadfile = $dir."/pic_".time().".jpg";
+		$temp_upload_path = $uploadfile;
+		file_put_contents(storage_path('app/public').'/'.$temp_upload_path, $img);
+		$profile_photo=$uploadfile;	
+		/**store to local storage*/	
+		storeImage($uploadfile);
+
+		$customer_data = array(
 				'customers_firstname' => $customers_firstname,
-				'fb_id' => $social_id,
-				'customers_lastname' => $customers_lastname,
-				'email' => $email,
-				'password' => Hash::make($password),
-				'isActive' => '1',
-				'customers_picture' => $profile_photo,
-				'created_at' =>	 time()
-			);
-			
-			$update_customer_data = array(
-				'customers_firstname' => $customers_firstname,
-				'fb_id' => $social_id,
 				'customers_lastname' => $customers_lastname,
 				'email' => $email,
 				'isActive' => '1',
 				'customers_picture' => $profile_photo,
-				'created_at' =>	 time()
 			);
 
-
-			$existUser = Customer::where('fb_id', '=', $social_id)->orWhere('email', '=', $email)->get();
+		if($social == 'facebook') {
+			$customer_data['fb_id'] = $social_id;
 		}
 		
-		if($social == 'google'){
-		//user information
-			$customer_data = array(
-				'customers_firstname' => $customers_firstname,
-				'google_id' => $social_id,
-				'customers_lastname' => $customers_lastname,
-				'email' => $email,
-				'password' => Hash::make($password),
-				'isActive' => '1',
-				'customers_picture' => $profile_photo,
-				'created_at' =>	 time()
-			);
-			
-			$update_customer_data = array(
-				'customers_firstname' => $customers_firstname,
-				'google_id' => $social_id,
-				'customers_lastname' => $customers_lastname,
-				'email' => $email,
-				'isActive' => '1',
-				'customers_picture' => $profile_photo,
-				'created_at' =>	 time()
-			);
-
-			$existUser = DB::table('customers')->where('google_id', '=', $social_id)->orWhere('email', '=', $email)->get();
+		if($social == 'google') {
+	 		$customer_data['google_id'] = $social_id;
 		}
-		
-		if(count($existUser)>0){
+
+		$existUser = Customer::Where('email', '=', $email)
+								->orWhere('fb_id', '=', $social_id)
+								->orWhere('google_id', '=', $social_id)
+								->first();
+		 
+		if( count($existUser)>0 ) {
 			
-			$customers_id = $existUser[0]->customers_id;
-			
+			$customers_id = $existUser->customers_id;
 			//update data of customer
 			Customer::where('customers_id','=',$customers_id)->update($customer_data);
-		}else{
+			$user_data = $existUser;
+
+		} else {
 			//insert data of customer
-			$customers_id = Customer::insertGetId($customer_data);
+			$customer_data['password'] =  Hash::make($password);
+			$user_data = Customer::create($customer_data);
+			$customers_id = $user_data->customers_id;
+			$user_data = $existUser;
 		}
-		
-		$userData = Customer::where('customers_id', '=', $customers_id)->get();
-		
+		 
+		//$user_data = Customer::where('customers_id', '=', $customers_id)->get();
+		 
+		/*
 		$existUserInfo = CustomerInfo::where('customers_info_id', $customers_id)->get();
 		$customers_info_id 							= $customers_id;
 		$customers_info_date_of_last_logon  		= date('Y-m-d H:i:s');
@@ -427,7 +391,7 @@ class CustomersController extends DataController
 		$customers_info_date_account_created 		= date('Y-m-d H:i:s');
 		$global_product_notifications 				= '1';
 		
-		if(count($existUserInfo)>0){
+		if( count($existUserInfo)>0) {
 			//update customers_info table
 			CustomerInfo::where('customers_info_id', $customers_info_id)->update([
 				'customers_info_date_of_last_logon' => $customers_info_date_of_last_logon,
@@ -438,7 +402,7 @@ class CustomersController extends DataController
 		}else{
 			
 			//insert customers_info table
-			$customers_default_address_id = CustomerInfo::insertGetId([
+			  CustomerInfo::updateOrInsert([
 					'customers_info_id' => $customers_info_id,
 					'customers_info_date_of_last_logon' => $customers_info_date_of_last_logon,
 					'customers_info_number_of_logons' =>  $customers_info_number_of_logons,
@@ -447,39 +411,42 @@ class CustomersController extends DataController
 			]);	
 			
 		}		
+		*/
 		
 		//check if already login or not
-		$already_login = WhosOnline::where('customer_id', '=', $customers_id)->get();	
-		if(count($already_login)>0){
-			WhosOnline::where('customer_id', $customers_id)
-				->update([
-						'full_name'  => $userData[0]->customers_firstname.' '.$userData[0]->customers_lastname,
-						'time_entry'   => date('Y-m-d H:i:s'),							
-				]);
-		}else{
-			WhosOnline::insert([
-						'full_name'  => $userData[0]->customers_firstname.' '.$userData[0]->customers_lastname,
-						'time_entry' => date('Y-m-d H:i:s'),
-						'customer_id'    => $customers_id							
-				]);
-		}
+		// /$already_login = WhosOnline::where('customer_id', '=', $customers_id)->get();	
+		// if( count($already_login)>0) {
+
+		// 	WhosOnline::where('customer_id', $customers_id)
+		// 		->update([
+		// 				'full_name'  => $user_data->customers_firstname.' '.$user_data->customers_lastname,
+		// 				'time_entry'   => date('Y-m-d H:i:s'),							
+		// 		]);
+		// } else {
+			// WhosOnline::updateOrInsert(['customer_id'    => $customers_id],[
+			// 			'full_name'  => $user_data->customers_firstname.' '.$user_data->customers_lastname,
+			// 			'time_entry' => date('Y-m-d H:i:s'),
+			// 			'customer_id'    => $customers_id,
+			// 	]);
+		//}
 		
-		$customerInfo = array("email" => $email, "password" => $password);
+		//$customerInfo = array("email" => $email, "password" => $password);
 		$old_session = Session::getId();
 		
-		if(auth()->guard('customer')->attempt($customerInfo)) {	
+		if(auth()->guard('customer')->loginUsingId($customers_id)) {
+
 				$customer = auth()->guard('customer')->user();
-								
 				//set session				
 				session(['customers_id' => $customer->customers_id]);
-				
-				//cart 				
+				//get-current-cart 				
 				$cart = Basket::where([
-					['session_id', '=', $old_session],
+						['session_id', '=', $old_session],
 				])->get();
 				
-				if(count($cart)>0){					
-					foreach($cart as $cart_data){						
+				if( count($cart) > 0 ) {
+
+					foreach($cart as $cart_data) {
+
 						$exist = Basket::where([
 							['customers_id', '=', $customer->customers_id],
 							['products_id', '=', $cart_data->products_id],
@@ -495,28 +462,23 @@ class CustomersController extends DataController
 				BasketAttribute::where('session_id','=', $old_session)->update([
 					'customers_id'	=>	$customer->customers_id
 					]);
-				
-				
 				//insert device id
-				if(!empty(session('device_id'))){					
+				if(!empty(session('device_id'))) {					
 					Device::where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
 				}
 						
-				$result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();					
-				return redirect()->intended('/')->with('result', $result);
+				// $result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();					
+				return redirect()->intended('/')->with('result', $user_data);
 			}
 //		
-//		auth()->login($userData);
+//		auth()->login($user_data);
 //		
 //		return redirect()->intended('/');
-		/*Mail::send('/mail/createAccount', ['userData' => $userData], function($m) use ($userData){
-				$m->to($userData[0]->email)->subject('Welcome to Ecommerce App"')->getSwiftMessage()
+		/*Mail::send('/mail/createAccount', ['user_data' => $user_data], function($m) use ($user_data){
+				$m->to($user_data[0]->email)->subject('Welcome to Ecommerce App"')->getSwiftMessage()
 				->getHeaders()
 				->addTextHeader('x-mailgun-native-send', 'true');	
 			});*/
-
-		
-		
     }
 	
 	//create random password for social links
@@ -664,25 +626,39 @@ class CustomersController extends DataController
 	}
 	
 	//forgotPassword
-	public function processPassword(Request $request){
+	public function processPassword(Request $request) {
+
 		$title = array('pageTitle' => Lang::get("website.Forgot Password"));
 		
 		$password = $this->createRandomPassword();
 		
-		$email    		  =   $request->email;
+		$email =   $request->email;
+
 		$postData = array();
 				
 		//check email exist
-		$existUser = Customer::where('email', $email)->get();				
-		if(count($existUser)>0){
+		$existUser = Customer::where('email', $email)->first();	
+
+		if( count($existUser)>0 ) {
+
 			Customer::where('email', $email)->update([
 					'password'	=>	Hash::make($password)
 					]);
-			$existUser[0]->password = $password;
-			
+
+			$existUser->password = $password;
+			$token =str_random(60);
+			DB::table('password_resets')->insert([
+		        'email' => $request->email,
+		        'token' => $token, //change 60 to any length you want
+		        //'created_at' => Carbon::now()
+		    ]);
+
+			$this->notify(new ResetPasswordNotification($token));
+
 			//$myVar = new AlertController();
 			//$alertSetting = $myVar->forgotPasswordAlert($existUser);
-					
+			
+
 			return redirect('login')->with('success', Lang::get("website.Password has been sent to your email address"));
 		}else{	
 			return redirect('forgotPassword')->with('error', Lang::get("website.Email address does not exist"));
@@ -761,111 +737,73 @@ class CustomersController extends DataController
 	}
 	
 	
-	public function customerSignup(Request $request)	{
+	public function customerSignup(CustomerSignupRequest $request)	{
 
 		$old_session = Session::getId();
 				
 		$email = $request->email;
 		$password = $request->password;
-		 
-		$date = date('y-md h:i:s');
-		
-		$validator = Validator::make(
-			array(
-
-				'first_name' 	=> $request->first_name,
-				'email' 		=> $request->email,
-				'password' 		=> $request->password,
-				're_password' 	=> $request->re_password,
-				
-			),array(
-				'first_name' 	=> 'required',				
-				'email' 		=> 'required | email|unique:customers',
-				'password'  	=> 'required|min:8|regex:/^.+@.+$/i',
-				're_password' 	=> 'required | same:password',
-			 ),
-			array(
-				// 'emaill.required'		=>'Email must be required!',
-				// 'emaill.email'			=>'Email must be valid!',
-				// 'passwordl.required'	=>'Password must be required!',
-				// 'passwordl.min'			=>'Password must be minimum eight characters!',
-				// 'passwordl.regex'		=>'Password must be contain alpha numeric!',
-				// 're_passwordl.required'	=>'Confirm Password must be required!',
-				// 're_passwordl.same' 	=>'Password and Confirm Password must be matched!'
-			  
-			  )
-		     );
-
-		if($validator->fails())	{
-
-		 	return redirect('login')->withErrors($validator)->withInput();
-
-		} else { 
-
-			$data = array(				
+		 	
+		$created = Signup::insert([				
 						'customers_firstname' => $request->first_name,
 						'customers_lastname' => $request->last_name,
 						'email' => $request->email,
 						'password' => Hash::make($password),				
-					  );		
-			
+					]);
 				 
-			if(Signup::insert($data)) {					
-				
-				//check authentication of email and password
-				$customerInfo = array("email" => $request->email, "password" => $request->password);
-									
-				if(auth()->guard('customer')->attempt($customerInfo)) {
+		if($created) {					
+			//check authentication of email and password
+			$customerInfo = array("email" => $request->email, "password" => $request->password);
+								
+			if(auth()->guard('customer')->attempt($customerInfo)) {
 
-					$customer = auth()->guard('customer')->user();
-					//set session
-					session(['customers_id' => $customer->customers_id]);
-					//cart 
-					$cart = Basket::where([
-						['session_id', '=', $old_session],
-					])->get();
+				$customer = auth()->guard('customer')->user();
+				//set session
+				session(['customers_id' => $customer->customers_id]);
+				//cart 
+				$cart = Basket::where([
+							['session_id', '=', $old_session],
+						])->get();
 
-					if(count($cart)>0) {
-						foreach($cart as $cart_data) {
-							$exist =  Basket::where([
-								['customers_id', '=', $customer->customers_id],
-								['products_id', '=', $cart_data->products_id],
-								['is_order', '=', '0'],
-							])->delete();
-						}
+				if(count($cart)>0) {
+
+					foreach($cart as $cart_data) {
+						$exist =  Basket::where([
+							['customers_id', '=', $customer->customers_id],
+							['products_id', '=', $cart_data->products_id],
+							['is_order', '=', '0'],
+						])->delete();
 					}
-
-					Basket::where('session_id','=', $old_session)->update([
-						'customers_id'	=>	$customer->customers_id
-						]);
-
-					 Basket::where('session_id','=', $old_session)->update([
-						'customers_id'	=>	$customer->customers_id
-						]);
-
-					//insert device id
-					if(!empty(session('device_id'))){					
-						Device::where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
-					}
-					
-					$customers = Signup::where('customers_id', $customer->customers_id)->get();
-					$result['customers'] = $customers;
-					//email and notification			
-					//$myVar = new AlertController();
-					//$alertSetting = $myVar->createUserAlert($customers);
-					
-					return redirect()->intended('/')->with('result', $result);
-				} else {
-
-					return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
 				}
 
+				Basket::where('session_id','=', $old_session)->update([
+					'customers_id'	=>	$customer->customers_id
+					]);
+
+				 Basket::where('session_id','=', $old_session)->update([
+					'customers_id'	=>	$customer->customers_id
+					]);
+				//insert device id
+				if(!empty(session('device_id'))) {					
+					Device::where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
+				}
 				
+				$customers = Signup::where('customers_id', $customer->customers_id)->get();
+				$result['customers'] = $customers;
+				//email and notification			
+				//$myVar = new AlertController();
+				//$alertSetting = $myVar->createUserAlert($customers);
+				return redirect()->intended('/')->with('result', $result);
 			} else {
 
-				return redirect('/signup')->with('error', Lang::get("website.something is wrong"));
+				return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
 			}
+
+		} else {
+
+			return redirect('/signup')->with('error', Lang::get("website.something is wrong"));
 		}
+		 
 	}
 	
 }

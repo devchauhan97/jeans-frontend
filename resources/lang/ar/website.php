@@ -212,7 +212,7 @@ return [
 		
 	'Last Name'=>'اسم العائلة',
 		
-	'Email Adrress'=>'البريد الإلكتروني عنوان',
+	'Email Address'=>'البريد الإلكتروني عنوان',
 		
 	'Please enter your valid email address'=>' الرجاء إدخال عنوان بريدك الإلكتروني الصحيح.',
 		

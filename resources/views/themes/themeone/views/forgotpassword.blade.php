@@ -40,9 +40,9 @@
 
 			<div class="row my-3 d-flex justify-content-center">
 				<!--Facebook-->
-				<a href="login/facebook" class="btn btn-light facebook"><i class="fa fa-facebook"></i>@lang('website.Login with Facebook')</a>
+				<a href="{{Url::to('login/facebook')}}" class="btn btn-light facebook"><i class="fa fa-facebook"></i>@lang('website.Login with Facebook')</a>
 				<!--Google +-->
-				<a href="login/google" class="btn btn-light google"><i class="fa fa-google-plus"></i>@lang('website.Login with Google')</a>
+				<a href="{{Url::to('login/google')}}" class="btn btn-light google"><i class="fa fa-google-plus"></i>@lang('website.Login with Google')</a>
 			</div>
 		</div>
 
@@ -65,8 +65,9 @@
 			</h5>
 			<p>@lang('website.Please Enter your email to recover your password')</p>
 
-			<form name="signup" enctype="multipart/form-data" class="form-validate"  action="{{ URL::to('/processPassword')}}" method="post">
-
+			<form name="signup" enctype="multipart/form-data" class="form-validate"  action="{{URL::to('/password/email')}}" method="post">
+				<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+				<input type="hidden" name="_token" value="{{csrf_token()}}">
 				<div class="form-group row">
 					<label for="staticEmail" class="col-sm-3 col-form-label">@lang('website.Email')</label>
 					<div class="col-sm-9">
