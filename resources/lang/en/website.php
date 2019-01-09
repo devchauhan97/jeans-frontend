@@ -492,7 +492,9 @@ return [
 	'This field is required'=>'This field is required.',
 		
 	'Forgot Password'=>'Forgot Password?',
-		
+
+	'Reset Password'=>'Reset Password',
+		  
 	'Please enter your password and should be at least 6 characters long'=>'Please enter your password and should be at least 6 characters long.',
 		
 	'New Password'=>'New Password',
@@ -564,7 +566,7 @@ return [
 	'Password has been sent to your email address'=>'Password has been sent to your email address.',
 		
 	'Email address does not exist'=>'Email address does not exist.',
-		
+	'Invalid token' 		=>'Invalid Token'	,
 	'Add to Cart'=>'Add to Cart',
 		
 	'Added'=>'Added!',

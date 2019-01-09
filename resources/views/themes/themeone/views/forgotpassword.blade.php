@@ -64,28 +64,22 @@
 				@lang('website.Forgot Password')
 			</h5>
 			<p>@lang('website.Please Enter your email to recover your password')</p>
-
 			<form name="signup" enctype="multipart/form-data" class="form-validate"  action="{{URL::to('/password/email')}}" method="post">
 				<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 				<input type="hidden" name="_token" value="{{csrf_token()}}">
 				<div class="form-group row">
 					<label for="staticEmail" class="col-sm-3 col-form-label">@lang('website.Email')</label>
 					<div class="col-sm-9">
-						<input type="email" name="email" id="email" class="form-control email-validate">
+						<input type="email" name="email" id="email" class="form-control">
 						<span class="help-block error-content" hidden>@lang('website.Please enter your valid email address')</span>
 					</div>
 				</div>
-				
                 <div class="button text-right">
                 	<a href="{{ URL::to('/login')}}" class="btn btn-link ml-1 mr-4">@lang('website.Login')</a>
                 	<button type="submit" class="btn btn-dark">@lang('website.Send')</button>
                 </div>
-
-
-                
-			</form>
-
-		</div>
+ 			</form>
+ 		</div>
 	</div>
 </div> 
 </div>

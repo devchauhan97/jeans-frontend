@@ -16,9 +16,11 @@ class SendResetPassword extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public $users;
+
+    public function __construct($users)
     {
-        //
+        $this->users = $users;
     }
 
     /**
@@ -40,10 +42,17 @@ class SendResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
+        // //return (new MailMessage)
+        //             // ->line('The introduction to the notification.')
+        //             // ->action('Notification Action', url('/'))
+        //             // ->line('Thank you for using our application!');
+        // dd($this->users);
+       // dd($notifiable->token);
+        $url = url('/password/reset/'.$notifiable->token);
+  
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                ->subject('Test')
+                ->markdown('mail.recoverPassword',['user'=> $this->users,'url'=>$url]);
     }
 
     /**

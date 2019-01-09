@@ -31,11 +31,11 @@ use Illuminate\Http\Request;
 
 use Illuminate\Routing\Controller;
 //for Carbon a value 
-use Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Redirect;
 use Session;
 use Lang;
-use App\Signup;
+ 
 use App\Basket;
 use App\Device;
 use App\Customer;
@@ -46,8 +46,13 @@ use App\Product;
 use App\LikedProduct;
 //email
 use Illuminate\Support\Facades\Mail;
-use App\Http\Requests\CustomerPasswordUpdateRequest;
+//use Illuminate\Notifications\Notification;
+
+use App\PasswordReset;
 use App\Http\Requests\CustomerSignupRequest;
+
+use App\Http\Requests\CustomerPasswordUpdateRequest;
+use App\Http\Requests\CustomerLoginRequest;
 
 class CustomersController extends DataController
 {
@@ -63,110 +68,98 @@ class CustomersController extends DataController
      *
      * @return \Illuminate\Http\Response
      */
-	
 	//signup 
-	public function signup(Request $request){	
-		if(auth()->guard('customer')->check()){
+	public function signup(Request $request) {	
+ 
+		if(auth()->guard('customer')->check()) {
+
 			return redirect('/');
-		}
-		else{
+
+		} else {
+
 			$title = array('pageTitle' => Lang::get("website.Sign Up"));
 			$result = array();						
 			$result['commonContent'] = $this->commonContent();		
 			return view("signup", $title)->with('result', $result);   
 		} 			
 	}
-	
 	//login 
-	public function login(Request $request){	
+	public function login(Request $request) {
+
 		if(auth()->guard('customer')->check()){
+
 			return redirect('/');
-		}
-		else{
+		} else {
 			
 			$title = array('pageTitle' => Lang::get("website.Login"));
 			$result = array();				
 			$result['commonContent'] = $this->commonContent();		
 			return view("login", $title)->with('result', $result);   
 		} 		
-				
+	}
+	//login LoginRequest
+	public function customerLogin(CustomerLoginRequest $request) {
+		$old_session = Session::getId();
+
+	 	$result = array();		
+		//check authentication of email and password
+		$customerInfo = array("email" => $request->log_email, "password" => $request->log_password);
+		
+		if(auth()->guard('customer')->attempt($customerInfo)) {
+
+			$customer = auth()->guard('customer')->user();
+			/**
+			*update session cart
+			**/
+			$this->makeSessionCart($customer,$old_session);
+			$result['customers'] = DB::table('customers')->where('customers_id', $customer->customers_id)->get();					
+			return redirect()->intended('/')->with('result', $result);
+
+ 		} else {
+
+ 			return redirect('login')->with('loginError',Lang::get("website.Email or password is incorrect"));
+ 			
+ 		}
 	}
 	
-	//login
-	public function customerLogin(Request $request) {
-	// dd($request);
-		$old_session = Session::getId();		
-		$result = array();		
+	public function makeSessionCart($customer,$old_session) {
+
+		//set session				
+		session(['customers_id' => $customer->customers_id]);
 		
-		$validator = Validator::make(
-			array(
-					'log_email'    => $request->log_email,
-					'log_password' => $request->log_password
-				), 
-			array(
-					'log_email'    => 'required | email',
-					'log_password' => 'required',
-				),
-			array(
-					'log_email.required'=>'Email must be required!',
-					'log_email.email'=>'Email must be valid!',
-					'log_password.required'=>'Password must be required!'
-			    )
-		       );
- 		//validate 
-		if($validator->fails()) {
-
-			return redirect('login')->withErrors($validator)->withInput();
-
-		} else {
-
-			//check authentication of email and password
-			$customerInfo = array("email" => $request->log_email, "password" => $request->log_password);
-			
-			if(auth()->guard('customer')->attempt($customerInfo)) {
-
-				$customer = auth()->guard('customer')->user();
-				
-				//set session				
-				session(['customers_id' => $customer->customers_id]);
-				
-				//cart 				
-				$cart = Basket::where([
+		//cart 				
+		$cart = Basket::where([
 					['session_id', '=', $old_session],
 				])->get();
-				
-				if(count($cart)>0) {					
-					foreach($cart as $cart_data) {						
-						$exist = Basket::where([
-							['customers_id', '=', $customer->customers_id],
-							['products_id', '=', $cart_data->products_id],
-							['is_order', '=', '0'],
-						])->delete();
-					}									
-				}
-				
-				Basket::where('session_id','=', $old_session)->update([
+		
+		if(count($cart)>0) {
+
+			foreach($cart as $cart_data) {
+
+				$exist = Basket::where([
+					['customers_id', '=', $customer->customers_id],
+					['products_id', '=', $cart_data->products_id],
+					['is_order', '=', '0'],
+				])->delete();
+
+			}	
+
+		}
+		
+		Basket::where('session_id','=', $old_session)->update([
 					'customers_id'	=>	$customer->customers_id
-					]);
+				]);
 
-				BasketAttribute::where('session_id','=', $old_session)->update([
-					'customers_id'	=>	$customer->customers_id
-					]);
-				//insert device id
-				if(!empty(session('device_id'))) {					
-					DB::table('devices')->where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
-				}
-						
-				$result['customers'] = DB::table('customers')->where('customers_id', $customer->customers_id)->get();					
-				return redirect()->intended('/')->with('result', $result);
+		BasketAttribute::where('session_id','=', $old_session)->update([
+				'customers_id'	=>	$customer->customers_id
+				]);
+		//insert device id
+		if(!empty(session('device_id'))) {
 
-			} else {
-
-				return redirect('login')->with('loginError',Lang::get("website.Email or password is incorrect"));
-			}
+			DB::table('devices')->where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
 		}
 	}
-	
+
 	public function profile(Request $request) {
 
 		$title = array('pageTitle' => Lang::get("website.Profile"));
@@ -220,12 +213,7 @@ class CustomersController extends DataController
 		$old_session = Session::getId();
 		
 		$customers_id =   auth()->guard('customer')->user()->customers_id;
-
-		//$updated_at =   date('y-m-d h:i:s');
-
-		//$customers_info_date_account_last_modified 	=   date('y-m-d h:i:s');	
-		  
-
+ 
 		$userData = Customer::where('customers_id', $customers_id)->update(['password'			=>  Hash::make($request->new_password)]);
 
 		$user = Customer::where('customers_id', $customers_id)->get();
@@ -235,43 +223,7 @@ class CustomersController extends DataController
 		
 
 		if(Auth::guard('customer')->attempt($customerInfo)) {
-
-			//$customer = Auth::User();
-			//set session
-
-			//session(['customers_id' => $customer->customers_id]);
-/*
-			//cart 
-			$cart = Basket::where([
-				['session_id', '=', $old_session],
-			])->get();
-
-			if(count($cart)>0){
-
-				foreach($cart as $cart_data){
-
-					$exist = Basket::where([
-						['customers_id', '=', $customer->customers_id],
-						['products_id', '=', $cart_data->products_id],
-						['is_order', '=', '0'],
-					])->delete();
-
-				}
-
-			}
-
-			Basket::where('session_id','=', $old_session)->update([
-				'customers_id'	=>	$customer->customers_id
-				]);
-
-			BasketAttribute::where('session_id','=', $old_session)->update([
-				'customers_id'	=>	$customer->customers_id
-				]);
-
-
-			$result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();*/	
-			
-			
+ 			
 			$message = Lang::get("website.Password has been updated successfully");
 			return redirect()->back()->with('success', $message);
 		}
@@ -283,6 +235,7 @@ class CustomersController extends DataController
 		$message = Lang::get("website.Password has been updated successfully");
 		
 	}
+	
 	//logout
 	public function logout(REQUEST $request){
 
@@ -314,7 +267,7 @@ class CustomersController extends DataController
 		$old_session = Session::getId();
 		
 		$user =Socialite::driver($social)->stateless()->user();
-		$password = $this->createRandomPassword();	
+		$password = createRandomPassword();	
 		
 		// OAuth Two Providers
 		$token = $user->token;
@@ -437,35 +390,7 @@ class CustomersController extends DataController
 
 				$customer = auth()->guard('customer')->user();
 				//set session				
-				session(['customers_id' => $customer->customers_id]);
-				//get-current-cart 				
-				$cart = Basket::where([
-						['session_id', '=', $old_session],
-				])->get();
-				
-				if( count($cart) > 0 ) {
-
-					foreach($cart as $cart_data) {
-
-						$exist = Basket::where([
-							['customers_id', '=', $customer->customers_id],
-							['products_id', '=', $cart_data->products_id],
-							['is_order', '=', '0'],
-						])->delete();
-					}									
-				}
-				
-				Basket::where('session_id','=', $old_session)->update([
-					'customers_id'	=>	$customer->customers_id
-					]);
-
-				BasketAttribute::where('session_id','=', $old_session)->update([
-					'customers_id'	=>	$customer->customers_id
-					]);
-				//insert device id
-				if(!empty(session('device_id'))) {					
-					Device::where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
-				}
+				$this->makeSessionCart($customer,$old_session);
 						
 				// $result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();					
 				return redirect()->intended('/')->with('result', $user_data);
@@ -480,13 +405,7 @@ class CustomersController extends DataController
 				->addTextHeader('x-mailgun-native-send', 'true');	
 			});*/
     }
-	
-	//create random password for social links
-	function createRandomPassword() { 
-		$pass = substr(md5(uniqid(mt_rand(), true)) , 0, 8);	
-		return $pass; 
-	}
-	
+	 
 	// likeProduct 
 	public function likeMyProduct(Request $request){		
 		
@@ -610,69 +529,6 @@ class CustomersController extends DataController
 		return view("wishlistproducts")->with('result', $result);	
 		
 	}
-	
-	//forgotPassword
-	public function forgotPassword(){
-		if(auth()->guard('customer')->check()){
-			return redirect('/');
-		}
-		else{
-			
-			$title = array('pageTitle' => Lang::get("website.Forgot Password"));
-			$result = array();			
-			$result['commonContent'] = $this->commonContent();
-			return view("forgotpassword", $title)->with('result', $result);   
-		} 
-	}
-	
-	//forgotPassword
-	public function processPassword(Request $request) {
-
-		$title = array('pageTitle' => Lang::get("website.Forgot Password"));
-		
-		$password = $this->createRandomPassword();
-		
-		$email =   $request->email;
-
-		$postData = array();
-				
-		//check email exist
-		$existUser = Customer::where('email', $email)->first();	
-
-		if( count($existUser)>0 ) {
-
-			Customer::where('email', $email)->update([
-					'password'	=>	Hash::make($password)
-					]);
-
-			$existUser->password = $password;
-			$token =str_random(60);
-			DB::table('password_resets')->insert([
-		        'email' => $request->email,
-		        'token' => $token, //change 60 to any length you want
-		        //'created_at' => Carbon::now()
-		    ]);
-
-			$this->notify(new ResetPasswordNotification($token));
-
-			//$myVar = new AlertController();
-			//$alertSetting = $myVar->forgotPasswordAlert($existUser);
-			
-
-			return redirect('login')->with('success', Lang::get("website.Password has been sent to your email address"));
-		}else{	
-			return redirect('forgotPassword')->with('error', Lang::get("website.Email address does not exist"));
-		}
-		
-	}
-	
-	//forgotPassword
-	public function recoverPassword(){
-		$title = array('pageTitle' => Lang::get("website.Forgot Password"));
-		$user = DB::table('')->where('','')->get();
-		return view("recoverPassword", $title)->with('result', $result); 
-	}
-	
 	//generate random password
 	function subscribeNotification(Request $request) {
 			
@@ -735,75 +591,57 @@ class CustomersController extends DataController
 
 		print 'success';	
 	}
-	
-	
-	public function customerSignup(CustomerSignupRequest $request)	{
+
+	public function store(CustomerSignupRequest $request) {
+
+		$password = $request->password;
+
+		$data =[				
+					'customers_firstname' 	=> $request->first_name,
+					'customers_lastname' 	=> $request->last_name,
+					'email' 				=> $request->email,
+					'password' 				=> Hash::make($password),				
+				];
+
+		if($request->hasFile('picture') and in_array($request->picture->extension(), $extensions)) {
+
+			$image = $request->picture;
+			$fileName = time().'.'.$image->getClientOriginalName();
+			$image->move(storage_path('app/public').'/user_profile/', $fileName);
+			$customers_picture = 'user_profile/'.$fileName; 
+			storeImage($customers_picture);
+			$data['customers_picture'] = $customers_picture;
+		} 
+
+		$created = Customer::insert($data);
+		return $this->customerSignup($request);
+	}
+
+	public function customerSignup($request)	{
 
 		$old_session = Session::getId();
-				
-		$email = $request->email;
-		$password = $request->password;
-		 	
-		$created = Signup::insert([				
-						'customers_firstname' => $request->first_name,
-						'customers_lastname' => $request->last_name,
-						'email' => $request->email,
-						'password' => Hash::make($password),				
-					]);
-				 
-		if($created) {					
-			//check authentication of email and password
-			$customerInfo = array("email" => $request->email, "password" => $request->password);
-								
-			if(auth()->guard('customer')->attempt($customerInfo)) {
+		  
+		//check authentication of email and password
+		$customerInfo = array("email" => $request->email, "password" => $request->password);
 
-				$customer = auth()->guard('customer')->user();
-				//set session
-				session(['customers_id' => $customer->customers_id]);
-				//cart 
-				$cart = Basket::where([
-							['session_id', '=', $old_session],
-						])->get();
+		if(auth()->guard('customer')->attempt($customerInfo)) {
+		 						
+			$customer = auth()->guard('customer')->user();
 
-				if(count($cart)>0) {
+			$this->makeSessionCart($customer,$old_session);
 
-					foreach($cart as $cart_data) {
-						$exist =  Basket::where([
-							['customers_id', '=', $customer->customers_id],
-							['products_id', '=', $cart_data->products_id],
-							['is_order', '=', '0'],
-						])->delete();
-					}
-				}
+			//$customers = Customer::where('customers_id', $customer->customers_id)->get();
 
-				Basket::where('session_id','=', $old_session)->update([
-					'customers_id'	=>	$customer->customers_id
-					]);
-
-				 Basket::where('session_id','=', $old_session)->update([
-					'customers_id'	=>	$customer->customers_id
-					]);
-				//insert device id
-				if(!empty(session('device_id'))) {					
-					Device::where('device_id', session('device_id'))->update(['customers_id'	=>	$customer->customers_id]);		
-				}
-				
-				$customers = Signup::where('customers_id', $customer->customers_id)->get();
-				$result['customers'] = $customers;
-				//email and notification			
-				//$myVar = new AlertController();
-				//$alertSetting = $myVar->createUserAlert($customers);
-				return redirect()->intended('/')->with('result', $result);
-			} else {
-
-				return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
-			}
+			//$result['customers'] = $customers;
+			//email and notification			
+			//$myVar = new AlertController();
+			//$alertSetting = $myVar->createUserAlert($customers);
+			return redirect()->intended('/')->with('result');
 
 		} else {
 
-			return redirect('/signup')->with('error', Lang::get("website.something is wrong"));
+			return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
 		}
-		 
-	}
+  	}
 	
 }

@@ -179,7 +179,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Karlomikus\Theme\ThemeServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
-
+        
     ],
 
     /*

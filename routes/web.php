@@ -103,7 +103,15 @@ Route::post('/language/', array(
 	Route::get('/removeCoupon/{id}', 'CartController@removeCoupon');
 	
 	
+	/*
+	|--------------------------------------------------------------------------
+	| customer login Controller Routes
+	|--------------------------------------------------------------------
+	*/
 	
+	Route::get('/login', 'CustomersController@login');
+	Route::post('/customer/login', 'CustomersController@customerLogin');
+	Route::get('/logout', 'CustomersController@logout');
 	/*
 	|--------------------------------------------------------------------------
 	| customer registrations Controller Routes
@@ -113,29 +121,33 @@ Route::post('/language/', array(
 	| facebook login , google login, shipping address etc.
 	|
 	*/
-	
-	Route::get('/login', 'CustomersController@login');
 	Route::get('/signup', 'CustomersController@signup');
-	Route::post('/customer/login', 'CustomersController@customerLogin');
-	Route::get('/logout', 'CustomersController@logout');
-	Route::post('/customer/signup', 'CustomersController@customerSignup');
-	Route::get('/forgot/password', 'CustomersController@forgotPassword');
-	Route::get('/recoverPassword', 'CustomersController@recoverPassword');
-	Route::post('/password/email', 'CustomersController@processPassword');
-	
-	
+	Route::post('/customer/signup', 'CustomersController@store');
+
 	Route::get('login/{social}', 'CustomersController@socialLogin');
 	Route::get('callback/{social}', 'CustomersController@handleSocialLoginCallback');
 	Route::post('/commentsOrder', 'OrdersController@commentsOrder');
-	
-	//zones
+	/*
+	|--------------------------------------------------------------------------
+	| customer forget password and reset password
+	|
+	*/
+	Route::get('/forgot/password', 'CustomerForgotPasswordController@forgotPwd');
+	Route::post('/password/email', 'CustomerForgotPasswordController@passwordEmail');
+	Route::get('/password/reset/{token}', 'CustomerForgotPasswordController@passwordResetToken');
+	Route::post('update/reset/password', 'CustomerForgotPasswordController@updateResetPassword');
+	/*
+	|------------------------------------------------------------------- 
+	| zones
+	|
+	*/
 	Route::get('/zones', 'ShippingAddressController@ajaxZones');
-	
+
 	//likeMyProduct
 	Route::post('likeMyProduct', 'CustomersController@likeMyProduct');
 	
 	/*
-	|--------------------------------------------------------------------------
+	|--------------------------------------------------------------------
 	| WEbiste auth path Controller Routes
 	|--------------------------------------------------------------------------
 	|

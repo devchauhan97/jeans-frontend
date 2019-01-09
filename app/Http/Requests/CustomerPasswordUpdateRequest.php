@@ -25,9 +25,9 @@ class CustomerPasswordUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'old_password' => 'required',
-            'new_password' => 'required',
-            'confirm_password' => 'required|same:confirm_password'
+            'old_password'      => 'required',
+            'new_password'      => 'required',
+            'confirm_password'  => 'required|same:confirm_password'
         ];
     }
 

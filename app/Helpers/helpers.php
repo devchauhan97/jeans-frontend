@@ -3,6 +3,12 @@
  
 use Illuminate\Support\Facades\Storage;
  
+ //create random password for social links
+function createRandomPassword() { 
+    $pass = substr(md5(uniqid(mt_rand(), true)) , 0, 8);    
+    return $pass; 
+}
+    
 function store(Request $request)
 {
     if($request->hasFile('newImage')) {

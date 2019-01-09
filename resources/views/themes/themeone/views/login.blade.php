@@ -23,56 +23,53 @@
 			<div class="col-md-6 sign-in-left">
 				<div class="sign-in-inner">
 					<h3 class="text-center">Sign In</h3>
-					  @if(Session::has('loginError'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                    <span class="sr-only">@lang('website.Error'):</span>
-                    {!! session('loginError') !!}
-                    
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    	<span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                   @endif
-					<form class="sign-in form-validate" name="signup" enctype="multipart/form-data"  action="{{ URL::to('/customer/login')}}" method="post">
+			  	@if(Session::has('loginError'))
+	                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+	                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+	                    <span class="sr-only">@lang('website.Error'):</span>
+	                    {!! session('loginError') !!}
+	                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+	                    	<span aria-hidden="true">&times;</span>
+	                    </button>
+	                </div>
+                @endif
+					<form class="sign-in" name="signup" enctype="multipart/form-data"  action="{{ URL::to('/customer/login')}}" method="post">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 						<div class="form-group">
 							<label>Email Address:</label>
-							<input type="email" name="log_email" id="log_email" class="" placeholder="Enter you mail id" value="{{old('log_email')}}">
+							<input type="email" name="log_email" id="log_email" class="form-control" placeholder="Enter you mail id" value="{{old('log_email')}}">
 							<small class="text-danger">{{ $errors->first('log_email') }}</small>
 						</div>
 						<div class="form-group">
 							<label>Password:</label>
-							<input type="password" name="log_password" id="log_password" class="" placeholder="Enter you password">
+							<input type="password" name="log_password" id="log_password" class="form-control" placeholder="Enter you password">
 							<small class="text-danger">{{ $errors->first('log_password') }}</small>
 						</div>
 						<button class="sign-btn lgbtn" type="submit" name="signin">Sign In</button>
 					</form>
-						<a href="{{Url::to('forgot/password')}}" class="forgot-psd">Forgot your password?</a>
-						<div class="signin-divide"><span>Or</span></div>
-						@if($result['commonContent']['setting'][61]->value==1)
-				<!--Google +-->
+					<a href="{{Url::to('forgot/password')}}" class="forgot-psd">Forgot your password?</a>
+					<div class="signin-divide"><span>Or</span></div>
+					@if( $result['commonContent']['setting'][61]->value==1 )
+					<!--Google +-->
 						<a href="login/google" class="google-btn lgbtn"><i class="fa fa-google-plus"></i>
 	                    Sign in With Google
 	                    </a>
-	                     @endif
-						<div class="signin-divide"><span>Or</span></div>
-						<!--Facebook-->
-		                @if($result['commonContent']['setting'][2]->value==1)
+                     @endif
+					<div class="signin-divide"><span>Or</span></div>
+					<!--Facebook-->
+	                @if( $result['commonContent']['setting'][2]->value==1 )
 		                <a href="login/facebook"  class="facebook-btn lgbtn"><i class="fa fa-facebook"></i>
 						
 		                Sign in With Facebook
 		                </a>
-		                @endif
-		               
-					
-				</div>
+	                @endif
+		        </div>
 			</div>
 			<div class="col-md-6 sign-in-right">
 				<div class="sign-in-inner">
 					<h3 class="text-center">New to Jeans</h3>		
 				
-					@if(Session::has('error'))
+				@if(Session::has('error'))
 					<div class="alert alert-danger alert-dismissible fade show" role="alert">
 						  <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
 						  <span class="sr-only">@lang('website.Error'):</span>
@@ -139,6 +136,17 @@
 							<span class="help-block error-content" hidden>@lang('website.Please re-enter your password')</span>
 							<small class="text-danger">{{ $errors->first('re_password') }}</small>
 						</div>
+						 
+						<!-- <div >
+							<label class="form-check-label">
+								<input class="form-check-input" type="checkbox">@lang('website.Creating an account means you are okay with our') 
+								 @if(!empty($result['commonContent']['pages'][3]->slug))
+								<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][3]->slug)}}">@endif @lang('website.Terms and Services')
+								@if(!empty($result['commonContent']['pages'][3]->slug))</a>@endif, @if(!empty($result['commonContent']['pages'][1]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][1]->slug)}}">@endif @lang('website.Privacy Policy')@if(!empty($result['commonContent']['pages'][1]->slug))</a> @endif and @if(!empty($result['commonContent']['pages'][2]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][2]->slug)}}">@endif @lang('website.Refund Policy') @if(!empty($result['commonContent']['pages'][3]->slug))</a>@endif.
+							</label>
+							<span class="help-block error-content" hidden>@lang('website.Please accept our terms and conditions')</span>
+						</div> -->
+	                         
 						<button class="sign-btn register lgbtn" type="submit">Register</button>
 					</form>
 				</div>

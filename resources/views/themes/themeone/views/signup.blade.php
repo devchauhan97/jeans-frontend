@@ -39,18 +39,6 @@
 				<!-- <p>By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.</p> -->
 
 				<hr class="featurette-divider">
-				@if( count($errors) > 0)
-					@foreach($errors->all() as $error)
-						<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                            <span class="sr-only">@lang('website.Error'):</span>
-                            {{ $error }}
-                          	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-						</div>
-					 @endforeach
-				@endif
 
 				@if(Session::has('error'))
 					<div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -76,14 +64,12 @@
 					</div>
 				@endif
 
-				<form name="signup" enctype="multipart/form-data" class="form-validate" action="{{ URL::to('/signupProcess')}}" method="post">
-                
+				<form name="signup" enctype="multipart/form-data" class="form-validate" action="{{ URL::to('/customer/signup')}}" method="post">
+                	<input type="hidden" name="_token" value="{{csrf_token()}}">
                 	<div class="form-group row justify-content-center">
 						
                         <div class="uploader">
                         	<h5 class="title-h5">@lang('website.Upload Profile Photo')</h5>
-                            
-                            
                             <div class="upload-picture">
                                 <div class="uploaded-image" id="uploaded_image"></div>
                                 <img class="upload-choose-icon" src="{{asset('').'images/default.png'}}" />
@@ -91,79 +77,80 @@
                                 	<input name="picture" id="userImage" type="file" class="inputFile" onChange="showPreview(this);" />
                                 </div>
                             </div>
-
-
-                        </div>
-						<!--<label for="picture" class="col-sm-4 col-form-label">@lang('website.Picture')</label>
-						<div class="col-sm-8">
-							<input type="file" class="form-control-file" name="picture" id="picture">
-						</div>-->
-
+						</div>
 					</div>
-                    
-					<div class="form-group row">
+                    <div class="form-group row">
 						<label for="staticEmail" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.First Name')</label>
 						<div class="col-sm-8">
-							<input type="text" name="firstName" id="firstName" class="form-control field-validate" value="{{ old('firstName') }}">
+							<input type="text" name="first_name" id="first_name" class="form-control" value="{{ old('first_name') }}">
 							<span class="help-block error-content" hidden>@lang('website.Please enter your first name')</span> 
+							<small class="text-danger">{{ $errors->first('first_name') }}</small>
 						</div>
 					</div>
 					<div class="form-group row">
-						<label for="inputPassword" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.Last Name')</label>
+						<label for="inputPassword" class="col-sm-4 col-form-label"> @lang('website.Last Name')</label>
 						<div class="col-sm-8">
-							<input type="text" name="lastName" id="lastName" class="form-control field-validate"  value="{{ old('lastName') }}">
+							<input type="text" name="last_name" id="last_name" class="form-control"  value="{{ old('last_name') }}">
 							<span class="help-block error-content" hidden>@lang('website.Please enter your last name')</span> 
+							<small class="text-danger">{{ $errors->first('last_name') }}</small>
 						</div>
 					</div>
 					<hr class="featurette-divider">
 					<div class="form-group row">
 						<label for="inputPassword" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.Email Address')</label>
 						<div class="col-sm-8">
-							<input type="text" name="email" id="email" class="form-control email-validate" value="{{ old('email') }}">
+							<input type="text" name="email" id="email" class="form-control" value="{{ old('email') }}">
 							<span class="help-block error-content" hidden>@lang('website.Please enter your valid email address')</span>
+							<small class="text-danger">{{ $errors->first('email') }}</small>
 						</div>
 					</div>
 					<div class="form-group row">
 						<label for="inlineFormCustomSelect" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.Gender')</label>
 						<div class="col-sm-8">
-							<select class="custom-select field-validate" name="gender" id="inlineFormCustomSelect">
+							<select class="custom-select " name="gender" id="inlineFormCustomSelect">
 								<option selected value="">@lang('website.Choose...')</option>
-								<option value="0" @if(!empty(old('gender')) and old('gender')==0) selected @endif)>@lang('website.Male')</option>
-								<option value="1" @if(!empty(old('gender')) and old('gender')==1) selected @endif>@lang('website.Female')</option>
+								<option value="Male" @if(!empty(old('gender')) and old('gender')==0) selected @endif)>@lang('website.Male')</option>
+								<option value="1" @if(!empty(old('gender')) and old('gender')== 'Female') selected @endif>@lang('website.Female')</option>
 							</select>
 							<span class="help-block error-content" hidden>@lang('website.Please select your gender')</span>
+							<small class="text-danger">{{ $errors->first('gender') }}</small>
 						</div>
 					</div>
-					
-
+					 
 					<div class="form-group row">
 						<label for="inputPassword4" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.Password')</label>
 						<div class="col-sm-8">
 							<input type="password" class="form-control password" name="password" id="password">
 							<span class="help-block error-content" hidden>@lang('website.Please enter your password')</span>
+							<small class="text-danger">{{ $errors->first('password') }}</small>
+							<ul class="req-char">
+							<li>8 characters minimum</li>
+							<li>At least one letter</li>
+							<li>At least one number</li>
+						</ul>
 						</div>
-				  	
-					</div>
+				  	</div>
 					<div class="form-group row">					
 						<label for="inputPassword5" class="col-sm-4 col-form-label"><strong>*</strong>@lang('website.Confirm Password')</label>
-						<div class="col-sm-8 re-password-content">
-							<input type="password" class="form-control password" name="re_password" id="re_password">
+						<div class="col-sm-8">
+							<input type="password" class="form-control" name="re_password" id="re_password">
 							<span class="help-block error-content" hidden>@lang('website.Please re-enter your password')</span>
 							<span class="help-block error-content-password" hidden>@lang('website.Password does not match the confirm password')</span>
+							<small class="text-danger">{{ $errors->first('re_password') }}</small>
 						</div>				  	
 					</div>
-					<div class="form-group row">
+					<!-- <div class="form-group row">
 						<label class="col-sm-4 col-form-label"></label>
 						<div class="col-sm-8">
 							<div class="form-check checkbox-parent">
 								<label class="form-check-label">
-									<input class="form-check-input checkbox-validate" type="checkbox">@lang('website.Creating an account means you are okay with our')  @if(!empty($result['commonContent']['pages'][3]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][3]->slug)}}">@endif @lang('website.Terms and Services')@if(!empty($result['commonContent']['pages'][3]->slug))</a>@endif, @if(!empty($result['commonContent']['pages'][1]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][1]->slug)}}">@endif @lang('website.Privacy Policy')@if(!empty($result['commonContent']['pages'][1]->slug))</a> @endif and @if(!empty($result['commonContent']['pages'][2]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][2]->slug)}}">@endif @lang('website.Refund Policy') @if(!empty($result['commonContent']['pages'][3]->slug))</a>@endif.
+									<input class="form-check-input" type="checkbox">@lang('website.Creating an account means you are okay with our')  @if(!empty($result['commonContent']['pages'][3]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][3]->slug)}}">@endif @lang('website.Terms and Services')@if(!empty($result['commonContent']['pages'][3]->slug))</a>@endif, @if(!empty($result['commonContent']['pages'][1]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][1]->slug)}}">@endif @lang('website.Privacy Policy')@if(!empty($result['commonContent']['pages'][1]->slug))</a> @endif and @if(!empty($result['commonContent']['pages'][2]->slug))<a href="{{ URL::to('/page?name='.$result['commonContent']['pages'][2]->slug)}}">@endif @lang('website.Refund Policy') @if(!empty($result['commonContent']['pages'][3]->slug))</a>@endif.
 								</label>
 								<span class="help-block error-content" hidden>@lang('website.Please accept our terms and conditions')</span>
 							</div>
                             
 						</div>
-					</div>
+					</div> -->
 					<div class="button">
                     	<button type="submit" class="btn btn-dark pull-right">@lang('website.Sign Up')</button>
                     </div>
