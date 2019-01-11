@@ -1,9 +1,9 @@
 <!-- scripts -->
-<script src="{!! asset('js/app.js') !!}"></script>
-<script src="{!! asset('js/jquery-ui.js') !!}"></script>
+<script src="{!! asset('public/js/app.js') !!}"></script>
+<script src="{!! asset('public/js/jquery-ui.js') !!}"></script>
 
 <!-- owl carousel -->
-<script src="{!! asset('js/owl.carousel.js') !!}"></script>
+<script src="{!! asset('public/js/owl.carousel.js') !!}"></script>
 
 <!--- google map-->
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&key=AIzaSyCQq_d3bPGfsIAlenXUG5RtZsKZKzOmrMw"></script>
@@ -91,7 +91,7 @@ jQuery(document).ready(function(e) {
 </script> 
 
 
-<script src="{!! asset('js/stripe_card.js') !!}" data-rel-js></script> 
+<script src="{!! asset('public/js/stripe_card.js') !!}" data-rel-js></script> 
 
 <script type="application/javascript">
 (function() {
@@ -1342,12 +1342,12 @@ jQuery(document).on('focusout','.qty',function(){
 		jQuery('#loader').css('display','flex');
 		var address_id = jQuery(this).attr('address_id');
 		jQuery.ajax({
-			url: '{{ URL::to("/delete-address")}}',
+			url: '{{ URL::to("/delete/address")}}',
 			type: "POST",
-			data: '&address_id='+address_id,
+			data: '&address_id='+address_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),
 			
 			success: function (res) {
-				window.location = 'shipping/address?action=detele';
+				window.location = 'address?action=detele';
 			},
 		});
 	});

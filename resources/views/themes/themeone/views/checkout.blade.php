@@ -3,14 +3,14 @@
 @if(!empty(session("theme")))
         <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @else
-        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+        <link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
-<link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
-<link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
+<link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
   
 @endsection
 @section('content')
@@ -124,7 +124,8 @@
                       </div>
                       
                       <div class="tab-pane fade @if(session('step') == 1) show active @endif" id="pills-billing" role="tabpanel" aria-labelledby="billing-tab">
-                        <form name="signup" enctype="multipart/form-data" action="{{ URL::to('/checkout_billing_address')}}" method="post">
+                        <form name="signup" enctype="multipart/form-data" action="{{ URL::to('/checkout/billing/address')}}" method="post">
+                          <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <div class="form-row">
                           <div class="form-group col-md-6">
                             <label for="firstName">@lang('website.First Name')</label>
@@ -196,7 +197,8 @@
                 <div class="tab-pane fade @if(session('step') == 2) show active @endif" id="pills-shipping-methods" role="tabpanel" aria-labelledby="shipping-methods-tab">
                     <div class="shipping-methods">
                         <p class="title">@lang('website.Please select a prefered shipping method to use on this order')</p>
-                    <form name="shipping_mehtods" method="post" id="shipping_mehtods_form" enctype="multipart/form-data" action="{{ URL::to('/checkout_payment_method')}}">
+                    <form name="shipping_mehtods" method="post" id="shipping_mehtods_form" enctype="multipart/form-data" action="{{ URL::to('/checkout/payment/method')}}">
+                      <!-- <input type="hidden" name="_token" value="{{csrf_token()}}"> -->
                         @if(count($result['shipping_methods'])>0)
                             <input type="hidden" name="mehtod_name" id="mehtod_name">
                             <input type="hidden" name="shipping_price" id="shipping_price">

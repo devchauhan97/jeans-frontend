@@ -30,7 +30,7 @@ use Lang;
 
 //email
 use Illuminate\Support\Facades\Mail;
-
+use App\Http\Requests\AddAddressRequest;
 class ShippingAddressController extends DataController
 {
 	
@@ -50,7 +50,8 @@ class ShippingAddressController extends DataController
      * @return \Illuminate\Http\Response
      */
 	//get all countries
-	public function countries(){
+	public function countries() 
+	{
 		
 		$allCountries = DB::table('countries')->get();	
 		return($allCountries);
@@ -58,7 +59,8 @@ class ShippingAddressController extends DataController
 	}
 	
 	//get all zones
-	public function ajaxZones(Request $request){
+	public function ajaxZones(Request $request) 
+	{
 			
 		$getZones = $this->zones($request->country_id);	
 			
@@ -67,11 +69,12 @@ class ShippingAddressController extends DataController
 	}
 	
 	//get all zones
-	public function zones($country_id){
+	public function zones($country_id)
+	{
 			
 		$zones = DB::table('zones');
 		
-		if(!empty($country_id)){
+		if(!empty($country_id)) {
 			$zones->where('zone_country_id', $country_id);	
 		}
 		
@@ -81,40 +84,40 @@ class ShippingAddressController extends DataController
 	}
 	
 	//get all customer addresses url 
-	public function shippingAddress(Request $request){
+	public function shippingAddress(Request $request)
+	{
 		
 		$title = array('pageTitle' => Lang::get('website.Shipping Address'));
 		$result = array();		
 		$result['commonContent'] = $this->commonContent();
 		
 		//print_r($request->update);
-		if(!empty($request->action)){
+		$result['action'] = null;
+		if(!empty($request->action)) {
 			$result['action'] = $request->action;			
-		}else{
-			$result['action'] = '';
-		}
+		}  
 		
 		// address book		
-		$result['address'] = $this->getShippingAddress($address_id=''); 
+		$result['address']   = $this->getShippingAddress(); 
 		$result['countries'] = $this->countries(); 
 		
+		$result['editAddress'] = '';
+		$result['zones']	   = '';
 		//edit address
-		if(!empty($request->address_id)){
+		if(!empty($request->address_id)) {
+
 			$result['editAddress'] = $this->getShippingAddress($request->address_id); 
 			$result['zones'] = $this->zones($result['editAddress'][0]->countries_id);
 			
-		}else{
-			$result['editAddress'] = '';
-			$result['zones']	   = '';
-		}
+		}  
 		
 		return view("shipping-address", $title)->with('result', $result); 
 					
 	}
 	
 	//get all customer addresses url 
-	public function getShippingAddress($address_id){	
-		
+	public function getShippingAddress($address_id = null)
+	{	
 		$addresses = DB::table('address_book')
 					->leftJoin('countries', 'countries.countries_id', '=' ,'address_book.entry_country_id')
 					->leftJoin('zones', 'zones.zone_id', '=' ,'address_book.entry_zone_id')
@@ -144,15 +147,17 @@ class ShippingAddressController extends DataController
 		if(!empty($address_id)){
 			$addresses->where('address_book_id', '=', $address_id);
 		}
-					$result = $addresses->get();
+		$result = $addresses->get();
 		
 		return $result;
 					
 	}
 	
-	public function addMyAddress(Request $request){
-		
+	public function addAddress(AddAddressRequest $request)
+	{
+ 
 		$customers_id            				=   auth()->guard('customer')->user()->customers_id;
+
 		$entry_firstname            		    =   $request->entry_firstname;
 		$entry_lastname             		    =   $request->entry_lastname;
 		$entry_street_address       		    =   $request->entry_street_address;
@@ -162,8 +167,9 @@ class ShippingAddressController extends DataController
 		$entry_state             				=   $request->entry_state;
 		$entry_country_id             			=   $request->entry_country_id;
 		$entry_zone_id             				=   $request->entry_zone_id;
-		$entry_gender							=   $request->entry_gender;
-		$entry_company							=   $request->entry_company;
+		// $entry_gender							=   $request->entry_gender;
+		// $entry_company							=   $request->entry_company;
+
 		$customers_default_address_id			=   $request->customers_default_address_id;
 							
 		if(!empty($customers_id)){		
@@ -178,8 +184,8 @@ class ShippingAddressController extends DataController
 				'entry_country_id'            	=>   $entry_country_id,
 				'entry_zone_id'             	=>   $entry_zone_id,
 				'customers_id'             		=>   $customers_id,
-				'entry_gender'					=>   $entry_gender,
-				'entry_company'					=>   $entry_company
+				// 'entry_gender'					=>   $entry_gender,
+				//'entry_company'					=>   $entry_company
 			);	
 			
 			//add address into address book
@@ -197,7 +203,7 @@ class ShippingAddressController extends DataController
 	
 	
 	//update shipping address 
-	public function updateAddress(Request $request) {
+	public function updateAddress(AddAddressRequest $request) {
 		
 		$customers_id =   auth()->guard('customer')->user()->customers_id;
 		 

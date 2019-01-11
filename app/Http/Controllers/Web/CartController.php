@@ -617,15 +617,16 @@ class CartController extends DataController
 		$result['commonContent'] = $this->commonContent();
 		return view("cartButton")->with('result', $result);
 	}	
-	
 	//updateCart
-	public function updateCart(Request $request){
+	public function updateCart(Request $request)
+	{
 		
-		if(empty(session('customers_id'))){
+		if(empty(session('customers_id'))) {
 			$customers_id					=	'';
-		}else{
+		} else {
 			$customers_id					=	session('customers_id');
-		}				
+		}
+						
 		$session_id							=	Session::getId();
 		
 		foreach($request->cart as $key=>$customers_basket_id){

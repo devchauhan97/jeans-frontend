@@ -1,16 +1,16 @@
 @extends('layouts')
 @section('customcss')
 @if(!empty(session("theme")))
-        <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+        <link href="{!! asset('public/css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @else
-        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+        <link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
-<link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
-<link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
+<link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('public/css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
   
 @endsection
 @section('content')
@@ -95,7 +95,7 @@
                         	<div class="col-12">
                                     <h5 class="title-h5">@if(!empty($result['editAddress'])) @lang('website.Edit Address') @else @lang('website.Add Address') @endif </h5>
                                     <hr class="featurette-divider">
-                                    <form name="addMyAddress" class="form-validate" enctype="multipart/form-data" action="@if(!empty($result['editAddress'])) {{ URL::to('/update-address')}} @else {{ URL::to('/addMyAddress')}} @endif  " method="post">
+                                    <form name="addMyAddress" class="form-validate" enctype="multipart/form-data" action="@if(!empty($result['editAddress'])) {{ URL::to('/update/address')}} @else {{ URL::to('/add/address')}} @endif  " method="post">
                                       <input type="hidden" name="_token" value="{{csrf_token()}}">
                                      @if(!empty($result['editAddress']))
                                      <input type="hidden" name="address_book_id" value="{{$result['editAddress'][0]->address_id}}">
@@ -148,44 +148,48 @@
                                         <div class="form-group row">
                                             <label for="entry_firstname" class="col-sm-4 col-form-label">@lang('website.First Name')</label>
                                             <div class="col-sm-8">
-                                                <input type="text" name="entry_firstname" class="form-control field-validate" id="entry_firstname" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->firstname}}" @endif>
-                                                <span class="help-block error-content" hidden>@lang('website.Please enter your first name')</span> 
+                                                <input type="text" name="entry_firstname" class="form-control" id="entry_firstname" @if(!empty($result['editAddress'])) value="{{ $result['editAddress'][0]->firstname  }}" @endif>
+                                                <!-- <span class="help-block error-content" hidden>@lang('website.Please enter your first name')</span> -->
+                                                 <small class="text-danger">{{ $errors->first('entry_firstname') }}</small>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group row">
                                             <label for="entry_lastname" class="col-sm-4 col-form-label">@lang('website.Last Name')</label>
                                             <div class="col-sm-8">
-                                                <input type="text" name="entry_lastname" class="form-control field-validate" id="entry_lastname" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->lastname}}" @endif>
-                                                <span class="help-block error-content" hidden>@lang('website.Please enter your last name')</span>
+                                                <input type="text" name="entry_lastname" class="form-control" id="entry_lastname" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->lastname  }}" @endif>
+                                                <!-- <span class="help-block error-content" hidden>@lang('website.Please enter your last name')</span> -->
+                                                
                                             </div>
                                         </div>
                                         
                                         <div class="form-group row">
                                             <label for="entry_street_address" class="col-sm-4 col-form-label">@lang('website.Address')</label>
                                             <div class="col-sm-8">
-                                                <input type="text" name="entry_street_address" class="form-control field-validate" id="entry_street_address" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->street}}" @endif>
-                                                <span class="help-block error-content" hidden>@lang('website.Please enter your address')</span>
+                                                <input type="text" name="entry_street_address" class="form-control" id="entry_street_address" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->street}}" @endif>
+                                                <!-- <span class="help-block error-content" hidden>@lang('website.Please enter your address')</span> -->
+                                                <small class="text-danger">{{ $errors->first('entry_street_address') }}</small>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group row">
                                             <label for="entry_country_id" class="col-sm-4 col-form-label">@lang('website.Country')</label>
                                             <div class="col-sm-8">
-                                                <select name="entry_country_id" onChange="getZones();" id="entry_country_id" class="form-control field-validate">
+                                                <select name="entry_country_id" onChange="getZones();" id="entry_country_id" class="form-control">
                                                     <option value="">@lang('website.select Country')</option>
                                                     @foreach($result['countries'] as $countries)
                                                     <option value="{{$countries->countries_id}}" @if(!empty($result['editAddress'])) @if($countries->countries_id==$result['editAddress'][0]->countries_id) selected @endif @endif>{{$countries->countries_name}}</option>
                                                     @endforeach
                                                 </select>
-                                                <span class="help-block error-content" hidden>@lang('website.Please select your country')</span> 
+                                               <!--  <span class="help-block error-content" hidden>@lang('website.Please select your country')</span>  -->
+                                               <small class="text-danger">{{ $errors->first('entry_country_id') }}</small>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group row">
                                             <label for="entry_zone_id" class="col-sm-4 col-form-label">@lang('website.State')</label>
                                             <div class="col-sm-8">
-                                                <select name="entry_zone_id" id="entry_zone_id" class="form-control field-validate">
+                                                <select name="entry_zone_id" id="entry_zone_id" class="form-control">
                                                     <option value="">@lang('website.Select Zone')</option>
                                                     @if(!empty($result['zones']))
                                                     @foreach($result['zones'] as $zones)
@@ -193,23 +197,26 @@
                                                     @endforeach
                                                     @endif
                                                 </select>
-                                                <span class="help-block error-content" hidden>@lang('website.Please select your state')</span> 
+                                                <!-- <span class="help-block error-content" hidden>@lang('website.Please select your state')</span>  -->
+                                                <small class="text-danger">{{ $errors->first('entry_zone_id') }}</small>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group row">
                                             <label for="entry_city" class="col-sm-4 col-form-label">@lang('website.City')</label>
                                             <div class="col-sm-8">
-                                                <input type="text" name="entry_city" class="form-control field-validate" id="entry_city" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->city}}" @endif>
-                                                <span class="help-block error-content" hidden>@lang('website.Please enter your city')</span>
+                                                <input type="text" name="entry_city" class="form-control" id="entry_city" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->city}}" @endif>
+                                                <!-- <span class="help-block error-content" hidden>@lang('website.Please enter your city')</span> -->
+                                                <small class="text-danger">{{ $errors->first('entry_city') }}</small>
                                             </div>
                                         </div>
                                         
                                         <div class="form-group row">
                                             <label for="entry_postcode" class="col-sm-4 col-form-label">@lang('website.Zip/Postal Code')</label>
                                             <div class="col-sm-8">
-                                                <input type="text" name="entry_postcode" class="form-control field-validate" id="entry_postcode" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->postcode}}" @endif>
-                                                <span class="help-block error-content" hidden>@lang('website.Please enter your Zip/Postal Code')</span> 
+                                                <input type="text" name="entry_postcode" class="form-control" id="entry_postcode" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->postcode}}" @endif>
+                                                <!-- <span class="help-block error-content" hidden>@lang('website.Please enter your Zip/Postal Code')</span> --> 
+                                                <small class="text-danger">{{ $errors->first('entry_postcode') }}</small>
                                             </div>
                                         </div>	 
                                         

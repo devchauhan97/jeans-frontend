@@ -277,11 +277,13 @@ class DataController extends Controller
 	}
 	
 	//products 
-	public function products($data){
+	public function products($data)
+	{
 		//dd($data);
-		if(empty($data['page_number']) or $data['page_number'] == 0 ){
+
+		if(empty($data['page_number']) or $data['page_number'] == 0 ) {
 			$skip								=   $data['page_number'].'0';
-		}else{
+		} else {
 			$skip								=   $data['limit']*$data['page_number'];
 		}		
 		
@@ -340,7 +342,6 @@ class DataController extends Controller
 			if($type == "wishlist"){
 				$categories->LeftJoin('liked_products', 'liked_products.liked_products_id', '=', 'products.products_id');
 			}
-			
 			//parameter special
 			elseif($type == "special"){
 				$categories->LeftJoin('specials', 'specials.products_id', '=', 'products_to_categories.products_id')

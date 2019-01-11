@@ -211,8 +211,8 @@ class OrdersController extends DataController
 	}
 	
 	
-	//checkout_billing_address
-	public function checkout_billing_address(Request $request){
+	//checkoutBillingAddress
+	public function checkoutBillingAddress(Request $request){
 				
 		if(session('step')=='1'){
 			session(['step' => '2']);
@@ -238,8 +238,8 @@ class OrdersController extends DataController
 		return redirect()->back();		
 	}
 	
-	//checkout_payment_method
-	public function checkout_payment_method(Request $request){
+	//checkout/payment/method
+	public function checkoutPaymentMethod(Request $request){
 		
 		if(session('step')=='2'){
 			session(['step' => '3']);

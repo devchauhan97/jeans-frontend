@@ -97,7 +97,7 @@ Route::post('/language/', array(
 	Route::get('/viewcart', 'CartController@viewcart');
 	Route::get('/editcart', 'CartController@editcart');
 	
-	Route::post('/updateCart', 'CartController@updateCart');
+	Route::post('/update/cart', 'CartController@updateCart');
 	Route::get('/deleteCart', 'CartController@deleteCart');
 	Route::post('/apply_coupon', 'CartController@apply_coupon');
 	Route::get('/removeCoupon/{id}', 'CartController@removeCoupon');
@@ -164,16 +164,17 @@ Route::post('/language/', array(
 		Route::post('/updatepassword', 'CustomersController@updatePassword');		
 		
 		Route::get('/shipping/address', 'ShippingAddressController@shippingAddress');
-		Route::post('/addMyAddress', 'ShippingAddressController@addMyAddress');
+		Route::post('add/address', 'ShippingAddressController@addAddress');
+
 		Route::post('/default/address', 'ShippingAddressController@myDefaultAddress');		
 		
-		Route::post('/update-address', 'ShippingAddressController@updateAddress');
-		Route::post('/delete-address', 'ShippingAddressController@deleteAddress');
+		Route::post('/update/address', 'ShippingAddressController@updateAddress');
+		Route::post('/delete/address', 'ShippingAddressController@deleteAddress');
 		
 		Route::get('/checkout', 'OrdersController@checkout');	
 		Route::post('/checkout_shipping_address', 'OrdersController@checkout_shipping_address');
-		Route::post('/checkout_billing_address', 'OrdersController@checkout_billing_address');
-		Route::post('/checkout_payment_method', 'OrdersController@checkout_payment_method');
+		Route::post('/checkout/billing/address', 'OrdersController@checkoutBillingAddress');
+		Route::post('/checkout/payment/method', 'OrdersController@checkoutPaymentMethod');
 		Route::post('/paymentComponent', 'OrdersController@paymentComponent');	
 		Route::post('/place_order', 'OrdersController@place_order');	
 		Route::get('/orders', 'OrdersController@orders');	

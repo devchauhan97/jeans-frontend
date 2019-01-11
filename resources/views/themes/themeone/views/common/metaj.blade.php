@@ -13,9 +13,9 @@
     <meta name="keywords" content="<?=stripslashes($result['commonContent']['setting'][74]->value)?>"/>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="google-signin-client_id" content="31214299992-7pijldgsl0h1f75s8tbq7subrijq36jo.apps.googleusercontent.com">
-	<link href="{!! asset('css/jquery-ui.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-	 <link rel="shortcut icon" href="http://bombayport.xyz/images/fab_icon.jpg" />
-	<link rel="stylesheet" type="text/css" href="{!! asset('css/infinite-slider.css') !!}">
+	<link href="{!! asset('public/css/jquery-ui.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+	 <link rel="shortcut icon" href="{{asset('public/images/fab_icon.jpg')}}" />
+	<link rel="stylesheet" type="text/css" href="{!! asset('public/css/infinite-slider.css') !!}">
 	
   
   <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -24,7 +24,7 @@
 	
     <!---- onesignal ------>
     @if($result['commonContent']['setting'][54]->value=='onesignal')
-	<!--<link href="{!! asset('onesignal/manifest.json') !!} " media="all" rel="manifest"/>-->
+	<!--<link href="{!! asset('public/onesignal/manifest.json') !!} " media="all" rel="manifest"/>-->
 	<script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async=""></script>
 	<script>
       var OneSignal = window.OneSignal || [];

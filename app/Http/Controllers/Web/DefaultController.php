@@ -96,25 +96,26 @@ class DefaultController extends DataController
 		$result['products'] = $special_products;
 		
 		//special products
-		$myVar = new DataController();
+		//$myVar = new DataController();
 		$data = array('page_number'=>'0', 'type'=>'special', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
 		$special_products = $myVar->products($data);
 		$result['special'] = $special_products;
 		
 		//top seller
-		$myVar = new DataController();
+		//$myVar = new DataController();
 		$data = array('page_number'=>'0', 'type'=>'topseller', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
 		$top_seller = $myVar->products($data);
 		$result['top_seller'] = $top_seller;
 		
 		//most liked
-		$myVar = new DataController();
+		//$myVar = new DataController();
+
 		$data = array('page_number'=>'0', 'type'=>'mostliked', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
 		$most_liked = $myVar->products($data);
 		$result['most_liked'] = $most_liked;
 		
 		//is feature
-		$myVar = new DataController();
+		//$myVar = new DataController();
 		$data = array('page_number'=>'0', 'type'=>'is_feature', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
 		$featured = $myVar->products($data);
 		$result['featured'] = $featured;

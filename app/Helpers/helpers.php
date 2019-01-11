@@ -45,20 +45,18 @@ function getZoneCountry($zone_country_id){
 function storeImage($uploadImage)
 {
 	$file_local = Storage::disk('public')->get($uploadImage);
-    $file_ftp = Storage::disk('ftp')->put($uploadImage, $file_local);	
+
+    $file_ftp = Storage::disk('ftp')->put('images/'.$uploadImage, $file_local);	
 }
 
 function getFtpImage($imagepath)
 {
 
-	if(Storage::disk('ftp')->exists($imagepath)){
-
-		//$image = Storage::disk('ftp')->get($imagepath);
-	}
- 
-    if(env('FTP_HOST'))
-        $image='http://'.env('FTP_HOST').'/jeans-images/file.png';
-    else
-        $image='http://localhost'.'/jeans-images/'.$imagepath;
+    $image='http://'.env('FTP_HOST').'/images/not-found.png';
+    if(Storage::disk('ftp')->exists('/images/'.$imagepath)){
+        //$image = Storage::disk('ftp')->get($imagepath);
+        $image='http://'.env('FTP_HOST').'/images/'.$imagepath;
+    }
+  
     return $image;
 }

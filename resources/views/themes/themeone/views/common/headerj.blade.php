@@ -15,9 +15,9 @@
 					<li><a href="{{ URL::to('/contact-us')}}">Contact Us</a></li>
 				</ul>
 			</div>
-  			<div class="logo"><a href="{{ URL::to('/')}}"><img src="{{asset('').'images/logo.png'}}" alt="logo"></a></div>
+  			<div class="logo"><a href="{{ URL::to('/')}}"><img src="{{asset('public/images/logo.png')}}" alt="logo"></a></div>
 	  		<nav class="pushmenu pushmenu-left main-nav">
-	  			<div class="nav-logo"><a href="index.html"><img src="{{asset('').'images/white_logo.png'}}" alt="logo"></a></div>
+	  			<div class="nav-logo"><a href="index.html"><img src="{{asset('public/images/white_logo.png')}}" alt="logo"></a></div>
 	  			<ul class="links">
 	  				<li><a href="{{ URL::to('/shop')}}">Shop</a></li>
 	  				<li><a href="#">AW18 LOOKBOOK</a></li>
@@ -35,11 +35,11 @@
 	  			<form class="form-inline search-form none-991" action="{{ URL::to('/shop')}}" method="get">
 	  				<input type="hidden" id="category_id" name="category" value="all">				 
 				   <input type="search" class="search-input"  name="search" placeholder="Search..." value="{{ app('request')->input('search') }}" aria-label="Search">
-				  <button type="submit" class="search-icon"><span><img src="{{asset('').'images/search_icon.png'}}"></span></button>
+				  <button type="submit" class="search-icon"><span><img src="{{asset('public/images/search_icon.png')}}"></span></button>
 	  			</form>
 	  			<ul>
 	  				 
-	  				<li class="photo-icon"> <a href="#"><img src="{{asset('').'images/photo_icon.png'}}" alt="photo icon"></a>
+	  				<li class="photo-icon"> <a href="#"><img src="{{asset('public/images/photo_icon.png')}}" alt="photo icon"></a>
 	  					
 					<!-- nologin-user-dropdown -->
 					 @if (Auth::guard('customer')->check())
@@ -61,7 +61,7 @@
 	  				<li class="cart-header  head-cart-content">  				
 	  				 @include('cartButton')
 	  				   </li>
-	  				 <li><a href="{{ URL::to('/wishlist')}}"><img src="{{asset('').'images/wishlist_icon.png'}}" alt="photo icon"><span class="cart-number wishlist " id="wishlist-count">{{$result['commonContent']['totalWishList']}}</span></a></li>
+	  				 <li><a href="{{ URL::to('/wishlist')}}"><img src="{{asset('public/images/wishlist_icon.png')}}" alt="photo icon"><span class="cart-number wishlist " id="wishlist-count">{{$result['commonContent']['totalWishList']}}</span></a></li>
 	  			</ul>
 	  		</div>
            

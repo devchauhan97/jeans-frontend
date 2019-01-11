@@ -52,7 +52,8 @@ class ProductsController extends DataController
      */
 			
 	//shop 
-	public function shop(Request $request){
+	public function shop(Request $request)
+	{
 		//dd($request);
 		$title = array('pageTitle' => Lang::get('website.Shop'));
 		$result = array();
@@ -171,8 +172,6 @@ class ProductsController extends DataController
 
 			
 		}
-
-		
 		//print_r($filters);
 		$myVar = new DataController();	
 		$data = array('page_number'=>$page_number, 'type'=>$type, 'limit'=>$limit, 'categories_id'=>$categories_id, 'search'=>$search, 'filters'=>$filters, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
@@ -209,7 +208,8 @@ class ProductsController extends DataController
 	}
 
 	//productDetail 
-	public function productDetail(Request $request){
+	public function productDetail(Request $request)
+	{
 		
 		$title 			= 	array('pageTitle' => Lang::get('website.Product Detail'));
 		$result 		= 	array();

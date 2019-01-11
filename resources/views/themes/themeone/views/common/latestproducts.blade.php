@@ -1,3 +1,4 @@
+
 <section class="featured-product padding-50 light-grey">
     <div class="wrapper">
         <h2 class="text-center">Featured products</h2>
@@ -26,9 +27,8 @@
                     <span class="product-title">{{$products->products_name}}</span>
                     <div class="pricing">
                        @if(!empty($products->discount_price))
-                       {{$web_setting[19]->value}}{{$products->discount_price+0}}
                         <span class="text-strike">
-                        <strike>{{$web_setting[19]->value}}{{$products->products_price+0}}</strike>
+                        <strike>{{$web_setting[19]->value}}{{$products->discount_price+0}}</strike>
                         </span>
                          @else 
                         <span class="pink"> {{$web_setting[19]->value}} {{$products->products_price+0}}</span>
@@ -36,10 +36,32 @@
                     </div>
                 </a>
             </div>
-        @endif
-        @endforeach
+              @endif
+                @endforeach
 
     </div>
     
 </section>
     
+    
+
+<!-- <section class="latest-products-section padding-50">
+    <div class="wrapper">
+        <h2 class="text-center">latest products</h2>
+        <div class="row">
+             @foreach($result['featured']['product_data'] as $key=>$products)
+              @if($key<=2)
+                <div class="col-md-4 col-sm-4 col-4">
+                    <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}"><img class="left-img" src="{{getFtpImage($products->products_image)}}" alt="{{$products->products_name}} Jean1"></a>
+                </div>
+             @endif
+             @endforeach 
+             <div class="col-md-4 col-sm-4 col-4">
+                <a href="#"><img class="left-img" src="{{asset('public/images/trendy_jean5.jpg')}}" alt="Trendy Jean1"></a>
+            </div>
+            <div class="col-md-4 col-sm-4 right-img col-4">
+                <a href="#"><img src="{{asset('public/images/trendy_jean6.jpg')}}" alt="Trendy Jean3"></a>
+            </div> 
+        </div>
+    </div>
+</section> -->

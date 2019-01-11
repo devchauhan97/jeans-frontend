@@ -8,40 +8,38 @@
 	@include('common.headerj')
 	
 <!-- hero slider -->
-	
-
 @yield('content')
 
 <!-- customer-logos-slider -->
-	<section class="customer-logos-slider padding-50">
+	<!-- <section class="customer-logos-slider padding-50">
 		<div class="wrapper">
 			<h4>Manufactures</h4>
 			<div class="customer-logos slider">
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo1.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo2.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo3.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo4.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo5.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo6.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo1.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo2.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo3.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo4.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo5.png'}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('').'images/customerlogo6.png'}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo1.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo2.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo3.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo4.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo5.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo6.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo1.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo2.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo3.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo4.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo5.png')}}"></a></div>
+			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo6.png')}}"></a></div>
 			</div>
 		</div>
-	</section>
+	</section> -->
 
 <!--Footer light-grey -->
 
 	<footer class="light-grey padding-50">
 		<div class="wrapper">
 			<ul class="social-icon text-center">
-				<li><a href="#"><img src="{{asset('').'images/facebook_icon.png'}}"></a></li>
-				<li><a href="#"><img src="{{asset('').'images/insta_icon.png'}}"></a></li>
-				<li><a href="#"><img src="{{asset('').'images/youtube_icon.png'}}"></a></li>
-				<li><a href="#"><img src="{{asset('').'images/twitter_icon.png'}}"></a></li>
+				<li><a href="#"><img src="{{asset('public/images/facebook_icon.png')}}"></a></li>
+				<li><a href="#"><img src="{{asset('public/images/insta_icon.png')}}"></a></li>
+				<li><a href="#"><img src="{{asset('public/images/youtube_icon.png')}}"></a></li>
+				<li><a href="#"><img src="{{asset('public/images/twitter_icon.png')}}"></a></li>
 			</ul>
 
 			<div class="row">

@@ -198,7 +198,7 @@ class CustomersController extends DataController
 			'customers_telephone'			 =>  $request->customers_telephone,
 			'customers_gender'				 =>  $request->customers_gender,
 			'customers_dob'					 =>  $request->customers_dob,
-			'customers_picture'				 =>  $request->customers_picture
+			'customers_picture'				 =>  $customers_picture
 		]);
 				
 		// CustomerInfo::where('customers_info_id', $customers_id)->update(['customers_info_date_account_last_modified'   => $customers_info_date_account_last_modified]);	
@@ -254,6 +254,7 @@ class CustomersController extends DataController
      */
     public function socialLogin($social){
 		//print_r($social);
+		
         return Socialite::driver($social)->redirect();
     }
 
@@ -291,7 +292,7 @@ class CustomersController extends DataController
 			mkdir($dir);
 		} 
 
-		$uploadfile = $dir."/pic_".time().".jpg";
+		$uploadfile = $dir."pic_".time().".jpg";
 		$temp_upload_path = $uploadfile;
 		file_put_contents(storage_path('app/public').'/'.$temp_upload_path, $img);
 		$profile_photo=$uploadfile;	
