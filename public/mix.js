@@ -67,7 +67,6 @@
 /* 0 */
 /***/ (function(module, exports, __webpack_require__) {
 
-(function webpackMissingModule() { throw new Error("Cannot find module \"D:\\xampp\\htdocs\\jeans-frontend\\resources\\assets\\js\\app.js\""); }());
 __webpack_require__(1);
 __webpack_require__(2);
 __webpack_require__(3);
@@ -79,14 +78,15 @@ __webpack_require__(8);
 __webpack_require__(9);
 __webpack_require__(10);
 __webpack_require__(11);
-module.exports = __webpack_require__(12);
+__webpack_require__(12);
+module.exports = __webpack_require__(13);
 
 
 /***/ }),
 /* 1 */
 /***/ (function(module, exports) {
 
-// removed by extract-text-webpack-plugin
+
 
 /***/ }),
 /* 2 */
@@ -150,6 +150,12 @@ module.exports = __webpack_require__(12);
 
 /***/ }),
 /* 12 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

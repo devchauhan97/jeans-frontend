@@ -36,7 +36,8 @@
                 	<p>
                     @lang('website.Dummy Text')</p>
                     
-                    <form name="signup" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('/processContactUs')}}" method="post">
+                    <form name="signup" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('/contact')}}" method="post">
+                        <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <div class="form-group">
                             <label for="firstName">@lang('website.Full Name')</label>
                             <input type="text" class="form-control field-validate" id="name" name="name">

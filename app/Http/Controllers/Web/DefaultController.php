@@ -33,6 +33,8 @@ use App\SlidersImage;
 use App\OrdersProduct;
 use App\Page;
 use App\Order;
+use App\Product;
+use App\ProductsToCategory;
 
 class DefaultController extends DataController
 {
@@ -63,169 +65,123 @@ class DefaultController extends DataController
 	}
 	
 	//index 
-	public function index(Request $request){
+	public function index(Request $request)
+	{
 		
 		$title = array('pageTitle' => Lang::get("website.Home"));
-		$result = array();			
+		$result = array();	
 		$result['commonContent'] = $this->commonContent();
+		//dd($result['commonContent']);
+		/*get top featured product*/
+		$result['featured'] =$this->getFeaturedProduct();
+		
+		/*get top seller product*/
+		$result['top_seller'] = $this->getTopSellerProduct();
 
-		if(!empty($request->limit)){
-			$limit = $request->limit;
-		}else{
-			$limit = 12;
-		}
-		
-		//min_price
-		if(!empty($request->min_price)){
-			$min_price = $request->min_price;
-		}else{
-			$min_price = '';
-		}
-		
-		//max_price
-		if(!empty($request->max_price)){
-			$max_price = $request->max_price;
-		}else{
-			$max_price = '';
-		}	
-		
-		//products
-		$myVar = new DataController();
-		$data = array('page_number'=>'0', 'type'=>'', 'limit'=>10, 'min_price'=>$min_price, 'max_price'=>$max_price );
-		$special_products = $myVar->products($data);
-		$result['products'] = $special_products;
-		
 		//special products
-		//$myVar = new DataController();
-		$data = array('page_number'=>'0', 'type'=>'special', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
-		$special_products = $myVar->products($data);
-		$result['special'] = $special_products;
-		
-		//top seller
-		//$myVar = new DataController();
-		$data = array('page_number'=>'0', 'type'=>'topseller', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
-		$top_seller = $myVar->products($data);
-		$result['top_seller'] = $top_seller;
-		
-		//most liked
-		//$myVar = new DataController();
-
-		$data = array('page_number'=>'0', 'type'=>'mostliked', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
-		$most_liked = $myVar->products($data);
-		$result['most_liked'] = $most_liked;
-		
-		//is feature
-		//$myVar = new DataController();
-		$data = array('page_number'=>'0', 'type'=>'is_feature', 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
-		$featured = $myVar->products($data);
-		$result['featured'] = $featured;
-		
-		//news
-		$myVar = new NewsController();
-		$data = array('page_number'=>'0', 'type'=>'', 'limit'=>3, 'is_feature'=>1);
-		$news = $myVar->getAllNews($data);
-		$result['news'] = $news;
-		
+		$result['special'] = $this->getTopDealsProduct() ;
 		//current time
 		$currentDate = Carbon\Carbon::now();
 		$currentDate = $currentDate->toDateTimeString();
 		
 		$slides = SlidersImage::select('sliders_id as id', 'sliders_title as title', 'sliders_url as url', 'sliders_image as image', 'type', 'sliders_title as title')
-		   ->where('status', '=', '1')
-		   ->where('languages_id', '=', session('language_id'))
-		   ->where('expires_date', '>', $currentDate)
-		   ->get();
+					   ->where('status', '=', '1')
+					   ->where('languages_id', '=', session('language_id'))
+					   ->where('expires_date', '>', $currentDate)
+		   				->get();
 		
 		$result['slides'] = $slides;
 		
 		//cart array
-		$cart = '';
-		$myVar = new CartController();
-		$result['cartArray'] = $myVar->cartIdArray($cart);
-		
-		//liked products
-		$result['liked_products'] = $this->likedProducts();
-		
-		$orders =  DB::select(DB::raw('SELECT orders_id FROM orders WHERE YEARWEEK(CURDATE()) BETWEEN YEARWEEK(date_purchased) AND YEARWEEK(date_purchased)'));
-		
-		if(count($orders)>0){
-			$allOrders = $orders;
-		}else{
-			$allOrders =  Order::get();
-		}
-		
-		$temp_i = array();
-		foreach($allOrders as $orders_data){
-			$mostOrdered = OrdersProduct::select('orders_products.products_id')
-							->where('orders_id', $orders_data->orders_id)
-							->get();
-			
-			foreach($mostOrdered as $mostOrderedData){
-				$temp_i[] = $mostOrderedData->products_id;		
-			}		
-		}	
-		$detail = array();
-		$temp_i = array_unique($temp_i);				
-		foreach($temp_i as $temp_data){			
-			$myVar = new DataController();
-			$data = array('page_number'=>'0', 'type'=>'', 'products_id'=>$temp_data, 'limit'=>7, 'min_price'=>'', 'max_price'=>'');
-			$single_product = $myVar->products($data);
-			if(!empty($single_product['product_data'][0])){
-				$detail[] = $single_product['product_data'][0];
-			}
-		}
-		
-		$result['weeklySoldProducts'] = array('success'=>'1', 'product_data'=>$detail,  'message'=>"Returned all products.", 'total_record'=>count($detail));
-		
+		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();
+
 		return view("index", $title)->with('result', $result); 
 		
 	}
 	
-	//myContactUs
-	public function ContactUs(Request $request){
-		$title = array('pageTitle' => Lang::get("website.Contact Us"));
-		$result = array();			
-		$result['commonContent'] = $this->commonContent();
-		
-		return view("contact-us", $title)->with('result', $result); 
-	}
 	
-	//processContactUs
-	public function processContactUs(Request $request){
-		$name 		=  $request->name;
-		$email 		=  $request->email;
-		$subject 	=  $request->subject;
-		$message 	=  $request->message;
-		
-		$result['commonContent'] = $this->commonContent();
-		
-		$data = array('name'=>$name, 'email'=>$email, 'subject'=>$subject, 'message'=>$message, 'adminEmail'=>$result['commonContent']['setting'][3]->value);
-		
-		//Mail::send('/mail/contactUs', ['data' => $data], function($m) use ($data){
-		//	$m->to($data['adminEmail'])->subject(Lang::get("website.contact us title"))->getSwiftMessage()
-		//	->getHeaders()
-		//	->addTextHeader('x-mailgun-native-send', 'true');	
-		//});
-		
-		return redirect()->back()->with('success', Lang::get("website.contact us message"));
-	}
 	
 	//page
-	public function page(Request $request){
+	public function page(Request $request)
+	{
 		
 		$pages = Page::leftJoin('pages_description','pages_description.page_id','=','pages.page_id')
 					->where([['pages.status','1'],['type',2],['pages_description.language_id',session('language_id')],['pages.slug',$request->name]])->get();
 		
-		if(count($pages)>0){
+		if(count($pages)>0) {
+
 			$title = array('pageTitle' => $pages[0]->name);
 			$result['commonContent'] = $this->commonContent();
 			$result['pages'] = $pages;			
 			return view("page", $title)->with('result', $result);
 		
-		}else{
+		} else {
+
 			return redirect()->intended('/') ;
+		
 		}
 	}
-	
-	
+
+	public function getFeaturedProduct($data =[])
+	{
+		
+		return  Product::where('products_quantity','>','0')
+					->where('products.products_status', '=', 1)
+					->where('products.is_feature', '=', 1)
+					->leftJoin('products_description','products_description.products_id','=','products.products_id')
+					->LeftJoin('specials', function ($join)  {  
+						$join->on('specials.products_id', '=', 'products.products_id')->where('status', '=', '1')
+						->where('expires_date', '>', time());
+					})->select('products.*','products_description.products_name','specials.specials_new_products_price as discount_price')
+			
+				->where('products_description.language_id','=',Session::get('language_id'))
+				->groupBy('products.products_id')
+				->limit(4)
+				->get();
+			  
+
+	}
+	public function getTopDealsProduct($data = [])
+	{
+		 
+		$top_deals = Product::where('products_quantity','>','0')
+					->where('products.products_status', '=', 1)
+					->where('products.is_feature', '!=', 1)
+					->leftJoin('products_description','products_description.products_id','=','products.products_id')
+
+					->LeftJoin('specials', function ($join)  {  
+						$join->on('specials.products_id', '=', 'products.products_id')->where('specials.status', '=', '1')
+						->where('expires_date', '>', time());
+					})
+					->select('products.*',   'products_description.products_name', 'specials.specials_new_products_price as discount_price', 'specials.specials_new_products_price as discount_price')
+			 
+					->where('products_quantity','>','0')
+					->orderBy('specials.products_id', 'DESC')
+					->groupBy('products.products_id')
+					->limit(4)
+					->get();
+		 
+		return $top_deals;			
+	}
+	public function getTopSellerProduct($data =[])
+	{
+		
+	  	$top_seller = Product::where('products_quantity','>','0')
+							->where('products.products_status', '=', 1)
+							->where('products.is_feature', '!=', 1)
+							->leftJoin('products_description','products_description.products_id','=','products.products_id')
+							->LeftJoin('specials', function ($join)  {  
+								$join->on('specials.products_id', '=', 'products.products_id')
+								->where('status', '=', '1')->where('expires_date', '>', time());
+							})->select('products.*','products_description.products_name','specials.specials_new_products_price as discount_price')
+									 ->where('products_description.language_id','=',Session::get('language_id'))
+
+							->orderBy('products_ordered', 'DESC')
+							->groupBy('products.products_id')
+							->limit(4)
+							->get();
+
+		return  $top_seller;  
+	}
+ 	
 }

@@ -34,13 +34,20 @@
                      
                 <div class="col-12 col-lg-8 cart-left">
                     <div class="row">
+
                          @if(session()->has('message'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
                                  {{ session()->get('message') }}
                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             </div>               
                         @endif
-                    
+                        @if(session()->has('error'))
+                            <div class="alert alert-danger alert-dismissible  show" role="alert">
+                                 {{ session()->get('error') }}
+                                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>               
+                        @endif
+
                         <form method='POST' id="update_cart_form" action='{{ URL::to('/update/cart')}}' >
                             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                             <div class="table-responsive">
@@ -64,6 +71,7 @@
                                             <td align="left" class="item">
                                                 <input type="hidden" name="cart[]" value="{{$products->customers_basket_id}}">
                                                 <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="cart-thumb">
+
                                                     <img class="img-fluid" src="{{getFtpImage($products->image)}}" alt="{{$products->products_name}}" alt="">
                                                 </a>
                                                 <div class="cart-product-detail">
@@ -86,7 +94,7 @@
                                                   <span class="input-group-btn qtyminus_{{$products->customers_basket_id}}">
                                                     	<i class="fa fa-minus" aria-hidden="true"></i>
                                                   </span>
-                                                  <input name="quantity[]" type="text" readonly value="{{$products->customers_basket_quantity}}" class="form-control qty">                                                  
+                                                  <input name="quantity[]" type="text" readonly value="{{$products->customers_basket_quantity}}" class="form-control qty" maxlength ="{{$products->products_quantity}}">                                                  
                                                   <span class="input-group-btn qtypluscart_{{$products->customers_basket_id}}">
                                                   		<i class="fa fa-plus" aria-hidden="true"></i>
                                                   </span>

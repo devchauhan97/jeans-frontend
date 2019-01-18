@@ -14,4 +14,11 @@ class Product extends Model
 
 	//use user id of admin
 	protected $primaryKey = 'products_id'; 
+
+	public  function scopeGetProduct($query)
+	{
+
+		return $query->where('products_quantity','>','0')
+							->leftJoin('products_description','products_description.products_id','=','products.products_id');
+	}
 }

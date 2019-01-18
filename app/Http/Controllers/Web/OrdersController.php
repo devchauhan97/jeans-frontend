@@ -69,7 +69,8 @@ class OrdersController extends DataController
 	}
 	
 	//checkout
-	public function checkout(Request $request){
+	public function checkout(Request $request)
+	{
 		
 		$title = array('pageTitle' => Lang::get('website.Checkout'));
 		$result = array();	
@@ -258,7 +259,7 @@ class OrdersController extends DataController
 	//order_detail
 	public function paymentComponent(Request $request){		
 		session(['payment_method' => $request->payment_method]);
-		return view('paymentComponent');		
+		//return view('paymentComponent');		
 	}
 	
 	//generate token 
@@ -286,7 +287,8 @@ class OrdersController extends DataController
 	}
 	
 	//place_order
-	public function place_order(Request $request){		
+	public function place_order(Request $request)
+	{		
 		
 		$date_added								=	date('Y-m-d h:i:s');		
 		$customers_id            				=   session('customers_id');
@@ -1063,7 +1065,8 @@ class OrdersController extends DataController
 	}
 		
 	//get default payment method
-	public function getPaymentMethods(){
+	public function getPaymentMethods()
+	{
 		$result = array();
 		$payments_setting = DB::table('payments_setting')->get();
 		

@@ -26,12 +26,17 @@
 $routeSetting = DB::table('settings')->get();
 Theme::set($routeSetting[48]->value);
 
-Route::get('welcome/{locale}', function ($locale) {
-    App::setLocale($locale);
-	print $locale;
-    //
-});
-
+// Route::get('welcome/{locale}', function ($locale) {
+//     App::setLocale($locale);
+// 	print $locale;
+//     //
+// });
+// Route::get('/clear-cache', function() {
+ 
+// 	$exitCode = Artisan::call('config:cache');
+// 	$exitCode = Artisan::call('route:cache');
+// 	$exitCode = Artisan::call('optimize');
+// });
 Route::group(['namespace' => 'Web'], function () {	
 	
 //language route
@@ -50,8 +55,8 @@ Route::post('/language/', array(
 	Route::get('/', 'DefaultController@index');
 	Route::get('/index', 'DefaultController@index');
 	
-	Route::get('/contact-us', 'DefaultController@ContactUs');
-	Route::post('/processContactUs', 'DefaultController@processContactUs');
+	Route::get('/contact', 'ContactController@contactUs');
+	Route::post('/contact', 'ContactController@processContactUs');
 	
 	//news section
 	// Route::get('/news', 'NewsController@news');
@@ -59,9 +64,7 @@ Route::post('/language/', array(
 	// Route::post('/loadMoreNews', 'NewsController@loadMoreNews');	
 	
 	
-	Route::get('/clear-cache', function() {
-		$exitCode = Artisan::call('config:cache');
-	});
+	 
 	
 	/*
 	|--------------------------------------------------------------------------

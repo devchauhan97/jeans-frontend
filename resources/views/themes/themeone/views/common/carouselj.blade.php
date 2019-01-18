@@ -20,8 +20,8 @@
 				<a href="{{ URL::to('shop?type=mostliked')}}">
 			@elseif($slides_data->type == 'topseller')
 				<a href="{{ URL::to('shop?type=topseller')}}">
-			@elseif($slides_data->type == 'deals')
-				<a href="{{ URL::to('shop?type=deals')}}">
+			@elseif($slides_data->type == 'special')
+				<a href="{{ URL::to('shop?type=special')}}">
 			@endif
 	        <img src="{{getFtpImage($slides_data->image)}}" alt="Chicago">
 	    </a>

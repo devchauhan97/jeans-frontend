@@ -6,54 +6,26 @@
 
 	<div class="clearfix "></div>
 	@include('common.headerj')
-	
-<!-- hero slider -->
-@yield('content')
-
-<!-- customer-logos-slider -->
-	<!-- <section class="customer-logos-slider padding-50">
-		<div class="wrapper">
-			<h4>Manufactures</h4>
-			<div class="customer-logos slider">
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo1.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo2.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo3.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo4.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo5.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo6.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo1.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo2.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo3.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo4.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo5.png')}}"></a></div>
-			    <div class="slide"><a href="#"><img src="{{asset('public/images/customerlogo6.png')}}"></a></div>
-			</div>
-		</div>
-	</section> -->
-
-<!--Footer light-grey -->
-
+	<!-- hero slider -->
+	@yield('content')
 	<footer class="light-grey padding-50">
 		<div class="wrapper">
 			<ul class="social-icon text-center">
-				<li><a href="#"><img src="{{asset('public/images/facebook_icon.png')}}"></a></li>
-				<li><a href="#"><img src="{{asset('public/images/insta_icon.png')}}"></a></li>
-				<li><a href="#"><img src="{{asset('public/images/youtube_icon.png')}}"></a></li>
-				<li><a href="#"><img src="{{asset('public/images/twitter_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[50]->value}}"><img src="{{asset('public/images/facebook_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[51]->value}}"><img src="{{asset('public/images/insta_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[52]->value}}"><img src="{{asset('public/images/twitter_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[53]->value}}"><img src="{{asset('public/images/youtube_icon.png')}}"></a></li>
 			</ul>
-
 			<div class="row">
 				<div class="col-md-4 col-sm-4">
 					<ul>
-                <li> <a href="{{ URL::to('/')}}">@lang('website.Home')</a> </li>
-                <li> <a href="{{ URL::to('/shop')}}">@lang('website.Shop')</a> </li>
-                <li> <a href="{{ URL::to('/orders')}}">@lang('website.Orders')</a> </li>
-                <li> <a href="{{ URL::to('/viewcart')}}">@lang('website.Shopping Cart')</a> </li> 
-                <li> <a href="{{ URL::to('/wishlist')}}">@lang('website.Wishlist')</a> </li>            
-              </ul>
+	                <li> <a href="{{ URL::to('/')}}">@lang('website.Home')</a> </li>
+	                <li> <a href="{{ URL::to('/shop')}}">@lang('website.Shop')</a> </li>
+	                <li> <a href="{{ URL::to('/orders')}}">@lang('website.Orders')</a> </li>
+	                <li> <a href="{{ URL::to('/viewcart')}}">@lang('website.Shopping Cart')</a> </li> 
+	                <li> <a href="{{ URL::to('/wishlist')}}">@lang('website.Wishlist')</a> </li>            
+	              </ul>
 				</div>
-
-
 				<div class="col-md-4 col-sm-4">
 					<ul class="text-center">
 						<li class="bold">Online Order Related Queries</li>
@@ -62,36 +34,29 @@
 						<li>For Business Enquiries | <a href="#">Contact Us</a></li>
 					</ul>
 				</div>
-
-
 				<div class="col-md-4 col-sm-4">
 					<ul >
-                @if(count($result['commonContent']['pages']))
-                    @foreach($result['commonContent']['pages'] as $page)
-                        <li> <a href="{{ URL::to('/page?name='.$page->slug)}}">{{$page->name}}</a> </li>
-                    @endforeach
-                @endif            
-                <li> <a href="{{ URL::to('/contact-us')}}">@lang('website.Contact Us')</a> </li>
-              </ul>
+		                @if(count($result['commonContent']['pages']))
+		                    @foreach($result['commonContent']['pages'] as $page)
+		                    	<li> <a href="{{ URL::to('/page?name='.$page->slug)}}">{{$page->name}}</a> </li>
+		                    @endforeach
+		                @endif            
+	                	<li> <a href="{{ URL::to('/contact-us')}}">@lang('website.Contact Us')</a> </li>
+	          		</ul>
 				</div>
-
 			</div>
 
 			<div class="copyright text-center">
 				<span>Copyright @2018</span>
 			</div>
-
 		</div>
 	</footer>
-
   @include('common.footerj')
   @yield('customjs')
-  <script type="text/javascript" >
-	
+<script type="text/javascript" >
 	// customer-logos slider
-
-$(document).ready(function(){
-  $('.customer-logos').slick({
+jQuery(document).ready(function(){
+  jQuery('.customer-logos').slick({
     slidesToShow: 6,
     slidesToScroll: 1,
     autoplay: true,
@@ -113,6 +78,8 @@ $(document).ready(function(){
   });
 });
 </script>
-	
+	@if(!empty($web_setting[77]->value))
+		<?=stripslashes($web_setting[77]->value)?>
+    @endif
 </body>
 </html>

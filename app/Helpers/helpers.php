@@ -52,10 +52,12 @@ function storeImage($uploadImage)
 function getFtpImage($imagepath)
 {
 
-    $image='http://'.env('FTP_HOST').'/images/not-found.png';
+    $image='http://'.config('FTP_HOST').'/images/not-found.png';
     if(Storage::disk('ftp')->exists('/images/'.$imagepath)){
         //$image = Storage::disk('ftp')->get($imagepath);
-        $image='http://'.env('FTP_HOST').'/images/'.$imagepath;
+        $host =Config::get('filesystems.disks.ftp.host');
+        $image ='http://'.$host.'/images/'.$imagepath;
+
     }
   
     return $image;

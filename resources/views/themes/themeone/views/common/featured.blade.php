@@ -1,9 +1,9 @@
 <section class="featured-product padding-50 light-grey">
     <div class="wrapper">
-        <h2 class="text-center">Top Deals</h2>
+        <h2 class="text-center">Featured products</h2>
         <div class="row">
-        @foreach($result['special'] as $key=>$products) 
-        @if($key<=3)
+        @foreach($result['featured'] as $key=>$products) 
+         
             <div class="col-md-3 col-sm-6 col-3">
                 
                 <div class="bg-grey text-center">
@@ -21,25 +21,25 @@
                     @endif
 
                 </div>
-            </div>
-            <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="featured-content text-center">
-                <span class="product-title">{{$products->products_name}}</span>
-                <div class="pricing">
-                   @if(!empty($products->discount_price))
-                   {{$web_setting[19]->value}}{{$products->discount_price+0}}
-                    <span class="text-strike">
-                    <strike>{{$web_setting[19]->value}}{{$products->products_price+0}}</strike>
-                    </span>
-                     @else 
-                    <span class="pink"> {{$web_setting[19]->value}} {{$products->products_price+0}}</span>
-                     @endif
                 </div>
-            </a>
-        </div>
-      @endif
-    @endforeach
+                <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="featured-content text-center">
+                    <span class="product-title">{{$products->products_name}}</span>
+                    <div class="pricing">
+                       @if(!empty($products->discount_price))
+                       {{$web_setting[19]->value}}{{$products->discount_price+0}}
+                        <span class="text-strike">
+                        <strike>{{$web_setting[19]->value}}{{$products->products_price+0}}</strike>
+                        </span>
+                         @else 
+                        <span class="pink"> {{$web_setting[19]->value}} {{$products->products_price+0}}</span>
+                         @endif
+                    </div>
+                </a>
+            </div>
+        
+        @endforeach
 
     </div>
     
 </section>
- 
+    

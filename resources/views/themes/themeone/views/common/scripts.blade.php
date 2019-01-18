@@ -1,7 +1,6 @@
 <!-- scripts -->
-<script src="{!! asset('public/js/app.js') !!}"></script>
-<script src="{!! asset('public/js/jquery-ui.js') !!}"></script>
-
+<!-- <script src="{!! asset('public/js/app.js') !!}"></script> -->
+<script src="{!! asset('public/js/plugins/jQueryUI/jquery-ui.min.js') !!}"></script>
 <!-- owl carousel -->
 <script src="{!! asset('public/js/owl.carousel.js') !!}"></script>
 
@@ -81,7 +80,7 @@ jQuery(document).ready(function(e) {
 	
 	braintree.setup(
 		// Replace this with a client token from your server
-		" <?php print session('braintree_token')?>",
+		"<?php print session('braintree_token')?>",
 		"dropin", {
 		container: "payment-form"
 	});
@@ -90,6 +89,7 @@ jQuery(document).ready(function(e) {
 });
 </script> 
 
+<script src="https://js.stripe.com/v3/"></script> 
 
 <script src="{!! asset('public/js/stripe_card.js') !!}" data-rel-js></script> 
 
@@ -195,7 +195,7 @@ jQuery(document).ready(function(e) {
 jQuery( document ).ready( function () {
 	jQuery('#loader').hide();
 	
-	@if($result['commonContent']['setting'][54]->value=='onesignal')
+	@if($web_setting[54]->value=='onesignal')
 	 OneSignal.push(function () {
 	  OneSignal.registerForPushNotifications();
 	  OneSignal.on('subscriptionChange', function (isSubscribed) {
@@ -219,7 +219,7 @@ jQuery( document ).ready( function () {
 	@endif
 	
 	//load google map
-	@if(Request::path() == 'contact-us')		
+	@if(Request::path() == 'contact')		
 		initialize();
 	@endif	
 	
@@ -478,7 +478,7 @@ jQuery( document ).ready( function () {
 		jQuery.ajax({			
 			url: '{{ URL::to("/likeMyProduct")}}',			
 			type: "POST",			
-			data: '&products_id='+products_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),			
+			data: '&products_id='+products_id+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),			
 						
 			success: function (res) {			
 				//jQuery('.head-cart-content').html(res);	
@@ -518,7 +518,7 @@ jQuery( document ).ready( function () {
 		jQuery.ajax({			
 			url: '{{ URL::to("/likeMyProduct")}}',			
 			type: "POST",			
-			data: '&products_id='+products_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),			
+			data: '&products_id='+products_id+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),			
 						
 			success: function (res) {				
 				var obj = JSON.parse(res);	
@@ -1152,20 +1152,20 @@ jQuery(document).on('keyup focusout', '.email-validate', function(e){
 		}
 	});
 	
-	/*$(".show_commentsandnotes_container").click(function () {
-		$('.commentsandnotes_bg').fadeIn(1000, function() {
-		   $('.commentsandnotes_bg').addClass('show');
+	/*jQuery(".show_commentsandnotes_container").click(function () {
+		jQuery('.commentsandnotes_bg').fadeIn(1000, function() {
+		   jQuery('.commentsandnotes_bg').addClass('show');
 		});
-		$('.commentsandnotes_container').fadeIn(1000, function() {
-		   $('.commentsandnotes_container').addClass('show');
+		jQuery('.commentsandnotes_container').fadeIn(1000, function() {
+		   jQuery('.commentsandnotes_container').addClass('show');
 		});
 	});
-	$(".commentsandnotes_bg").click(function () {
-		$('.commentsandnotes_bg').fadeOut(1000, function() { 
-		   $('.commentsandnotes_bg').removeClass('show');
+	jQuery(".commentsandnotes_bg").click(function () {
+		jQuery('.commentsandnotes_bg').fadeOut(1000, function() { 
+		   jQuery('.commentsandnotes_bg').removeClass('show');
 		});
-		$('.commentsandnotes_container').fadeOut(1000, function() { 
-		   $('.commentsandnotes_container').removeClass('show'); 
+		jQuery('.commentsandnotes_container').fadeOut(1000, function() { 
+		   jQuery('.commentsandnotes_container').removeClass('show'); 
 		});
 	});*/
 	
@@ -1238,32 +1238,40 @@ jQuery(document).on('keyup focusout', '.email-validate', function(e){
 	
 	// This button will increment the value
 	jQuery('.qtypluscart_{{$products->customers_basket_id}}').click(function(e){
+
 		// Stop acting like a button
 		e.preventDefault();
 		// Get the field name
 		fieldName = jQuery(this).attr('field');
 		// Get its current value
 		var currentVal = parseInt(jQuery(this).prev('.qty').val());
-		// If is not undefined
-		if (!isNaN(currentVal)) {				
-			// Increment
-			jQuery(this).prev('.qty').val(currentVal + 1);
-		} else {
-			// Otherwise put a 0 there
-			jQuery(this).prev('.qty').val(0);
-		}
+		var maxProductQty = parseInt(jQuery(this).prev('.qty').attr('maxlength'));
+ 
+		//if(maxProductQty > currentVal) {
+			// If is not undefined
+			if (!isNaN(currentVal)) {				
+				// Increment
+				jQuery(this).prev('.qty').val(currentVal + 1);
+			} else {
+				// Otherwise put a 0 there
+				jQuery(this).prev('.qty').val(0);
+			}
+		//}
 		
 	});
 
 	// This button will decrement the value till 0
 	jQuery(".qtyminus_{{$products->customers_basket_id}}").click(function(e) {
+
 		// Stop acting like a button
 		e.preventDefault();
 		// Get the field name
 		fieldName = jQuery(this).attr('field');
 		// Get its current value
 		var currentVal = parseInt(jQuery(this).next('.qty').val());
+		
 		// If it isn't undefined or its greater than 0
+
 		if (!isNaN(currentVal) && currentVal > 1) {
 			// Decrement one
 			jQuery(this).next('.qty').val(currentVal - 1);
@@ -1325,7 +1333,7 @@ jQuery(document).on('focusout','.qty',function(){
 		jQuery.ajax({
 			url: '{{ URL::to("/default/address")}}',
 			type: "POST",
-			data: '&address_id='+address_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),
+			data: '&address_id='+address_id+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),
 			
 			success: function (res) {
 				 window.location = '{{ URL::to("shipping/address?action=default")}}';
@@ -1344,7 +1352,7 @@ jQuery(document).on('focusout','.qty',function(){
 		jQuery.ajax({
 			url: '{{ URL::to("/delete/address")}}',
 			type: "POST",
-			data: '&address_id='+address_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),
+			data: '&address_id='+address_id+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),
 			
 			success: function (res) {
 				window.location = 'address?action=detele';
@@ -1417,7 +1425,7 @@ jQuery(document).on('click', '.cart', function(e){
 	jQuery.ajax({
 		url: '{{ URL::to("/addToCart")}}',
 		type: "POST",
-		data: '&products_id='+products_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),		
+		data: '&products_id='+products_id+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),		
 		success: function (res) {
 			if(res.trim() == "already added"){							
 			}else{
@@ -1472,7 +1480,7 @@ function paymentMethods(){
 	jQuery.ajax({
 		url: '{{ URL::to("/paymentComponent")}}',
 		type: "POST",
-		data: '&payment_method='+payment_method+'&_token='+$('meta[name="csrf-token"]').attr('content'),			
+		data: '&payment_method='+payment_method+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),			
 		success: function (res) {
 			//jQuery('#loader').hide();
 		},
@@ -1505,7 +1513,7 @@ function getZones() {
 	jQuery.ajax({
 		url: '{{ URL::to("/zones")}}',
 		type: "GET",
-		//data: '&country_id='+country_id+'&_token='+$('meta[name="csrf-token"]').attr('content'),
+		//data: '&country_id='+country_id+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),
 		 data: {'country_id': country_id},
 		
 		success: function (res) {
@@ -1628,20 +1636,20 @@ jQuery('.nav-index').on('show.bs.tab', function (e) {
   function getmodal ()
   {
   	
-  		    $(".cart-modall").toggle();
+  		    jQuery(".cart-modall").toggle();
 	     e.stopPropagation();
   }
 </script>
 <script type="text/javascript">
 	
-  $menuLeft = $('.pushmenu-left');
-  $nav_list = $('#nav_list');
+  $menuLeft = jQuery('.pushmenu-left');
+  $nav_list = jQuery('#nav_list');
 
-$(document).ready(function() {
+jQuery(document).ready(function() {
    
   $nav_list.click(function() {
-	$(this).toggleClass('change');
-    $('.pushmenu-push').toggleClass('pushmenu-push-toright');
+	jQuery(this).toggleClass('change');
+    jQuery('.pushmenu-push').toggleClass('pushmenu-push-toright');
     $menuLeft.toggleClass('pushmenu-open');
   });
 

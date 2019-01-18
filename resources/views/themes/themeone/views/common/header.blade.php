@@ -124,7 +124,7 @@
                                   <ul>
                                     <li class="dropdown-header underline">@lang('website.new in Stores')</li>
                                     
-                                    @if($result['commonContent']['recentProducts']['success']==1)
+                                    @if(@$result['commonContent']['recentProducts']['success']==1)
                                         <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                                           <div class="carousel-inner">
                                           
@@ -177,11 +177,13 @@
                                 <a class="nav-link dropdown-toggle" href="{{ URL::to('/news/')}}">@lang('website.News')</a>
                     
                                 <ul class="dropdown-menu" > 
-                                @foreach($result['commonContent']['newsCategories'] as $categories)                                         	
+                                    @if(@$result['commonContent']['newsCategories'])
+                                @foreach(@$result['commonContent']['newsCategories'] as $categories)                                         	
                                     <li>                
                                         <a class="dropdown-item" href="{{ URL::to('/news?category='.$categories->slug)}}">{{$categories->name}}</a>                 
                                     </li>
                                 @endforeach
+                                @endIf
                                 </ul>    
                             </li>
                             <li class="nav-item dropdown open">
@@ -230,7 +232,7 @@
                                   <ul>
                                     <li class="dropdown-header underline">@lang('website.new in Stores')</li>
                                     
-                                    @if($result['commonContent']['recentProducts']['success']==1)
+                                    @if(@$result['commonContent']['recentProducts']['success']==1)
                                         <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
                                           <div class="carousel-inner">
                                           
@@ -288,11 +290,13 @@
                                 <div class="nav-link dropdown-toggle">@lang('website.News')</div>
                     
                                 <ul class="dropdown-menu" > 
+                                     @if(@$result['commonContent']['newsCategories'])
                                 @foreach($result['commonContent']['newsCategories'] as $categories)             	
                                     <li>                
                                         <a class="dropdown-item" href="{{ URL::to('/news?category='.$categories->slug)}}">{{$categories->name}}</a>                 
                                     </li>
                                 @endforeach
+                                @endif
                                 </ul>    
                             </li>
                             <li class="nav-item dropdown open">

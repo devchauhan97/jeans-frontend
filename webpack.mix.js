@@ -40,11 +40,12 @@ mix.sass('resources/assets/sass/app.scss', 'public/css')
 });
 
 // Images Compile Code
-mix.copy('resources/assets/images/website_images', 'public/images')
+mix
 .copy('resources/assets/fonts', 'public/fonts');
+/*copy('resources/assets/images/website_images', 'public/images')*/
 
 // Js Compile Code
-mix.js('resources/assets/js/app.js', 'public/js');
+// mix.js('resources/assets/js/app.js', 'public/js');
 
 /*.js('resources/assets/js/vendor/jquery-ui.js', 'public/js')
 .js('resources/assets/js/vendor/bootstrap-select.js', 'public/js')

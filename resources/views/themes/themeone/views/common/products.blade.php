@@ -3,7 +3,7 @@
         <h2 class="text-center">Featured products</h2>
         <div class="row">
         @foreach($result['featured']['product_data'] as $key=>$products) 
-        @if($key<=3)
+         
             <div class="col-md-3 col-sm-6 col-3">
                 
                 <div class="bg-grey text-center">
@@ -36,7 +36,7 @@
                     </div>
                 </a>
             </div>
-        @endif
+        
         @endforeach
 
     </div>

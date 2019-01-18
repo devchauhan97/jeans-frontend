@@ -59,49 +59,50 @@ class ProductsController extends DataController
 		$result = array();
 		
 		$result['commonContent'] = $this->commonContent();
-		if(!empty($request->page)){
+
+		if(!empty($request->page)) {
 			$page_number = $request->page;
-		}else{
+		} else {
 			$page_number = 0;
 		}
 		
-		if(!empty($request->limit)){
+		if(!empty($request->limit)) {
 			$limit = $request->limit;
-		}else{
+		} else {
 			$limit = 15;
 		}
 		
-		if(!empty($request->type)){
+		if(!empty($request->type)) {
 			$type = $request->type;
-		}else{
+		} else {
 			$type = '';
 		}
 		
 		//min_price
-		if(!empty($request->min_price)){
+		if(!empty($request->min_price)) {
 			$min_price = $request->min_price;
-		}else{
+		} else {
 			$min_price = '';
 		}
 		
 		//max_price
-		if(!empty($request->max_price)){
+		if(!empty($request->max_price)) {
 			$max_price = $request->max_price;
-		}else{
+		} else {
 			$max_price = '';
 		}	
 		
 		//category		
-		if(!empty($request->category) and $request->category!='all'){
+		if(!empty($request->category) and $request->category!='all') {
 			$category =Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories_slug',$request->category)->where('language_id',Session::get('language_id'))->get();
 			
 			$categories_id = $category[0]->categories_id;
 			//for main
-			if($category[0]->parent_id==0){
+			if($category[0]->parent_id==0) {
 				$category_name = $category[0]->categories_name;
 				$sub_category_name = '';
 				$category_slug = '';
-			}else{
+			} else {
 			//for sub
 				$main_category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories.categories_id',$category[0]->parent_id)->where('language_id',Session::get('language_id'))->get();
 				
@@ -110,7 +111,7 @@ class ProductsController extends DataController
 				$sub_category_name = $category[0]->categories_name;
 			}
 			
-		}else{
+		} else {
 			$categories_id = '';
 			$category_name = '';
 			$sub_category_name = '';
@@ -123,15 +124,15 @@ class ProductsController extends DataController
 		$result['sub_category_name'] = $sub_category_name;
 		 
 		//search value
-		if(!empty($request->search)){
+		if(!empty($request->search)) {
 			$search = $request->search;
-		}else{
+		} else {
 			$search = '';
 		}	
 		
 		
 		$filters = array();
-		if(!empty($request->filters_applied) and $request->filters_applied==1){
+		if(!empty($request->filters_applied) and $request->filters_applied==1) {
 			$index = 0;
 			$options = array();
 			$option_values = array();
@@ -150,7 +151,7 @@ class ProductsController extends DataController
 				    }
 				    	
 
-			foreach($option as $key=>$options_data){				
+			foreach($option as $key=>$options_data) {				
 				$option_name = $options_data->products_options_name;				 		
 				if(!empty($request->$option_name)){
 					$index2 = 0;
@@ -173,11 +174,11 @@ class ProductsController extends DataController
 			
 		}
 		//print_r($filters);
-		$myVar = new DataController();	
+		//$myVar = new DataController();	
 		$data = array('page_number'=>$page_number, 'type'=>$type, 'limit'=>$limit, 'categories_id'=>$categories_id, 'search'=>$search, 'filters'=>$filters, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
 			//dd($data);
 		
-		$products = $myVar->products($data);
+		$products =$this->products($data);
 		//dd($products);
 		$result['products'] = $products;
 		
@@ -187,8 +188,8 @@ class ProductsController extends DataController
 		$result['filters'] = $filters;
 		
 		$cart = '';
-		$myVar = new CartController();
-		$result['cartArray'] = $myVar->cartIdArray($cart);		
+		//$myVar = new CartController();
+		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();		
 		
 		if($limit > $result['products']['total_record']){		
 			$result['limit'] = $result['products']['total_record'];
@@ -272,8 +273,8 @@ class ProductsController extends DataController
 		$result['simliar_products'] = $simliar_products;
 		
 		$cart = '';
-		$myVar = new CartController();
-		$result['cartArray'] = $myVar->cartIdArray($cart);
+		//$myVar = new CartController();
+		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();
 		
 		//liked products
 		$result['liked_products'] = $this->likedProducts();	
@@ -282,54 +283,55 @@ class ProductsController extends DataController
 	}
 	
 	
-	public function filterProducts(Request $request){
-		
+	public function filterProducts(Request $request)
+	{
+		$result['commonContent'] = $this->commonContent();
 		//min_price
 		if(!empty($request->min_price)){
 			$min_price = $request->min_price;
-		}else{
+		} else {
 			$min_price = '';
 		}
 		
 		//max_price
 		if(!empty($request->max_price)){
 			$max_price = $request->max_price;
-		}else{
+		} else {
 			$max_price = '';
 		}	
 				
 		if(!empty($request->limit)){
 			$limit = $request->limit;
-		}else{
+		} else {
 			$limit = 15;
 		}
 		
 		if(!empty($request->type)){
 			$type = $request->type;
-		}else{
+		} else {
 			$type = '';
 		}
 		
 		//if(!empty($request->category_id)){
-		if(!empty($request->category) and $request->category!='all'){
+		if(!empty($request->category) and $request->category!='all') {
 			$category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories_slug',$request->category)->where('language_id',Session::get('language_id'))->get();
 			
 			$categories_id = $category[0]->categories_id;
-		}else{
+		} else {
 			$categories_id = '';
 		}
 		
 		//search value
-		if(!empty($request->search)){
+		if(!empty($request->search)) {
 			$search = $request->search;
-		}else{
+		} else {
 			$search = '';
 		}
 		
 		//min_price
-		if(!empty($request->min_price)){
+		if(!empty($request->min_price)) {
 			$min_price = $request->min_price;
-		}else{
+		} else {
 			$min_price = '';
 		}
 		
@@ -339,9 +341,6 @@ class ProductsController extends DataController
 		}else{
 			$max_price = '';
 		}	
-		
-		
-		
 		
 		if(!empty($request->filters_applied) and $request->filters_applied==1){
 			$filters['options_count'] = count($request->options_value);
@@ -351,14 +350,14 @@ class ProductsController extends DataController
 			$filters = array();
 		}	
 						
-		$myVar = new DataController();
+		// /$myVar = new DataController();
 		$data = array('page_number'=>$request->page_number, 'type'=>$type, 'limit'=>$limit, 'categories_id'=>$categories_id, 'search'=>$search, 'filters'=>$filters, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
-		$products = $myVar->products($data);
+		$products = $this->products($data);
 		$result['products'] = $products;	
 			
 		$cart = '';
-		$myVar = new CartController();
-		$result['cartArray'] = $myVar->cartIdArray($cart);
+		//$myVar = new CartController();
+		$result['cartArray'] =  $result['commonContent']['cart']->pluck('products_id')->toArray();
 		$result['limit'] = $limit;
 		return view("filterproducts")->with('result', $result);			
 		

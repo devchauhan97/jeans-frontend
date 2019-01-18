@@ -198,7 +198,7 @@
                     <div class="shipping-methods">
                         <p class="title">@lang('website.Please select a prefered shipping method to use on this order')</p>
                     <form name="shipping_mehtods" method="post" id="shipping_mehtods_form" enctype="multipart/form-data" action="{{ URL::to('/checkout/payment/method')}}">
-                      <!-- <input type="hidden" name="_token" value="{{csrf_token()}}"> -->
+                      <input type="hidden" name="_token" value="{{csrf_token()}}">
                         @if(count($result['shipping_methods'])>0)
                             <input type="hidden" name="mehtod_name" id="mehtod_name">
                             <input type="hidden" name="shipping_price" id="shipping_price">
@@ -279,7 +279,7 @@
                                             <td align="left" class="item">
                                                 <input type="hidden" name="cart[]" value="{{$products->customers_basket_id}}">
                                                 <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="cart-thumb">
-                                                    <img class="img-fluid" src="{{asset('').$products->image}}" alt="{{$products->products_name}}" alt="">
+                                                    <img class="img-fluid" src="{{getFtpImage($products->image)}}" alt="{{$products->products_name}}" alt="">
                                                 </a>
                                                 <div class="cart-product-detail">
                                                     <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="title">
@@ -386,7 +386,7 @@
                         
                             <ul class="list">
                                 @foreach($result['payment_methods'] as $payment_methods)
-                                    @if($payment_methods['active']==1)
+                                    @if($payment_methods['active'] == 1)
                                         <input id="payment_currency" type="hidden" onClick="paymentMethods();" name="payment_currency" value="{{$payment_methods['payment_currency']}}">
                                         @if($payment_methods['payment_method']=='braintree')
                                             

@@ -1,4 +1,10 @@
-@extends('layout')
+@extends('layouts')
+@section('customcss')
+<link rel="stylesheet" type="text/css" href="{!! asset('public/css/bootstrap.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('public/css/responsivej.css') !!}">
+@endsection
+
 @section('content')
 <section class="site-content">
 	<div class="container">
@@ -28,7 +34,7 @@
                 
                 <div class="col-12 col-lg-3 spaceleft-0">
                     @include('common.sidebar_info')
-                 </div>
+                </div>
             </div>
         </div>
 	</div>

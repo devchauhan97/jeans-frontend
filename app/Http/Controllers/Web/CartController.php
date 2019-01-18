@@ -124,8 +124,8 @@ class CartController extends DataController
 		
 		
 		$cart = '';
-		$myVar = new CartController();
-		$result['cartArray'] = $myVar->cartIdArray($cart);
+		//$myVar = new CartController();
+		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();
 		
 		//liked products
 		$result['liked_products'] = $this->likedProducts();	
@@ -622,32 +622,51 @@ class CartController extends DataController
 	{
 		
 		if(empty(session('customers_id'))) {
-			$customers_id					=	'';
+			$customers_id	=	'';
 		} else {
-			$customers_id					=	session('customers_id');
+			$customers_id	=	session('customers_id');
 		}
 						
-		$session_id							=	Session::getId();
+		$session_id	= Session::getId();
 		
-		foreach($request->cart as $key=>$customers_basket_id){
-			Basket::where('customers_basket_id', '=', $customers_basket_id)->update(
-			[
-				 'customers_id' => $customers_id,
-				 'session_id'   => $session_id,
-				 'customers_basket_quantity' => $request->quantity[$key],
-			]);
+		foreach($request->cart as $key=>$customers_basket_id) {
+
+			$product = Basket::select('customers_basket.products_id','products.products_quantity','products_description.products_name')->LeftJoin('products', function ($join) {
+					$join->on('products.products_id', '=', 'customers_basket.products_id');
+				 })
+				->LeftJoin('products_description', function ($join) {
+					$join->on('products_description.products_id', '=', 'products.products_id');
+				 })
+				->where('customers_basket_id', $customers_basket_id)->first();
+			 
+			if($product['products_quantity'] > $request->quantity[$key]) {
+
+				Basket::where('customers_basket_id', '=', $customers_basket_id)->update(
+				[
+					 'customers_id' => $customers_id,
+					 'session_id'   => $session_id,
+					 'customers_basket_quantity' => $request->quantity[$key],
+				]);
+
+			} else {
+				$message = $product['products_name'] .' has  quantity exceeded';
+				return redirect()->back()->with('error', $message);
+			}
+			
 		}
 		
 		$message = Lang::get("website.Cart has been updated successfully");
+
 		return redirect()->back()->with('message', $message);
 
 	}	
 		
 	//mycart
-	public function myCart($baskit_id){		
+	public function myCart($baskit_id)
+	{		
 		$cart = Basket::join('products', 'products.products_id','=', 'customers_basket.products_id')
 			->join('products_description', 'products_description.products_id','=', 'products.products_id')
-			->select('customers_basket.*', 'products.products_model as model', 'products.products_image as image', 'products_description.products_name as products_name', 'products.products_quantity as quantity', 'products.products_price as price', 'products.products_weight as weight', 'products.products_weight_unit as unit', 'products.products_slug')->where([
+			->select('customers_basket.*', 'products.products_model as model', 'products.products_image as image', 'products_description.products_name as products_name', 'products.products_quantity as quantity', 'products.products_price as price', 'products.products_weight as weight', 'products.products_weight_unit as unit', 'products.products_slug', 'products.products_quantity')->where([
 						['customers_basket.is_order', '=', '0'],
 						['products_description.language_id', '=', Session::get('language_id')],
 					]);

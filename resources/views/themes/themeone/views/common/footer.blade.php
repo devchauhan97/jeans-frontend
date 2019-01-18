@@ -31,7 +31,7 @@
                         <li> <a href="{{ URL::to('/page?name='.$page->slug)}}"><i class="fa fa-angle-double-right" aria-hidden="true"></i>{{$page->name}}</a> </li>
                     @endforeach
                 @endif            
-                <li> <a href="{{ URL::to('/contact-us')}}"><i class="fa fa-angle-double-right" aria-hidden="true"></i>@lang('website.Contact Us')</a> </li>
+                <li> <a href="{{ URL::to('/contact')}}"><i class="fa fa-angle-double-right" aria-hidden="true"></i>@lang('website.Contact Us')</a> </li>
               </ul>
             </div>
         </div>
@@ -59,7 +59,7 @@
           
           	<?php /*?><ul class="cat-list pl-0 mb-0">
 		   		<?php $counter = 0;?>
-                @foreach($result['commonContent']['popularCategories'] as $categories_data)
+                @foreach(@$result['commonContent']['popularCategories'] as $categories_data)
                 			
                     <li>
 
