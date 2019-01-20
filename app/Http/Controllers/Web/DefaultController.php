@@ -24,7 +24,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Lang;
 //for Carbon a value 
-use Carbon;
+use Carbon\Carbon;
 
 //email
 use Illuminate\Support\Facades\Mail;
@@ -35,6 +35,7 @@ use App\Page;
 use App\Order;
 use App\Product;
 use App\ProductsToCategory;
+use Cache;
 
 class DefaultController extends DataController
 {
@@ -73,23 +74,82 @@ class DefaultController extends DataController
 		$result['commonContent'] = $this->commonContent();
 		//dd($result['commonContent']);
 		/*get top featured product*/
-		$result['featured'] =$this->getFeaturedProduct();
-		
-		/*get top seller product*/
-		$result['top_seller'] = $this->getTopSellerProduct();
+		//$result['featured'] =$this->getFeaturedProduct();
 
-		//special products
-		$result['special'] = $this->getTopDealsProduct() ;
-		//current time
-		$currentDate = Carbon\Carbon::now();
-		$currentDate = $currentDate->toDateTimeString();
+		$pr= Product::select('products.*','products_description.products_name','specials.specials_new_products_price as discount_price')
+				->join('products_description','products_description.products_id','=','products.products_id')
+				->LeftJoin('specials', function ($join)  {  
+					$join->on('specials.products_id', '=', 'products.products_id')
+					->where('specials.status', '=', '1')
+					->where('specials.expires_date', '>', time());
+				})
+				->where('products_quantity','>','0')
+				->where('products.products_status', '=', 1)
+				->where('products_description.language_id','=',Session::get('language_id'))
+				;
 		
-		$slides = SlidersImage::select('sliders_id as id', 'sliders_title as title', 'sliders_url as url', 'sliders_image as image', 'type', 'sliders_title as title')
+		$featured =	clone $pr;
+
+		$top_seller =	clone $pr;
+		$top_deals =	clone $pr;
+
+		$chave = 'featured';
+	    if(Cache::has($chave)) {
+		        $result['featured'] =Cache::get($chave);
+	    } else{
+			$posts = $featured->where('products.is_feature', '=', 1)
+								->groupBy('products.products_id')
+								->limit(4)
+								->get();
+			$result['featured'] = $posts;
+			//Cache::forever($chave, $posts);
+		}
+		/*get top seller product*/
+		//$result['top_seller'] = $this->getTopSellerProduct();
+		$chave = 'top_seller';
+	    if(Cache::has($chave)) {
+		        $result['top_seller'] =Cache::get($chave);
+	    } else{
+			$posts = $top_seller->where('products.is_feature', '=', 0)
+									->orderBy('products.products_ordered', 'DESC')
+									->groupBy('products.products_id')
+									->limit(4)
+									->get();
+			$result['top_seller'] = $posts;
+			Cache::forever($chave, $posts);
+		}
+		//special products
+		$chave = 'special';
+	    if(Cache::has($chave)) {
+		        $result['special'] =Cache::get($chave);
+	    } else {
+			$posts = $top_deals->where('products.is_feature', '=', 0)
+									->orderBy('specials.products_id', 'DESC')
+									->groupBy('products.products_id')
+									->limit(4)
+									->get();
+			$result['special'] = $posts;
+			Cache::forever($chave, $posts);
+		}
+		//$result['special'] = $this->getTopDealsProduct() ;
+		 
+		//current time
+		
+		$currentDate = Carbon::now()->toDateTimeString();
+		
+		$chave = 'slides_'.Carbon::now()->toDateString();
+		
+	    if(Cache::has($chave)) {
+		        $slides =Cache::get($chave);
+	    } else {
+			$slides = SlidersImage::select('sliders_id as id', 'sliders_title as title', 'sliders_url as url', 'sliders_image as image', 'type', 'sliders_title as title')
 					   ->where('status', '=', '1')
 					   ->where('languages_id', '=', session('language_id'))
 					   ->where('expires_date', '>', $currentDate)
-		   				->get();
-		
+		   			   ->get();
+			Cache::forever($chave, $slides);
+		}
+
 		$result['slides'] = $slides;
 		
 		//cart array

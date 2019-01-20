@@ -14,4 +14,8 @@ class ProductsToCategory extends Model
 
 	//use user id of admin
 	protected $primaryKey = 'products_id';
+
+	public function category() {
+	    return $this->hasOne(Category::class, 'categories_id');
+	}	
 }

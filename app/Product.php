@@ -15,6 +15,19 @@ class Product extends Model
 	//use user id of admin
 	protected $primaryKey = 'products_id'; 
 
+
+
+	public  function products_description()
+	{
+
+		return $this->hasOne(ProductsDescription::class,'products_id');
+	}
+	public  function special()
+	{
+
+		return $this->hasMany(Special::class,'products_id');
+	}
+
 	public  function scopeGetProduct($query)
 	{
 

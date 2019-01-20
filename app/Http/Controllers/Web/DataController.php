@@ -41,7 +41,7 @@ use App\Setting;
 use App\ProductsImage;
 use App\ProductsOptionsValue;
 use App\Basket;
-
+use Cache;
 class DataController extends Controller
 {
 	
@@ -56,6 +56,9 @@ class DataController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public $languages=null;
+    public $web_setting=null;
+
 	public function __construct()
     {
     	$result = array();
@@ -93,12 +96,12 @@ class DataController extends Controller
             //->get();
             ->paginate(10);*/
         
-        $languages = DB::table('languages')->get();
+        $this->languages = DB::table('languages')->get();
         
-        $web_setting = DB::table('settings')->get();
+        $this->web_setting = DB::table('settings')->get();
         
-        view()->share('languages', $languages);
-        view()->share('web_setting', $web_setting);
+        view()->share('languages', $this->languages);
+        view()->share('web_setting', $this->web_setting);
 
         //view()->share('unseenOrders', $result);
         //view()->share('newCustomers', $newCustomers);
@@ -116,14 +119,17 @@ class DataController extends Controller
 		
 		$result = array();		
 		
-		$data = array('type'=>'header');
+		//$data = array('type'=>'header');
 
-		$myVar = new CartController();
+		// $myVar = new CartController();
 		
-		$cart = $myVar->cart($data);
+		// $cart = $myVar->cart($data);
 
-		$result['cart'] = $cart;
-				
+		//$result['cart'] = $cart;
+		$cart = Basket::BasketCart();
+		
+		$result['cart'] = $cart->get();
+
 		if(count($result['cart'])==0) {
 
 			session(['step' => '0']);
@@ -185,14 +191,21 @@ class DataController extends Controller
 		$result['popularCategories'] = $categoriesContent;	
 
 		*/	
-		$result['setting'] = Setting::get();
-		$result['pages'] = Page::leftJoin('pages_description', 'pages_description.page_id', '=', 'pages.page_id')
-							->where([['type','2'],['status','1'],['pages_description.language_id',session('language_id')]])->orderBy('pages_description.name', 'ASC')->get();
+		$result['setting'] = $this->web_setting;
+
+		$result['pages'] =  Cache::remember('pages_description', 60, function()
+							{
+
+								 return  Page::leftJoin('pages_description', 'pages_description.page_id', '=', 'pages.page_id')
+														->where([['type','2'],['status','1'],['pages_description.language_id',session('language_id')]])->orderBy('pages_description.name', 'ASC')->get();
+							});
 		
-		if(!empty(session('customers_id'))) {						
-			$wishlist = LikedProduct::where([
-					'liked_customers_id' => session('customers_id')
-				])->get();
+		if(!empty(session('customers_id'))) {
+			$cache_like_product='cache_like_product_'.session('customers_id');
+			$wishlist =  LikedProduct::where([
+											'liked_customers_id' => session('customers_id')
+										])->get();
+						 
 			$result['totalWishList'] = count($wishlist); 	
 		} else {
 			$result['totalWishList']=0;
@@ -222,7 +235,13 @@ class DataController extends Controller
 	{
 				
 		$result 	= 	array();
-		
+		$category_result = Category::with('sub_categories.categories_description','categories_description'
+			
+					)
+					->where('categories_status',1)
+					->get();
+
+		return $category_result;
 		$categories = Category::LeftJoin('categories_description', 'categories_description.categories_id', '=', 'categories.categories_id')
 			->select('categories.categories_id as id',
 				 'categories.categories_image as image',

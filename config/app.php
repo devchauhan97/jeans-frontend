@@ -179,7 +179,8 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Karlomikus\Theme\ThemeServiceProvider::class,
         Laravel\Socialite\SocialiteServiceProvider::class,
-        
+        Barryvdh\Debugbar\ServiceProvider::class,
+
     ],
 
     /*
@@ -232,7 +233,8 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Theme' => Karlomikus\Theme\Facade\Theme::class,
         'Socialite' => Laravel\Socialite\Facades\Socialite::class,
-        
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
+        'Carbon' => 'Carbon\Carbon',
     ],
 
 ];

@@ -25,19 +25,20 @@
   				<li><a href="#">Actif Club</a></li>
 				<li><a href="#">Gallery</a></li>
   			</ul> -->
+       
   			 <ul class="nav navbar-nav">
               <!-- <li class="active"><a href="#">Active Link</a></li>
               <li><a href="#">Link</a></li> -->
               @foreach($result['commonContent']['categories'] as $categories_data) 
                 <li class="dropdown">
-                	<a data-toggle="dropdown" href="{{ URL::to('/shop')}}?category={{$categories_data->slug}}" >{{$categories_data->name}}</a>
-                  @if(count($categories_data->sub_categories)>0)
+                	<a data-toggle="dropdown" href="{{ URL::to('/shop')}}?category={{$categories_data->categories_slug}}" >{{$categories_data->categories_description->categories_name}}</a>
+              <!--     //@if(count($categories_data->sub_categories)>0) -->
 				          <ul class="dropdown-menu">
                 		@foreach($categories_data->sub_categories as $sub_categories_data)
-                          <li class="active"><a href="{{ URL::to('/shop')}}?category={{$sub_categories_data->sub_slug}}">{{$sub_categories_data->sub_name}}</a></li>
+                          <li class="active"><a href="{{ URL::to('/shop')}}?category={{$sub_categories_data->categories_slug}}">{{$sub_categories_data->categories_description->categories_name}}</a></li>
                     @endforeach  
                   </ul>
-                  @endif  
+               <!--   // @endif  --> 
                 </li>
              @endforeach
             <li class="active"><a href="{{ URL::to('/shop?type=special')}}">Top Deal</a></li>

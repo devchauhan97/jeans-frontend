@@ -1,6 +1,6 @@
 <!-- scripts -->
 <!-- <script src="{!! asset('public/js/app.js') !!}"></script> -->
-<script src="{!! asset('public/js/plugins/jQueryUI/jquery-ui.min.js') !!}"></script>
+<script src="{!! asset('public/js/jquery-ui.min-1.12.1.js') !!}"></script>
 <!-- owl carousel -->
 <script src="{!! asset('public/js/owl.carousel.js') !!}"></script>
 
