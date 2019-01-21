@@ -5,12 +5,13 @@
     @else
         <link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
-<link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link rel="stylesheet" type="text/css" href="{!! asset('public/css/bootstrap.min.css') !!}">
+ <link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.min.css') !!}">
+<!-- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}"> -->
+<!--  <link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
  <link href="{!! asset('public/css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ 
   
 @endsection
 @section('content')
@@ -51,13 +52,13 @@
                         <li class="nav-item">
                             <a class="nav-link @if(session('step')==2) active @elseif(session('step')>2) active-check @endif"  @if(session('step')>=2)  id="shipping-methods-tab" data-toggle="pill" href="#pills-shipping-methods" role="tab" aria-controls="pills-shipping-methods" aria-expanded="true"  @endif>@lang('website.Shipping Methods')</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item @if(session('step')==3) active @endif">
                             <a class="nav-link @if(session('step')==3) active @elseif(session('step')>3) active-check @endif"  @if(session('step')>=3)  id="order-tab" data-toggle="pill" href="#pills-order" role="tab" aria-controls="pills-order" aria-expanded="true"  @endif>@lang('website.Order Detail')</a>
                         </li>
                     </ul>
                     
                     <div class="tab-content" id="pills-tabContent">
-                      <div class="tab-pane fade @if(session('step') == 0) show active @endif" id="pills-shipping" role="tabpanel" aria-labelledby="shipping-tab">
+                      <div class="tab-pane fade @if(session('step') == 0) show active in @endif" id="pills-shipping" role="tabpanel" aria-labelledby="shipping-tab">
                         
                         <form name="signup" enctype="multipart/form-data" class="form-validate" action="{{ URL::to('/checkout_shipping_address')}}" method="post">
                           <input type="hidden" name="_token" value="{{csrf_token()}}">
@@ -123,7 +124,7 @@
                     	</form>
                       </div>
                       
-                      <div class="tab-pane fade @if(session('step') == 1) show active @endif" id="pills-billing" role="tabpanel" aria-labelledby="billing-tab">
+                      <div class="tab-pane fade @if(session('step') == 1) show active in @endif" id="pills-billing" role="tabpanel" aria-labelledby="billing-tab">
                         <form name="signup" enctype="multipart/form-data" action="{{ URL::to('/checkout/billing/address')}}" method="post">
                           <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <div class="form-row">
@@ -194,7 +195,7 @@
                     </form>
               	</div>
                 
-                <div class="tab-pane fade @if(session('step') == 2) show active @endif" id="pills-shipping-methods" role="tabpanel" aria-labelledby="shipping-methods-tab">
+                <div class="tab-pane fade @if(session('step') == 2) show active in @endif" id="pills-shipping-methods" role="tabpanel" aria-labelledby="shipping-methods-tab">
                     <div class="shipping-methods">
                         <p class="title">@lang('website.Please select a prefered shipping method to use on this order')</p>
                     <form name="shipping_mehtods" method="post" id="shipping_mehtods_form" enctype="multipart/form-data" action="{{ URL::to('/checkout/payment/method')}}">
@@ -250,7 +251,7 @@
                     </div>
                 </div>
               
-                <div class="tab-pane fade @if(session('step') == 3) show active @endif" id="pills-order" role="tabpanel" aria-labelledby="order-tab"> 
+                <div class="tab-pane fade @if(session('step') == 3) show active in @endif" id="pills-order" role="tabpanel" aria-labelledby="order-tab"> 
                 	 
                     <div class="order-review">
                         <?php 
@@ -565,6 +566,7 @@
                                 </div>    
                             @endif  
                             <form id="apply_coupon">
+                              <input type="hidden" name="_token" value="{{csrf_token()}}">
                                 <div class="form-group">
                                     <label for="inputPassword2" class="">@lang('website.Coupon Code')</label>
                                     <input type="text" name="coupon_code" class="form-control" id="coupon_code">

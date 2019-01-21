@@ -2,10 +2,10 @@
 <!-- <script src="{!! asset('public/js/app.js') !!}"></script> -->
 <script src="{!! asset('public/js/jquery-ui.min-1.12.1.js') !!}"></script>
 <!-- owl carousel -->
-<script src="{!! asset('public/js/owl.carousel.js') !!}"></script>
+<script src="{!! asset('public/js/owl.carousel.min.js') !!}"></script>
 
 <!--- google map-->
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&key=AIzaSyCQq_d3bPGfsIAlenXUG5RtZsKZKzOmrMw"></script>
+<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&key=AIzaSyCQq_d3bPGfsIAlenXUG5RtZsKZKzOmrMw"></script> -->
 
 <!--- one signal-->
 @if(Request::path() == 'checkout')	

@@ -8,8 +8,9 @@
   <meta name="description" content="<?=stripslashes($web_setting[75]->value)?>"/>
   <meta name="robots" content="noindex,nofollow">
   <meta name="keywords" content="<?=stripslashes($web_setting[74]->value)?>"/>
-  <meta name="google-signin-client_id" content="31214299992-7pijldgsl0h1f75s8tbq7subrijq36jo.apps.googleusercontent.com">
-  <link href="{!! asset('public/css/jquery-ui.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+  <!-- <meta name="google-signin-client_id" content="31214299992-7pijldgsl0h1f75s8tbq7subrijq36jo.apps.googleusercontent.com"> -->
+  
+  <link href="{!! asset('public/css/jquery-ui.min.css') !!} " media="all" rel="stylesheet" type="text/css"/>
   <link rel="shortcut icon" href="{{getFtpImage($web_setting[15]->value)}}" />
   <link rel="stylesheet" type="text/css" href="{!! asset('public/css/infinite-slider.css') !!}">
   <meta name="csrf-token" content="{{ csrf_token() }}">

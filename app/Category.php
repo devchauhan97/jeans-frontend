@@ -20,7 +20,7 @@ class Category extends Model
 	}
 
 	public function sub_categories() {
-	    return $this->hasMany(self::class, 'parent_id','categories_id')->where('categories_status',1);
+	    return $this->hasMany(self::class, 'parent_id','categories_id');//->where('categories_status',1);
 	}
 
 	public function categories_description() {

@@ -31,12 +31,7 @@ Theme::set($routeSetting[48]->value);
 // 	print $locale;
 //     //
 // });
-// Route::get('/clear-cache', function() {
- 
-// 	$exitCode = Artisan::call('config:cache');
-// 	$exitCode = Artisan::call('route:cache');
-// 	$exitCode = Artisan::call('optimize');
-// });
+
 Route::group(['namespace' => 'Web'], function () {	
 	
 //language route
@@ -184,6 +179,9 @@ Route::post('/language/', array(
 		Route::post('/myorders', 'OrdersController@myorders');	
 		Route::get('/stripeForm', 'OrdersController@stripeForm');	
 		Route::get('/view/order/{id}', 'OrdersController@viewOrder');
+		Route::get('/stripe', 'StripeController@payWithStripe');
+		Route::post('/stripform', 'StripeController@postPaymentWithStripe');
 	});
 });
 
+Route::get('/cache', 'CacheController@index');

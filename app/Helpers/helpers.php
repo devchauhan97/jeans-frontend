@@ -4,6 +4,7 @@
 use Illuminate\Support\Facades\Storage;
  
  //create random password for social links
+use Illuminate\Support\Facades\Cache;
 function createRandomPassword() { 
     $pass = substr(md5(uniqid(mt_rand(), true)) , 0, 8);    
     return $pass; 
@@ -63,4 +64,13 @@ function getFtpImage($imagepath)
     }
   
     return $image;
+}
+
+
+function removeOldCache($session_id)
+{
+
+    Cache::forget('basket_cart'.$session_id);
+
+
 }

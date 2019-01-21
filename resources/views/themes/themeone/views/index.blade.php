@@ -1,9 +1,8 @@
 @extends('layouts')
 @section('customcss')
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/bootstrap.css') !!}">
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/responsivej.css') !!}">
-
+<link rel="stylesheet" type="text/css" href="{!! asset('public/css/bootstrap.min.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.min.css') !!}">
+<!-- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/responsivej.min.css') !!}"> -->
 @endsection
 @section('content')
 <!-- col-4-trending -->
@@ -28,20 +27,17 @@
 		</div>
 	</section>
 	<!-- banner section -->
-	<!-- <section class="banner-section">
-		 <a title="Banner Image" href="#"><img class="img-fluid" src="{{asset('public/images/banner-1.jpg').''}}" alt="Banner Image"></a>
-	</section> -->
+	 
 
-	<!-- featured-product -->
-	@include('common.featured')
-	<!-- latest-products-section -->
-	<!-- include('common.latestproducts') -->
-	<!-- top-seller -->
-	@include('common.top_seller')
-	<!-- top-deals -->
-	@include('common.special_products')
+<!-- featured-product -->
+@include('common.featured')
+<!-- latest-products-section -->
+
+<!-- top-seller -->
+@include('common.top_seller')
+<!-- top-deals -->
+@include('common.special_products')
 	
-
 
 @endsection
 @section('customjs')

@@ -32,7 +32,7 @@ use App\BasketAttribute;
 use App\Coupon;
 use App\Special;
 use App\ProductsToCategory;
-
+use Cache;
 class CartController extends DataController
 {
 	
@@ -311,7 +311,8 @@ class CartController extends DataController
 	
 	
 	//addToCart
-	public function addToCart(Request $request){
+	public function addToCart(Request $request)
+	{
 		
 		$products_id            				=   $request->products_id;		
 		
@@ -613,6 +614,7 @@ class CartController extends DataController
 			}
 						
 		}
+	
 		
 		$result['commonContent'] = $this->commonContent();
 		return view("cartButton")->with('result', $result);

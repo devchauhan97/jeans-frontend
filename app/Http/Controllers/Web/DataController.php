@@ -96,10 +96,16 @@ class DataController extends Controller
             //->get();
             ->paginate(10);*/
         
-        $this->languages = DB::table('languages')->get();
-        
-        $this->web_setting = DB::table('settings')->get();
-        
+        $this->languages = Cache::remember('cache_languages', 3600, function()
+							{ 
+								return DB::table('languages')->get();
+        					});
+
+        $this->web_setting = Cache::remember('cache_settings', 3600, function()
+							{ 
+								return DB::table('settings')->get();
+        					});
+
         view()->share('languages', $this->languages);
         view()->share('web_setting', $this->web_setting);
 
@@ -126,9 +132,21 @@ class DataController extends Controller
 		// $cart = $myVar->cart($data);
 
 		//$result['cart'] = $cart;
-		$cart = Basket::BasketCart();
+
+		if(empty(session('customers_id'))){
+			$session_id=Session::getId();
+		}else{
+			$session_id=session('customers_id');
+		}
+
+		$cart = Basket::BasketCart($session_id);
 		
-		$result['cart'] = $cart->get();
+		$result['cart'] = 
+						//Cache::remember('basket_cart'.$session_id, 3600, function() use ($cart)
+							// {
+							// 	return 
+								$cart->get();
+						  // });
 
 		if(count($result['cart'])==0) {
 
@@ -193,7 +211,7 @@ class DataController extends Controller
 		*/	
 		$result['setting'] = $this->web_setting;
 
-		$result['pages'] =  Cache::remember('pages_description', 60, function()
+		$result['pages'] =  Cache::remember('pages_description', 3600, function()
 							{
 
 								 return  Page::leftJoin('pages_description', 'pages_description.page_id', '=', 'pages.page_id')
@@ -234,15 +252,19 @@ class DataController extends Controller
 	public function categories()
 	{
 				
-		$result 	= 	array();
-		$category_result = Category::with('sub_categories.categories_description','categories_description'
+		$result  = 	array();
+		$category_result = 
+							/*Cache::remember('categories', 3600, function()
+							{ return*/
+								 Category::with('sub_categories.categories_description','categories_description'
 			
-					)
-					->where('categories_status',1)
-					->get();
-
+								)
+								->where('categories_status',1)
+								->get();
+							//});
+ 
 		return $category_result;
-		$categories = Category::LeftJoin('categories_description', 'categories_description.categories_id', '=', 'categories.categories_id')
+		/*$categories = Category::LeftJoin('categories_description', 'categories_description.categories_id', '=', 'categories.categories_id')
 			->select('categories.categories_id as id',
 				 'categories.categories_image as image',
 				 'categories.categories_icon as icon',
@@ -303,7 +325,7 @@ class DataController extends Controller
 			$result[$index++]->sub_categories = $data;
 			
 		}		
-		return($result);		
+		return($result);	*/	
 		
 	}
 	
