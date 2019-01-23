@@ -9,7 +9,6 @@ class Basket extends Model
 {
    
 	//protected $guard = "customers";
-	
 	protected $table = 'customers_basket';
 
 	protected $guarded = ['customers_basket_id'];

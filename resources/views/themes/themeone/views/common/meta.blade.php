@@ -20,27 +20,27 @@
 	<meta name="Vectorcoder" content="http://ionicecommerce.com">
 	
 	@if(!empty(session("theme")))
-		<link href="{!! asset('public/css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+		<link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @else
-		<link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+		<link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
-    <link href="{!! asset('public/css/jquery-ui.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/jquery-ui.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     <!---- slider --->
-    <link href="{!! asset('public/css/bootstrap-slider.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    <link href="{!! asset('public/css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    <link href="{!! asset('public/css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-	<link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/bootstrap-slider.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+	<link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     
-    <link href="{!! asset('public/css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    <link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 	
     
    
     <!--------- stripe js ------>
 	<script src="https://js.stripe.com/v3/"></script>
     
-    <link rel="stylesheet" type="text/css" href="{!! asset('public/css/base.css') !!}" data-rel-css="" />
-    <link rel="stylesheet" type="text/css" href="{!! asset('public/css/stripe.css') !!}" data-rel-css="" />
+    <link rel="stylesheet" type="text/css" href="{!! asset('css/base.css') !!}" data-rel-css="" />
+    <link rel="stylesheet" type="text/css" href="{!! asset('css/stripe.css') !!}" data-rel-css="" />
     
     <!------- paypal ---------->
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>

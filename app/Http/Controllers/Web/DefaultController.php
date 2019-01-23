@@ -117,7 +117,7 @@ class DefaultController extends DataController
 		$currentDate = Carbon::now()->toDateTimeString();
 		$chave = 'slides_'.Carbon::now()->toDateString();
 		
-	    $result['slides'] = Cache::remember($chave, 3600, function() { 
+	    $result['slides'] = Cache::remember($chave, 3600, function() use ($currentDate) { 
 								return SlidersImage::select('sliders_id as id', 'sliders_title as title', 'sliders_url as url', 'sliders_image as image', 'type', 'sliders_title as title')
 								   ->where('status', '=', '1')
 								   ->where('languages_id', '=', session('language_id'))

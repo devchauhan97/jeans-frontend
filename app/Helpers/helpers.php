@@ -47,22 +47,24 @@ function storeImage($uploadImage)
 {
 	$file_local = Storage::disk('public')->get($uploadImage);
 
-    $file_ftp = Storage::disk('ftp')->put('images/'.$uploadImage, $file_local);	
+    if(App::environment('APP_ENV') == 'local')
+        $uploadImage= 'images/'.$uploadImage;
+
+    $file_ftp = Storage::disk('ftp')->put($uploadImage, $file_local);	
 }
 
 function getFtpImage($imagepath)
 {
 
     
-    if(Storage::disk('ftp')->exists('/images/'.$imagepath)){
+    $host =Config::get('filesystems.disks.ftp.host');
+    $image ='http://'.$host.'/'.$imagepath;
+    /*if(Storage::disk('ftp')->exists('/images/'.$imagepath)){
         //$image = Storage::disk('ftp')->get($imagepath);
-        $host =Config::get('filesystems.disks.ftp.host');
-        $image ='http://'.$host.'/images/'.$imagepath;
 
     }else{
         $image=asset('images/not-found.png');
-    }
-  
+    }*/
     return $image;
 }
 

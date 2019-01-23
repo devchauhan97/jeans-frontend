@@ -11,8 +11,8 @@
                 <img src="{{getFtpImage($products->products_image)}}" alt="{{$products->products_name}}" width="300"> 
                 <div class="wish-middle">
                     <a href="{{ URL::to('/wishlist')}}"><span class="wishlist-icon" id="wishlist-count">
-                        <img src="{{asset('public/images/wishlist_icon.png')}}" alt="wishlist"></span></a>
-                    <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}"><span class="wishlist-icon"><img src="{{asset('public/images/eye_icon.png')}}" alt="wishlist"></span></a>
+                        <img src="{{asset('images/wishlist_icon.png')}}" alt="wishlist"></span></a>
+                    <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}"><span class="wishlist-icon"><img src="{{asset('images/eye_icon.png')}}" alt="wishlist"></span></a>
                 </div>              
                 <div class="add-cart">
                      @if(!in_array($products->products_id,$result['cartArray']))
@@ -57,10 +57,10 @@
              @endif
              @endforeach 
              <div class="col-md-4 col-sm-4 col-4">
-                <a href="#"><img class="left-img" src="{{asset('public/images/trendy_jean5.jpg')}}" alt="Trendy Jean1"></a>
+                <a href="#"><img class="left-img" src="{{asset('images/trendy_jean5.jpg')}}" alt="Trendy Jean1"></a>
             </div>
             <div class="col-md-4 col-sm-4 right-img col-4">
-                <a href="#"><img src="{{asset('public/images/trendy_jean6.jpg')}}" alt="Trendy Jean3"></a>
+                <a href="#"><img src="{{asset('images/trendy_jean6.jpg')}}" alt="Trendy Jean3"></a>
             </div> 
         </div>
     </div>

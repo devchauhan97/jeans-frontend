@@ -1,8 +1,8 @@
 <!-- scripts -->
-<!-- <script src="{!! asset('public/js/app.js') !!}"></script> -->
-<script src="{!! asset('public/js/jquery-ui.min-1.12.1.js') !!}"></script>
+<!-- <script src="{!! asset('js/app.js') !!}"></script> -->
+<script src="{!! asset('js/jquery-ui.min-1.12.1.js') !!}"></script>
 <!-- owl carousel -->
-<script src="{!! asset('public/js/owl.carousel.min.js') !!}"></script>
+<script src="{!! asset('js/owl.carousel.min.js') !!}"></script>
 
 <!--- google map-->
 <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&key=AIzaSyCQq_d3bPGfsIAlenXUG5RtZsKZKzOmrMw"></script> -->
@@ -12,86 +12,116 @@
 <!------- //paypal -------->
 
 <script type="text/javascript">
-window.onload = function(e){ 
+// window.onload = function(e){ 
  	
-	var paypal_public_key = document.getElementById('paypal_public_key').value;
-	var acount_type = document.getElementById('paypal_environment').value;
+// 	var paypal_public_key = document.getElementById('paypal_public_key').value;
+// 	var acount_type = document.getElementById('paypal_environment').value;
 	
-	if(acount_type=='Test'){
-		var paypal_environment = 'sandbox'
-	}else if(acount_type=='Live'){
-		var paypal_environment = 'production'
-	}
+// 	if(acount_type=='Test'){
+// 		var paypal_environment = 'sandbox'
+// 	}else if(acount_type=='Live'){
+// 		var paypal_environment = 'production'
+// 	}
 	
-     paypal.Button.render({			
-		env: paypal_environment, // sandbox | production		
-		style: {
-            label: 'checkout',
-            size:  'small',    // small | medium | large | responsive
-            shape: 'pill',     // pill | rect
-            color: 'gold'      // gold | blue | silver | black
-        },
+//      paypal.Button.render({			
+// 		env: paypal_environment, // sandbox | production		
+// 		style: {
+//             label: 'checkout',
+//             size:  'small',    // small | medium | large | responsive
+//             shape: 'pill',     // pill | rect
+//             color: 'gold'      // gold | blue | silver | black
+//         },
 		
-		// PayPal Client IDs - replace with your own
-		// Create a PayPal app: https://developer.paypal.com/developer/applications/create
+// 		// PayPal Client IDs - replace with your own
+// 		// Create a PayPal app: https://developer.paypal.com/developer/applications/create
 		
-		client: {
-			sandbox:     paypal_public_key,
-			production:  paypal_public_key
-		},
+// 		client: {
+// 			sandbox:     paypal_public_key,
+// 			production:  paypal_public_key
+// 		},
 
-		// Show the buyer a 'Pay Now' button in the checkout flow
-		commit: true,
+// 		// Show the buyer a 'Pay Now' button in the checkout flow
+// 		commit: true,
 
-		// payment() is called when the button is clicked
-		payment: function(data, actions) {
-			var payment_currency = document.getElementById('payment_currency').value;
-			var total_price = '<?php echo number_format((float)$total_price+0, 2, '.', '');?>';
+// 		// payment() is called when the button is clicked
+// 		payment: function(data, actions) {
+// 			var payment_currency = document.getElementById('payment_currency').value;
+// 			var total_price = '<?php echo number_format((float)$total_price+0, 2, '.', '');?>';
 			
-			// Make a call to the REST api to create the payment
-			return actions.payment.create({
-				payment: {
-					transactions: [
-						{
-							amount: { total: total_price, currency: payment_currency }
-						}
-					]
-				}
-			});
-		},
+// 			// Make a call to the REST api to create the payment
+// 			return actions.payment.create({
+// 				payment: {
+// 					transactions: [
+// 						{
+// 							amount: { total: total_price, currency: payment_currency }
+// 						}
+// 					]
+// 				}
+// 			});
+// 		},
 
-		// onAuthorize() is called when the buyer approves the payment
-		onAuthorize: function(data, actions) {
+// 		// onAuthorize() is called when the buyer approves the payment
+// 		onAuthorize: function(data, actions) {
 
-			// Make a call to the REST api to execute the payment
-			return actions.payment.execute().then(function() {
-			   	jQuery('#update_cart_form').prepend('<input type="hidden" name="nonce" value='+JSON.stringify(data)+'>');
-				jQuery("#update_cart_form").submit();
-			});
-		}
+// 			// Make a call to the REST api to execute the payment
+// 			return actions.payment.execute().then(function() {
+// 			   	jQuery('#update_cart_form').prepend('<input type="hidden" name="nonce" value='+JSON.stringify(data)+'>');
+// 				jQuery("#update_cart_form").submit();
+// 			});
+// 		}
 
-	}, '#paypal_button');
-};
+// 	}, '#paypal_button');
+// };
 </script>
-
-<script src="https://js.braintreegateway.com/js/braintree-2.32.1.min.js"></script> 
+ 
 <script type="text/javascript">
 jQuery(document).ready(function(e) {
+ 
 	
-	braintree.setup(
-		// Replace this with a client token from your server
-		"<?php print session('braintree_token')?>",
-		"dropin", {
-		container: "payment-form"
-	});
-	
-	 
+    jQuery(document).on('click',"#stripe_btn",function(){
+
+		var formData = jQuery('#stript_from').serialize();
+		var message ;
+		var stripe_error = jQuery('.stripe-error')
+		var help_block = jQuery('.help-block')
+		help_block.hide()
+		stripe_error.hide();
+		jQuery('#loader').css('display','flex');
+		jQuery.ajax({
+			url: '{{ URL::to("/strip/order")}}',
+			type: "POST",
+			data: formData,		
+			success: function (res) {
+
+				console.log()
+				if(res.success)
+				window.location.href='{{ URL::to("/orders")}}';
+
+			},
+			error: function (reject,exception) {
+				
+				console.log(reject,'exception',exception)
+                if( reject.status === 422 ) {
+                    var errors = jQuery.parseJSON(reject.responseText);
+                    jQuery.each(errors, function (key, val) {
+                        jQuery('[name="'+key+'"]').next('span').show()
+                    	jQuery('[name="'+key+'"]').next('span').html(val[0])
+                    });
+ 
+                } else {
+                	stripe_error.show();
+                	stripe_error.find('span').text(reject.responseJSON)
+                }
+                jQuery('#loader').hide();
+            }
+		});
+	 })
 });
 </script> 
 
-<script src="https://js.stripe.com/v3/"></script> 
+<!-- <script src="https://js.stripe.com/v3/"></script> 
 
-<script src="{!! asset('public/js/stripe_card.js') !!}" data-rel-js></script> 
+<script src="{!! asset('js/stripe_card.js') !!}" data-rel-js></script> 
 
 <script type="application/javascript">
 (function() {
@@ -177,7 +207,7 @@ jQuery(document).ready(function(e) {
 
   registerElements([cardNumber, cardExpiry, cardCvc], 'example2');
 })();
-</script> 
+</script> --> 
 @endif 
 
 <script type="application/javascript">
@@ -256,9 +286,9 @@ jQuery( document ).ready( function () {
 		jQuery('#loader').css('display','flex');
 		var comments = jQuery('#order_comments').val();
 		jQuery.ajax({
-			url: '{{ URL::to("/commentsOrder")}}',
+			url: '{{ URL::to("/order/comments/")}}',
 			type: "POST",
-			data: '&comments='+comments,
+			data: '&comments='+comments+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),
 			async: false,
 			success: function (res) {	
 				jQuery('#loader').hide();			
@@ -1471,18 +1501,20 @@ function delete_cart_product(cart_id){
 
 //paymentMethods
 function paymentMethods(){
+
 	//jQuery('#loader').css('display','flex');
 	var payment_method = jQuery(".payment_method:checked").val();
-	jQuery(".payment_btns").hide();
+	/*jQuery(".payment_btns").hide();
 	
 	jQuery("#"+payment_method+'_button').show();
-	
+	*/
 	jQuery.ajax({
 		url: '{{ URL::to("/paymentComponent")}}',
 		type: "POST",
 		data: '&payment_method='+payment_method+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),			
 		success: function (res) {
-			//jQuery('#loader').hide();
+			jQuery('#paymentComponent').show();
+			jQuery('#paymentComponent').html(res);
 		},
 	});
 }

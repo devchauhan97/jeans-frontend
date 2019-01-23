@@ -124,7 +124,7 @@ Route::post('/language/', array(
 
 	Route::get('login/{social}', 'CustomersController@socialLogin');
 	Route::get('callback/{social}', 'CustomersController@handleSocialLoginCallback');
-	Route::post('/commentsOrder', 'OrdersController@commentsOrder');
+	Route::post('/order/comments/', 'OrdersController@commentsOrder');
 	/*
 	|--------------------------------------------------------------------------
 	| customer forget password and reset password
@@ -170,7 +170,7 @@ Route::post('/language/', array(
 		Route::post('/delete/address', 'ShippingAddressController@deleteAddress');
 		
 		Route::get('/checkout', 'OrdersController@checkout');	
-		Route::post('/checkout_shipping_address', 'OrdersController@checkout_shipping_address');
+		Route::post('/checkout/shipping/address', 'OrdersController@checkoutShippingAddress');
 		Route::post('/checkout/billing/address', 'OrdersController@checkoutBillingAddress');
 		Route::post('/checkout/payment/method', 'OrdersController@checkoutPaymentMethod');
 		Route::post('/paymentComponent', 'OrdersController@paymentComponent');	
@@ -180,7 +180,7 @@ Route::post('/language/', array(
 		Route::get('/stripeForm', 'OrdersController@stripeForm');	
 		Route::get('/view/order/{id}', 'OrdersController@viewOrder');
 		Route::get('/stripe', 'StripeController@payWithStripe');
-		Route::post('/stripform', 'StripeController@postPaymentWithStripe');
+		Route::post('/strip/order', 'StripeController@postPaymentWithStripe');
 	});
 });
 

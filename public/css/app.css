@@ -3697,7 +3697,7 @@ body[dir="ltr"] .spaceleft-0 {
 }
 
 .checkout-area .checkout-left .nav .nav-item:last-child .nav-link::before {
-  content: "4";
+  content: "3";
 }
 
 .checkout-area .checkout-left .nav::after {

@@ -25,7 +25,7 @@ class CustomerPasswordUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'old_password'      => 'required',
+           // 'old_password'      => 'required',
             'new_password'      => 'required',
             'confirm_password'  => 'required|same:confirm_password'
         ];
@@ -33,10 +33,10 @@ class CustomerPasswordUpdateRequest extends FormRequest
 
     public function withValidator($validator)
     {
-        $validator->after(function ($validator) {
-            if ($this->has('old_password') && !Hash::check($this->old_password, Auth::guard('customer')->user()->password)) {
-                $validator->errors()->add('old_password', 'Old password not valid');
-            }
-        });
+        // $validator->after(function ($validator) {
+        //     if ($this->has('old_password') && !Hash::check($this->old_password, Auth::guard('customer')->user()->password)) {
+        //         $validator->errors()->add('old_password', 'Old password not valid');
+        //     }
+        // });
     }
 }

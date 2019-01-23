@@ -17,15 +17,15 @@
     </div>
    <!--  <div class="widget block-images">
     	<ul class="list-images en">
-        	<li><a href="{{ URL::to('/shop')}}"><img src="{{asset('public/images/banner_1_en.jpg')}}" alt="image"></a></li>
-            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('public/images/banner_2_en.jpg')}}" alt="image"></a></li>
-            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('public/images/banner_3_en.jpg')}}" alt="image"></a></li>
+        	<li><a href="{{ URL::to('/shop')}}"><img src="{{asset('images/banner_1_en.jpg')}}" alt="image"></a></li>
+            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('images/banner_2_en.jpg')}}" alt="image"></a></li>
+            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('images/banner_3_en.jpg')}}" alt="image"></a></li>
         </ul>
         
         <ul class="list-images ar">
-        	<li><a href="{{ URL::to('/shop')}}"><img src="{{asset('public/images/banner_1_ar.jpg')}}" alt="image"></a></li>
-            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('public/images/banner_2_ar.jpg')}}" alt="image"></a></li>
-            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('public/images/banner_3_ar.jpg')}}" alt="image"></a></li>
+        	<li><a href="{{ URL::to('/shop')}}"><img src="{{asset('images/banner_1_ar.jpg')}}" alt="image"></a></li>
+            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('images/banner_2_ar.jpg')}}" alt="image"></a></li>
+            <li><a href="{{ URL::to('/shop')}}"><img src="{{asset('images/banner_3_ar.jpg')}}" alt="image"></a></li>
         </ul>
     </div> -->
 </div>

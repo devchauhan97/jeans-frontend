@@ -1,8 +1,8 @@
 @extends('layouts')
 @section('customcss')
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/bootstrap.css') !!}">
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/responsivej.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('css/responsivej.css') !!}">
 @endsection
 
 @section('content')

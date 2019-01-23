@@ -36,11 +36,11 @@
 
 	    <!-- Left and right controls -->
 	    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
-	      <span class="glyphicon glyphicon-chevron-left"><img src="{{asset('').'public/images/left_slide_icon.png'}}"></span>
+	      <span class="glyphicon glyphicon-chevron-left"><img src="{{asset('images/left_slide_icon.png')}}"></span>
 	      <span class="sr-only">Previous</span>
 	    </a>
 	    <a class="right carousel-control" href="#myCarousel" data-slide="next">
-	      <span class="glyphicon glyphicon-chevron-right"><img src="{{asset('').'public/images/right_slide_icon.png'}}"></span>
+	      <span class="glyphicon glyphicon-chevron-right"><img src="{{asset('images/right_slide_icon.png')}}"></span>
 	      <span class="sr-only">Next</span>
 	    </a>
 	  </div>

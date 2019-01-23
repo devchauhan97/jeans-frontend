@@ -1,16 +1,16 @@
 @extends('layouts')
 @section('customcss')
 @if(!empty(session("theme")))
-        <link href="{!! asset('public/css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+        <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @else
-        <link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
-<link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
+<link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
   
 @endsection
 @section('content')
@@ -171,13 +171,13 @@
                                 <hr class="featurette-divider">
                                 <form name="updatepassword" class="" enctype="multipart/form-data" action="{{ URL::to('/updatepassword')}}" method="post">
                                     <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                    <div class="form-group row">
+                                    <!-- <div class="form-group row">
                                         <label for="old_password" class="col-sm-4 col-form-label">@lang('website.Old Password')</label>
                                         <div class="col-sm-8">
                                             <input name="old_password" type="password" class="form-control" id="old_password" placeholder="@lang('website.Old Password')">
                                             <span class="help-block error-content" hidden>@lang('website.Please enter your old password and should be at least 6 characters long')</span>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="form-group row">
                                         <label for="new_password" class="col-sm-4 col-form-label">@lang('website.New Password')</label>
                                         <div class="col-sm-8">

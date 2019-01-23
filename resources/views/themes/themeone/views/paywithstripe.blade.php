@@ -3,14 +3,14 @@
 @if(!empty(session("theme")))
         <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @else
-        <link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/bootstrap.min.css') !!}">
- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.min.css') !!}">
-<!-- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}"> -->
-<!--  <link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
- <link href="{!! asset('public/css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}">
+ <link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}">
+<!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}"> -->
+<!--  <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
+ <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  
   
 @endsection
@@ -38,7 +38,7 @@
                 <div class="panel-heading">Paywith Stripe</div>
                 <div class="panel-body">
                     <form class="form-horizontal" method="POST" id="payment-form" role="form" action="{!! URL::to('stripform') !!}" >
-                        {{ csrf_field() }}
+                        <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <div class="form-group{{ $errors->has('card_no') ? ' has-error' : '' }}">
                             <label for="card_no" class="col-md-4 control-label">Card No</label>
                             <div class="col-md-6">

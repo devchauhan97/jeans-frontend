@@ -1,15 +1,15 @@
 @extends('layouts')
 @section('customcss')
 @if(!empty(session("theme")))
-    <link href="{!! asset('public/css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+    <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 @else
     
 @endif
-<link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-<link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}">
+<link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
 <!-- <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
  <!-- <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
- <link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <!-- <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
  <!-- <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
   

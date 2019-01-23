@@ -13,7 +13,7 @@ class StripeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,9 +22,12 @@ class StripeRequest extends FormRequest
      * @return array
      */
     public function rules()
-    {
+    {//numeric|max:14
         return [
-            //
+            'card_no'                => 'required|numeric',
+            'cc_expiry_month'       => 'required|numeric|max:12|min:1',
+            'cc_expiry_year'      => 'required|numeric',
+            'cvv_number'         => 'required|numeric',
         ];
     }
 }

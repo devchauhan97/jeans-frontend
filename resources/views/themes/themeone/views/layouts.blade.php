@@ -11,10 +11,10 @@
 	<footer class="light-grey padding-50">
 		<div class="wrapper">
 			<ul class="social-icon text-center">
-				<li><a href="{{$web_setting[50]->value}}"><img src="{{asset('public/images/facebook_icon.png')}}"></a></li>
-				<li><a href="{{$web_setting[51]->value}}"><img src="{{asset('public/images/insta_icon.png')}}"></a></li>
-				<li><a href="{{$web_setting[52]->value}}"><img src="{{asset('public/images/twitter_icon.png')}}"></a></li>
-				<li><a href="{{$web_setting[53]->value}}"><img src="{{asset('public/images/youtube_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[50]->value}}"><img src="{{asset('images/facebook_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[51]->value}}"><img src="{{asset('images/insta_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[52]->value}}"><img src="{{asset('images/twitter_icon.png')}}"></a></li>
+				<li><a href="{{$web_setting[53]->value}}"><img src="{{asset('images/youtube_icon.png')}}"></a></li>
 			</ul>
 			<div class="row">
 				<div class="col-md-4 col-sm-4">

@@ -101,10 +101,10 @@ class DataController extends Controller
 								return DB::table('languages')->get();
         					});
 
-        $this->web_setting = Cache::remember('cache_settings', 3600, function()
-							{ 
-								return DB::table('settings')->get();
-        					});
+        $this->web_setting = //Cache::remember('cache_settings', 3600, function()
+							//{ 
+								 DB::table('settings')->get();
+        					//});
 
         view()->share('languages', $this->languages);
         view()->share('web_setting', $this->web_setting);

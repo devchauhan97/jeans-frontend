@@ -10,8 +10,8 @@
                 <img src="{{getFtpImage($products->products_image)}}" alt="{{$products->products_name}}" width="300"> 
                 <div class="wish-middle">
                     <a href="{{ URL::to('/wishlist')}}"><span class="wishlist-icon" id="wishlist-count">
-                        <img src="{{asset('public/images/wishlist_icon.png')}}" alt="wishlist"></span></a>
-                    <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}"><span class="wishlist-icon"><img src="{{asset('public/images/eye_icon.png')}}" alt="wishlist"></span></a>
+                        <img src="{{asset('images/wishlist_icon.png')}}" alt="wishlist"></span></a>
+                    <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}"><span class="wishlist-icon"><img src="{{asset('images/eye_icon.png')}}" alt="wishlist"></span></a>
                 </div>              
                 <div class="add-cart">
                      @if(!in_array($products->products_id,$result['cartArray']))

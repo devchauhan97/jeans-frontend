@@ -156,15 +156,18 @@ class OrdersController extends DataController
         	
 			
 			//breaintree token
-			$token = $this->generateBraintreeTokenWeb();
-			session(['braintree_token' => $token]);
+			// $token = $this->generateBraintreeTokenWeb();
+			// session(['braintree_token' => $token]);
+			$result['curr_year']=date('Y');
+			 
 			return view("checkout", $title)->with('result', $result); 
 		}
 		
 	}
 	
 	//checkout
-	public function checkout_shipping_address(Request $request){
+	public function checkoutShippingAddress(Request $request)
+	{
 		
 		$title = array('pageTitle' => Lang::get('website.Checkout'));
 		$result = array();	
@@ -235,7 +238,21 @@ class OrdersController extends DataController
 			$billing_address->same_billing_address = 1;
 			session(['billing_address' => $billing_address]);
 		}
+		/* Applay flate rate force fully*/
+		$shipping_method = ShippingMethod::where(['methods_type_link'=> 'flateRate'])->first();
+		//'status'=>1,'isDefault' => 1;
+		$flate_rate = FlateRate::where(['id'=>1])->first();
+
+		if(count($shipping_method)) {
 			
+			$shipping_detail = [
+								"mehtod_name"     => "Flat Rate",
+								"shipping_price"  => $flate_rate['flate_rate'],
+								"shipping_method" => "flateRate"
+							  ];
+		}
+		session(['shipping_detail' => (object) $shipping_detail]);
+		session(['payment_method' => 'stripe']);
 		return redirect()->back();		
 	}
 	
@@ -257,9 +274,14 @@ class OrdersController extends DataController
 	}
 	
 	//order_detail
-	public function paymentComponent(Request $request){		
+	public function paymentComponent(Request $request)
+	{		
 		session(['payment_method' => $request->payment_method]);
-		//return view('paymentComponent');		
+		$result['curr_year']=date('Y');
+		$result['payment_method']=$request->payment_method;
+			 
+		return view("paymentComponent")->with('result', $result); 
+
 	}
 	
 	//generate token 
@@ -1070,21 +1092,21 @@ class OrdersController extends DataController
 		$result = array();
 		$payments_setting = DB::table('payments_setting')->get();
 		
-		if($payments_setting[0]->braintree_enviroment=='0'){
-			$braintree_enviroment = 'Test';
-		}else{
-			$braintree_enviroment = 'Live';
-		}
+		// if($payments_setting[0]->braintree_enviroment=='0'){
+		// 	$braintree_enviroment = 'Test';
+		// }else{
+		// 	$braintree_enviroment = 'Live';
+		// }
 		
-		$braintree_description = PaymentDescription::where([['payment_name','Braintree'],['language_id',Session::get('language_id')]])->get();
-		$braintree = array(
-			'environment' => $braintree_enviroment, 
-			'name' => $braintree_description[0]->name, 
-			'public_key' => $payments_setting[0]->braintree_public_key,
-			'active' => $payments_setting[0]->brantree_active,
-			'payment_currency' => $payments_setting[0]->payment_currency,
-			'payment_method'=>'braintree',
-		);
+		// $braintree_description = PaymentDescription::where([['payment_name','Braintree'],['language_id',Session::get('language_id')]])->get();
+		// $braintree = array(
+		// 	'environment' => $braintree_enviroment, 
+		// 	'name' => $braintree_description[0]->name, 
+		// 	'public_key' => $payments_setting[0]->braintree_public_key,
+		// 	'active' => $payments_setting[0]->brantree_active,
+		// 	'payment_currency' => $payments_setting[0]->payment_currency,
+		// 	'payment_method'=>'braintree',
+		// );
 		
 		if($payments_setting[0]->stripe_enviroment=='0'){
 			$stripe_enviroment = 'Test';
@@ -1102,36 +1124,36 @@ class OrdersController extends DataController
 			'payment_method'=>'stripe'
 		);
 		
-		$cod_description = PaymentDescription::where([['payment_name','Cash On Delivery'],['language_id',Session::get('language_id')]])->get();
-		$cod = array(
-			'environment' => '', 
-			'name' => $cod_description[0]->name, 
-			'public_key' => '',
-			'active' => $payments_setting[0]->cash_on_delivery,
-			'payment_currency' => $payments_setting[0]->payment_currency,
-			'payment_method'=>'cash_on_delivery'
-		);
+		// $cod_description = PaymentDescription::where([['payment_name','Cash On Delivery'],['language_id',Session::get('language_id')]])->get();
+		// $cod = array(
+		// 	'environment' => '', 
+		// 	'name' => $cod_description[0]->name, 
+		// 	'public_key' => '',
+		// 	'active' => $payments_setting[0]->cash_on_delivery,
+		// 	'payment_currency' => $payments_setting[0]->payment_currency,
+		// 	'payment_method'=>'cash_on_delivery'
+		// );
 		
-		if($payments_setting[0]->paypal_enviroment=='0'){
-			$paypal_enviroment = 'Test';
-		}else{
-			$paypal_enviroment = 'Live';
-		}		
+		// if($payments_setting[0]->paypal_enviroment=='0'){
+		// 	$paypal_enviroment = 'Test';
+		// }else{
+		// 	$paypal_enviroment = 'Live';
+		// }		
 		
-		$paypal_description = PaymentDescription::where([['payment_name','Paypal'],['language_id',Session::get('language_id')]])->get();
-		$paypal = array(
-			'environment' => $paypal_enviroment, 
-			'name' => $paypal_description[0]->name, 
-			'public_key' => $payments_setting[0]->paypal_id,
-			'active' => $payments_setting[0]->paypal_status,
-			'payment_currency' => $payments_setting[0]->payment_currency,
-			'payment_method'=>'paypal'
-		);
+		// $paypal_description = PaymentDescription::where([['payment_name','Paypal'],['language_id',Session::get('language_id')]])->get();
+		// $paypal = array(
+		// 	'environment' => $paypal_enviroment, 
+		// 	'name' => $paypal_description[0]->name, 
+		// 	'public_key' => $payments_setting[0]->paypal_id,
+		// 	'active' => $payments_setting[0]->paypal_status,
+		// 	'payment_currency' => $payments_setting[0]->payment_currency,
+		// 	'payment_method'=>'paypal'
+		// );
 		
-		$result[0] = $braintree;
+		//$result[0] = $braintree;
 		$result[1] = $stripe;
-		$result[2] = $cod;
-		$result[3] = $paypal;
+		// $result[2] = $cod;
+		// $result[3] = $paypal;
 		
 		return $result;
 	}

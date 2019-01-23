@@ -3,16 +3,14 @@
 @if(!empty(session("theme")))
         <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @else
-        <link href="{!! asset('public/css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/bootstrap.min.css') !!}">
- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.min.css') !!}">
-<!-- <link rel="stylesheet" type="text/css" href="{!! asset('public/css/style.css') !!}"> -->
-<!--  <link href="{!! asset('public/css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
- <link href="{!! asset('public/css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('public/css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- 
-  
+ <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}">
+ <link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}">
+<!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}"> -->
+<!--  <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
+ <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 @endsection
 @section('content')
 <section class="site-content">
@@ -39,28 +37,28 @@
                 </ol>
             </div>
         </div>
-		<div class="checkout-area">
-            <div class="row">
-				<div class="col-12 col-lg-8 checkout-left">
+		    <div class="checkout-area">
+            <div class="">
+				        <div class="col-6 col-lg-8 checkout-left">
                     <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                        <li class="nav-item">
+                        <li class="nav-item @if(session('step')==0) active @endif">
                             <a class="nav-link @if(session('step')==0) active @elseif(session('step')>0) active-check @endif" id="shipping-tab" data-toggle="pill" href="#pills-shipping" role="tab" aria-controls="pills-shpping" aria-expanded="true">@lang('website.Shipping Address')</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item @if(session('step')==1) active @endif">
                             <a class="nav-link @if(session('step')==1) active @elseif(session('step')>1) active-check @endif" @if(session('step')>=1) id="billing-tab" data-toggle="pill" href="#pills-billing" role="tab" aria-controls="pills-billing" aria-expanded="true" @endif >@lang('website.Billing Address')</a>
                         </li>
-                        <li class="nav-item">
+                       <!--  <li class="nav-item @if(session('step')==2) active @endif">
                             <a class="nav-link @if(session('step')==2) active @elseif(session('step')>2) active-check @endif"  @if(session('step')>=2)  id="shipping-methods-tab" data-toggle="pill" href="#pills-shipping-methods" role="tab" aria-controls="pills-shipping-methods" aria-expanded="true"  @endif>@lang('website.Shipping Methods')</a>
-                        </li>
-                        <li class="nav-item @if(session('step')==3) active @endif">
-                            <a class="nav-link @if(session('step')==3) active @elseif(session('step')>3) active-check @endif"  @if(session('step')>=3)  id="order-tab" data-toggle="pill" href="#pills-order" role="tab" aria-controls="pills-order" aria-expanded="true"  @endif>@lang('website.Order Detail')</a>
+                        </li> -->
+                        <li class="nav-item @if(session('step')==2) active @endif">
+                            <a class="nav-link @if(session('step')==2) active @elseif(session('step')>2) active-check @endif"  @if(session('step')>=3)  id="order-tab" data-toggle="pill" href="#pills-order" role="tab" aria-controls="pills-order" aria-expanded="true"  @endif>@lang('website.Order Detail')</a>
                         </li>
                     </ul>
                     
                     <div class="tab-content" id="pills-tabContent">
                       <div class="tab-pane fade @if(session('step') == 0) show active in @endif" id="pills-shipping" role="tabpanel" aria-labelledby="shipping-tab">
                         
-                        <form name="signup" enctype="multipart/form-data" class="form-validate" action="{{ URL::to('/checkout_shipping_address')}}" method="post">
+                        <form name="signup" enctype="multipart/form-data" class="form-validate" action="{{ URL::to('/checkout/shipping/address')}}" method="post">
                           <input type="hidden" name="_token" value="{{csrf_token()}}">
                             <div class="form-row">
                               <div class="form-group col-md-6">
@@ -116,7 +114,7 @@
                               </div>
                               <div class="form-group col-md-6">
                                 <label for="lastName">@lang('website.Zip/Postal Code')</label>
-                                <input type="text" class="form-control" id="postcode" name="postcode" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->postcode}}@endif">
+                                <input type="text" class="form-control field-validate" id="postcode" name="postcode" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->postcode}}@endif">
                                 <span class="help-block error-content" hidden>@lang('website.Please enter your Zip/Postal Code')</span> 
                               </div>			  
                             </div>		
@@ -195,7 +193,7 @@
                     </form>
               	</div>
                 
-                <div class="tab-pane fade @if(session('step') == 2) show active in @endif" id="pills-shipping-methods" role="tabpanel" aria-labelledby="shipping-methods-tab">
+               <!--  <div class="tab-pane fade @if(session('step') == 2) show active in @endif" id="pills-shipping-methods" role="tabpanel" aria-labelledby="shipping-methods-tab">
                     <div class="shipping-methods">
                         <p class="title">@lang('website.Please select a prefered shipping method to use on this order')</p>
                     <form name="shipping_mehtods" method="post" id="shipping_mehtods_form" enctype="multipart/form-data" action="{{ URL::to('/checkout/payment/method')}}">
@@ -249,9 +247,9 @@
                         </div>
                       </form>
                     </div>
-                </div>
+                </div> -->
               
-                <div class="tab-pane fade @if(session('step') == 3) show active in @endif" id="pills-order" role="tabpanel" aria-labelledby="order-tab"> 
+                <div class="tab-pane fade @if(session('step') == 2) show active in @endif" id="pills-order" role="tabpanel" aria-labelledby="order-tab"> 
                 	 
                     <div class="order-review">
                         <?php 
@@ -370,220 +368,89 @@
                             </div> 
                         </div>
                     </div>
-                    <div class="payment-area">
-                    	<div class="heading">
-                            <h2>@lang('website.Payment Methods')</h2>
-                            <hr>
-                        </div>
-                        <div class="payment-methods">
-                        <p class="title">@lang('website.Please select a prefered payment method to use on this order')</p>
-                        
-                        <div class="alert alert-danger error_payment" style="display:none" role="alert">
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            @lang('website.Please select your payment method')
-                        </div>	
-                                
-                        <form name="shipping_mehtods" method="post" id="payment_mehtods_form" enctype="multipart/form-data" action="{{ URL::to('/order_detail')}}">
-                        
-                            <ul class="list">
-                                @foreach($result['payment_methods'] as $payment_methods)
-                                    @if($payment_methods['active'] == 1)
-                                        <input id="payment_currency" type="hidden" onClick="paymentMethods();" name="payment_currency" value="{{$payment_methods['payment_currency']}}">
-                                        @if($payment_methods['payment_method']=='braintree')
-                                            
-                                            <input id="{{$payment_methods['payment_method']}}_public_key" type="hidden" name="public_key" value="{{$payment_methods['public_key']}}">
-                                            <input id="{{$payment_methods['payment_method']}}_environment" type="hidden" name="{{$payment_methods['payment_method']}}_environment" value="{{$payment_methods['environment']}}">
-                                            <li>
-                                            	<input type="radio" onClick="paymentMethods();" name="payment_method" class="payment_method" value="{{$payment_methods['payment_method']}}" @if(!empty(session('payment_method'))) @if(session('payment_method')==$payment_methods['payment_method']) checked @endif @endif>
-                                                <label for="{{$payment_methods['payment_method']}}">{{$payment_methods['name']}}</label>
-                                            </li>
-                
-                                        @else
-                                            <input id="{{$payment_methods['payment_method']}}_public_key" type="hidden" name="public_key" value="{{$payment_methods['public_key']}}">
-                                            <input id="{{$payment_methods['payment_method']}}_environment" type="hidden" name="{{$payment_methods['payment_method']}}_environment" value="{{$payment_methods['environment']}}">
-                                            
-                                            <li>
-                                            	<input onClick="paymentMethods();" type="radio" name="payment_method" class="payment_method" value="{{$payment_methods['payment_method']}}" @if(!empty(session('payment_method'))) @if(session('payment_method')==$payment_methods['payment_method']) checked @endif @endif>
-                                            	<label for="{{$payment_methods['payment_method']}}">{{$payment_methods['name']}}</label>
-                                            </li>
-                                        @endif
-                                        
-                                    @endif
-                                @endforeach
-                            </ul>                             
-                        </form>
-                    </div>
-                        
-						<div class="button">
+                    <!-- payment-area -->
+                  </div>
+                <div class="button">
+                  
+                <!--  <div  id="paymentComponent" style="display: none;">
+                </div> -->
+              </div>
 
-                            
-                            <!--- paypal -->
-                            <div id="paypal_button" class="payment_btns" style="display: none"></div>
-                            
-                            <button id="braintree_button" style="display: none" class="btn btn-dark payment_btns" data-toggle="modal" data-target="#braintreeModel" >@lang('website.Order Now')</button>
-                            
-                            <button id="stripe_button" class="btn btn-dark payment_btns" style="display: none" data-toggle="modal" data-target="#stripeModel" >@lang('website.Order Now')</button>
-                            
-                            <button id="cash_on_delivery_button" class="btn btn-dark payment_btns" style="display: none">@lang('website.Order Now')</button>
-                            
-                            
-                         </div>
-                    </div>
-                    
-                    
-                
-                
-                    <!-- The braintree Modal -->
-                    <div class="modal fade" id="braintreeModel">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form id="checkout" method="post" action="{{ URL::to('/place_order')}}">
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h4 class="modal-title">@lang('website.BrainTree Payment')</h4>
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                      <div id="payment-form"></div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-dark">@lang('website.Pay') {{$web_setting[19]->value}}{{number_format((float)$total_price+0, 2, '.', '')}}</button>
-                                </div>
-                            </form>
-                        </div>
-                       </div>
-                    </div>
-                    
-                    <!-- The stripe Modal -->
-                    <div class="modal fade" id="stripeModel">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                            
-                            <main>
-                            <div class="container-lg">
-                                <div class="cell example example2">
-                                    <form>
-                                      <div class="row">
-                                        <div class="field">
-                                          <div id="example2-card-number" class="input empty"></div>
-                                          <label for="example2-card-number" data-tid="elements_examples.form.card_number_label">@lang('website.Card number')</label>
-                                          <div class="baseline"></div>
-                                        </div>
-                                      </div>
-                                      <div class="row">
-                                        <div class="field half-width">
-                                          <div id="example2-card-expiry" class="input empty"></div>
-                                          <label for="example2-card-expiry" data-tid="elements_examples.form.card_expiry_label">@lang('website.Expiration')</label>
-                                          <div class="baseline"></div>
-                                        </div>
-                                        <div class="field half-width">
-                                          <div id="example2-card-cvc" class="input empty"></div>
-                                          <label for="example2-card-cvc" data-tid="elements_examples.form.card_cvc_label">@lang('website.CVC')</label>
-                                          <div class="baseline"></div>
-                                        </div>
-                                      </div>
-                                    <button type="submit" class="btn btn-dark" data-tid="elements_examples.form.pay_button">@lang('website.Pay') {{$web_setting[19]->value}}{{number_format((float)$total_price+0, 2, '.', '')}}</button>
-                                    
-                                      <div class="error" role="alert"><svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17">
-                                          <path class="base" fill="#000" d="M8.5,17 C3.80557963,17 0,13.1944204 0,8.5 C0,3.80557963 3.80557963,0 8.5,0 C13.1944204,0 17,3.80557963 17,8.5 C17,13.1944204 13.1944204,17 8.5,17 Z"></path>
-                                          <path class="glyph" fill="#FFF" d="M8.5,7.29791847 L6.12604076,4.92395924 C5.79409512,4.59201359 5.25590488,4.59201359 4.92395924,4.92395924 C4.59201359,5.25590488 4.59201359,5.79409512 4.92395924,6.12604076 L7.29791847,8.5 L4.92395924,10.8739592 C4.59201359,11.2059049 4.59201359,11.7440951 4.92395924,12.0760408 C5.25590488,12.4079864 5.79409512,12.4079864 6.12604076,12.0760408 L8.5,9.70208153 L10.8739592,12.0760408 C11.2059049,12.4079864 11.7440951,12.4079864 12.0760408,12.0760408 C12.4079864,11.7440951 12.4079864,11.2059049 12.0760408,10.8739592 L9.70208153,8.5 L12.0760408,6.12604076 C12.4079864,5.79409512 12.4079864,5.25590488 12.0760408,4.92395924 C11.7440951,4.59201359 11.2059049,4.59201359 10.8739592,4.92395924 L8.5,7.29791847 L8.5,7.29791847 Z"></path>
-                                        </svg>
-                                        <span class="message"></span></div>
-                                    </form>
-                                                <div class="success">
-                                                  <div class="icon">
-                                                    <svg width="84px" height="84px" viewBox="0 0 84 84" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                      <circle class="border" cx="42" cy="42" r="40" stroke-linecap="round" stroke-width="4" stroke="#000" fill="none"></circle>
-                                                      <path class="checkmark" stroke-linecap="round" stroke-linejoin="round" d="M23.375 42.5488281 36.8840688 56.0578969 64.891932 28.0500338" stroke-width="4" stroke="#000" fill="none"></path>
-                                                    </svg>
-                                                  </div>
-                                                  <h3 class="title" data-tid="elements_examples.success.title">@lang('website.Payment successful')</h3>
-                                                  <p class="message"><span data-tid="elements_examples.success.message">@lang('website.Thanks You Your payment has been processed successfully')</p>
-                                                </div>
-                            
-                                            </div>
-                                        </div>
-                                    </main>
-                                </div>
-                        	</div>
-                    	</div>
-                	</div>
-				</div>
-				</div> <!--CHECKOUT LEFT CLOSE-->
-                
-                <div class="col-12 col-lg-4 checkout-right">    
-                    <div class="order-summary-outer">
-                    	<div class="order-summary">
-                            <div class="table-responsive">
-                                <table class="table">
-                                	<thead>
-                                    	<tr>
-                                        	<th colspan="2">@lang('website.Order Summary') </th>
-                                        </tr>
-                                    </thead>
-                                  	<tbody>
-                                        <tr>
-                                            <th><span>@lang('website.SubTotal')</span></th>
-                                            <td align="right" id="subtotal">{{$web_setting[19]->value}}{{$price+0}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th><span>@lang('website.Tax')</span></th>
-                                            <td align="right">{{$web_setting[19]->value}}{{$tax_rate}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                            	<span>@lang('website.Shipping Cost')</br><small>{{$shipping_name}}</small></span></span></th>
-                                            <td align="right">{{$web_setting[19]->value}}{{$shipping_price}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th><span>@lang('website.Discount(Coupon)')</span></th>
-                                            <td align="right" id="discount">{{$web_setting[19]->value}}{{number_format((float)session('coupon_discount'), 2, '.', '')+0}}</td>
-                                        </tr>
-                                        <tr>
-                                            <th class="last"><span>@lang('website.Total')</span></th>
-                                            <td class="last" align="right" id="total_price">{{$web_setting[19]->value}}{{number_format((float)$total_price+0, 2, '.', '')+0}}</td>
-                                        </tr>
-                                	</tbody>
-                                </table>
-                            </div>
-                        </div> 
-                        <div class="coupons">
-                        	<!-- applied copuns -->
-                            
-                            
-                            @if(count(session('coupon')) > 0 and !empty(session('coupon')))
-                            
-                            	<div class="form-group"> 
-                                    <label>@lang('website.Coupon Applied')</label>         
-                                    @foreach(session('coupon') as $coupons_show)  
-                                            
-                                        <div class="alert alert-success">
-                                            <a href="{{ URL::to('/removeCoupon/'.$coupons_show->coupans_id)}}" class="close"><span aria-hidden="true">&times;</span></a>
-                                            {{$coupons_show->code}}
-                                        </div>
-                                        
-                                    @endforeach
-                                </div>    
-                            @endif  
-                            <form id="apply_coupon">
-                              <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                <div class="form-group">
-                                    <label for="inputPassword2" class="">@lang('website.Coupon Code')</label>
-                                    <input type="text" name="coupon_code" class="form-control" id="coupon_code">
-                                </div>
-                                <button type="submit" class="btn btn-sm btn-dark">@lang('website.ApplyCoupon')</button>
-                                <div id="coupon_error" style="display: none"></div>
-                                <div id="coupon_require_error" style="display: none">@lang('website.Please enter a valid coupon code')</div>
-                            </form>
-                        </div>
-                    </div>	
-                </div>	<!--CHECKOUT RIGHT CLOSE-->
             </div>
-		</div>
+				  </div>
+				</div> <!--CHECKOUT LEFT CLOSE-->
+        <div class="col-6 col-lg-4 checkout-right">    
+            <div class="order-summary-outer">
+            	<div class="order-summary">
+                    <div class="table-responsive">
+                        <table class="table">
+                        	<thead>
+                            	<tr>
+                                	<th colspan="2">@lang('website.Order Summary') </th>
+                                </tr>
+                            </thead>
+                          	<tbody>
+                                <tr>
+                                    <th><span>@lang('website.SubTotal')</span></th>
+                                    <td align="right" id="subtotal">{{$web_setting[19]->value}}{{$price+0}}</td>
+                                </tr>
+                                <tr>
+                                    <th><span>@lang('website.Tax')</span></th>
+                                    <td align="right">{{$web_setting[19]->value}}{{$tax_rate}}</td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                    	<span>@lang('website.Shipping Cost')</br><small>{{$shipping_name}}</small></span></span></th>
+                                    <td align="right">{{$web_setting[19]->value}}{{$shipping_price}}</td>
+                                </tr>
+                                <tr>
+                                    <th><span>@lang('website.Discount(Coupon)')</span></th>
+                                    <td align="right" id="discount">{{$web_setting[19]->value}}{{number_format((float)session('coupon_discount'), 2, '.', '')+0}}</td>
+                                </tr>
+                                <tr>
+                                    <th class="last"><span>@lang('website.Total')</span></th>
+                                    <td class="last" align="right" id="total_price">{{$web_setting[19]->value}}{{number_format((float)$total_price+0, 2, '.', '')+0}}</td>
+                                </tr>
+                        	</tbody>
+                        </table>
+                    </div>
+                </div> 
+                <div class="coupons">
+                	<!-- applied copuns -->
+                    
+                    
+                    @if(count(session('coupon')) > 0 and !empty(session('coupon')))
+                    
+                    	<div class="form-group"> 
+                            <label>@lang('website.Coupon Applied')</label>         
+                            @foreach(session('coupon') as $coupons_show)  
+                                    
+                                <div class="alert alert-success">
+                                    <a href="{{ URL::to('/removeCoupon/'.$coupons_show->coupans_id)}}" class="close"><span aria-hidden="true">&times;</span></a>
+                                    {{$coupons_show->code}}
+                                </div>
+                                
+                            @endforeach
+                        </div>    
+                    @endif  
+                    <form id="apply_coupon">
+                      <input type="hidden" name="_token" value="{{csrf_token()}}">
+                        <div class="form-group">
+                            <label for="inputPassword2" class="">@lang('website.Coupon Code')</label>
+                            <input type="text" name="coupon_code" class="form-control" id="coupon_code">
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-dark">@lang('website.ApplyCoupon')</button>
+                        <div id="coupon_error" style="display: none"></div>
+                        <div id="coupon_require_error" style="display: none">@lang('website.Please enter a valid coupon code')</div>
+                    </form>
+                </div>
+            </div>	
+        </div>	<!--CHECKOUT RIGHT CLOSE-->
+       @include('paymentComponent')
+      </div>
+    </div>
 	</div>
 </section>
-  
-   
 
 
 @endsection 	
