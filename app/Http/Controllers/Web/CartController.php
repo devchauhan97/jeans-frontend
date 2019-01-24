@@ -427,8 +427,7 @@ class CartController extends DataController
 						]);
 					}
 				}
-		}
-		else{
+		} else {
 			
 			$existAttribute = '0';
 			$totalAttribute = '0';

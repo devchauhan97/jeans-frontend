@@ -1,5 +1,4 @@
- 
-<div class="col-md-6 col-md-offset-2">
+<div class="col-md-12">
     <div class="panel panel-default">
         <div class="panel-heading">Paywith Stripe</div>
           <form id="stript_from">

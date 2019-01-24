@@ -44,7 +44,8 @@ use App\UpsShipping;
 use App\FlateRate;
 //email
 use Illuminate\Support\Facades\Mail;
-
+use App\Http\Requests\ShippingAddressRequest ;
+use App\Http\Requests\BillingAddressRequest ;
 class OrdersController extends DataController
 {
 	
@@ -166,19 +167,17 @@ class OrdersController extends DataController
 	}
 	
 	//checkout
-	public function checkoutShippingAddress(Request $request)
+	public function checkoutShippingAddress(ShippingAddressRequest $request)
 	{
 		
 		$title = array('pageTitle' => Lang::get('website.Checkout'));
 		$result = array();	
-		$result['commonContent'] = $this->commonContent();
-		
-		if(session('step')=='0'){
+		// $result['commonContent'] = $this->commonContent();
+		if(session('step')=='0') {
 			session(['step' => '1']);
 		}		
 				
-		foreach($request->all() as $key=>$value)
-		{
+		foreach($request->all() as $key=>$value) {
 		  $shipping_data[$key] = $value;
 		  
 		  //billing address 
@@ -202,7 +201,7 @@ class OrdersController extends DataController
 		  
 		}
 		
-		if(empty(session('billing_address')) or session('billing_address')->same_billing_address==1){
+		if(empty(session('billing_address')) or session('billing_address')->same_billing_address==1) {
 			$billing_address = (object) $billing_data;
 			$billing_address->same_billing_address = 1;
 			session(['billing_address' => $billing_address]);			
@@ -210,34 +209,34 @@ class OrdersController extends DataController
 				
 		$address = (object) $shipping_data;
 		session(['shipping_address' => $address]);
-				
 		return redirect()->back();	 
 	}
-	
-	
 	//checkoutBillingAddress
-	public function checkoutBillingAddress(Request $request){
+	public function checkoutBillingAddress(BillingAddressRequest $request)
+	{
 				
-		if(session('step')=='1'){
+		if(session('step')=='1') {
 			session(['step' => '2']);
 		}
 		
-		if(empty($request->same_billing_address)){
+		if(empty($request->same_billing_address)) {
 			
-			foreach($request->all() as $key=>$value)
-			{
-			  $billing_data[$key] = $value;		 		  
+			foreach($request->all() as $key=>$value) {
+
+			  $billing_data[$key] = $value;		
+
 			}
 			
 			$billing_address = (object) $billing_data;
 			$billing_address->same_billing_address = 0;
 			session(['billing_address' => $billing_address]);
-		}else{
+		} else {
 			
 			$billing_address = session('billing_address');
 			$billing_address->same_billing_address = 1;
 			session(['billing_address' => $billing_address]);
 		}
+		
 		/* Applay flate rate force fully*/
 		$shipping_method = ShippingMethod::where(['methods_type_link'=> 'flateRate'])->first();
 		//'status'=>1,'isDefault' => 1;
@@ -251,13 +250,15 @@ class OrdersController extends DataController
 								"shipping_method" => "flateRate"
 							  ];
 		}
-		session(['shipping_detail' => (object) $shipping_detail]);
-		session(['payment_method' => 'stripe']);
+		 
+		session(['payment_method' => 'stripe','shipping_detail' => (object) $shipping_detail]);
+
 		return redirect()->back();		
 	}
 	
-	//checkout/payment/method
-	public function checkoutPaymentMethod(Request $request){
+	/*//checkout/payment/method
+	public function checkoutPaymentMethod(Request $request)
+	{
 		
 		if(session('step')=='2'){
 			session(['step' => '3']);
@@ -285,7 +286,8 @@ class OrdersController extends DataController
 	}
 	
 	//generate token 
-	public function generateBraintreeTokenWeb(){
+	public function generateBraintreeTokenWeb()
+	{
 		
 		$payments_setting = PaymentsSetting::get();
 		
@@ -307,7 +309,7 @@ class OrdersController extends DataController
 		
 		return $clientToken;
 	}
-	
+	*/
 	//place_order
 	public function place_order(Request $request)
 	{		
@@ -488,8 +490,7 @@ class OrdersController extends DataController
 					$payment_status = "failed";
 				}
 				
-		}
-		else if($payment_method == 'stripe'){				#### stipe payment
+		} else if($payment_method == 'stripe') {				#### stipe payment
 		
 			//require file
 			require_once app_path('stripe/config.php');

@@ -13,4 +13,5 @@ class OrdersStatusHistory extends Model
 
 	//use user id of admin
 	protected $primaryKey = 'orders_status_history_id';
+	
 }

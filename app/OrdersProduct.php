@@ -13,4 +13,16 @@ class OrdersProduct extends Model
 
 	//use user id of admin
 	protected $primaryKey = 'orders_products_id'; 
+
+	public  function orders()
+	{
+
+		return $this->hasOne(Orders::class,'orders_id');
+	}
+	
+	public  function orders_products_attributes()
+	{
+
+		return $this->hasMany(OrdersProductsAttribute::class,'orders_products_id');
+	} 
 }

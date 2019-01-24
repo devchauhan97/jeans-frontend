@@ -19,10 +19,16 @@ class SendProductOrderMail
      *
      * @return void
      */
-    public $ordersData;
-    public function __construct($ordersData)
+    public $orders_id;
+    public $orders_data;
+    public $total_price;
+    public $subtotal;
+    public function __construct($orders_id)
     {
-        $this->ordersData = $ordersData;
+        $this->orders_id   = $orders_id;
+        // $this->orders_data = $orders_data;
+        // $this->total_price = $total_price;
+        // $this->subtotal    = $subtotal;
     }
 
     /**

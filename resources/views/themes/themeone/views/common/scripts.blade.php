@@ -871,7 +871,7 @@ jQuery(document).on('click', '.add-to-Cart', function(e){
 	var url = jQuery('#checkout_url').val();
 	var message;
 	jQuery.ajax({
-		url: '{{ URL::to("/addToCart")}}',
+		url: '{{ URL::to("/add/cart")}}',
 		type: "POST",
 		data: formData,
 		
@@ -1453,7 +1453,7 @@ jQuery(document).on('click', '.cart', function(e){
 	var products_id = jQuery(this).attr('products_id');
 	var message ;
 	jQuery.ajax({
-		url: '{{ URL::to("/addToCart")}}',
+		url: '{{ URL::to("/add/cart")}}',
 		type: "POST",
 		data: '&products_id='+products_id+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),		
 		success: function (res) {
@@ -1508,7 +1508,7 @@ function paymentMethods(){
 	
 	jQuery("#"+payment_method+'_button').show();
 	*/
-	jQuery.ajax({
+	/*jQuery.ajax({
 		url: '{{ URL::to("/paymentComponent")}}',
 		type: "POST",
 		data: '&payment_method='+payment_method+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),			
@@ -1516,7 +1516,7 @@ function paymentMethods(){
 			jQuery('#paymentComponent').show();
 			jQuery('#paymentComponent').html(res);
 		},
-	});
+	});*/
 }
 
 //notification
@@ -1568,8 +1568,8 @@ function getBillingZones() {
 	jQuery('#loader').css('display','flex');
 	var country_id = jQuery('#billing_countries_id').val();
 	jQuery.ajax({
-		url: '{{ URL::to("/ajaxZones")}}',
-		type: "POST",
+		url: '{{ URL::to("/zones")}}',
+		type: "get",
 		 data: {'country_id': country_id},
 		
 		success: function (res) {

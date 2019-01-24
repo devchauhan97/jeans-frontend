@@ -12,5 +12,6 @@ class OrdersStatus extends Model
 
 	//use user id of admin
 	protected $primaryKey = 'orders_status_id';
+	
 }
 

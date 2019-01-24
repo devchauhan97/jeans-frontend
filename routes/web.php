@@ -88,7 +88,7 @@ Route::post('/language/', array(
 	*/
 
 	Route::get('/getCart', 'DataController@getCart');
-	Route::post('/addToCart', 'CartController@addToCart');
+	Route::post('/add/cart', 'CartController@addToCart');
 	Route::post('/updatesinglecart', 'CartController@updatesinglecart');
 	Route::get('/cartButton', 'CartController@cartButton');
 	
