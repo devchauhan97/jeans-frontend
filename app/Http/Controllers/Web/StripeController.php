@@ -47,17 +47,15 @@ class StripeController extends Controller
 	public function getFinalPrice()
 	{
 
-		$price = session('products_price');
-
 		if(!empty(session('shipping_detail')) and count(session('shipping_detail'))>0){
-            $shipping_price = session('shipping_detail')->shipping_price;
+			$shipping_price = session('shipping_detail')->shipping_price;
 		}else{
-            $shipping_price = 0;
-		}	
-
-    	$tax_rate = number_format((float)session('tax_rate'), 2, '.', '');
-        $coupon_discount = number_format((float)session('coupon_discount'), 2, '.', '');				
-        return ($price+$tax_rate+$shipping_price)-$coupon_discount;
+			$shipping_price = 0;
+		}				
+		$tax_rate = number_format((float)session('tax_rate'), 2, '.', '');
+		$coupon_discount = number_format((float)session('coupon_discount'), 2, '.', '');				
+		$order_price = (session('products_price')+$tax_rate+$shipping_price)-$coupon_discount;			
+        return $order_price;
 
 	}
     public function payWithStripe()
@@ -73,7 +71,7 @@ class StripeController extends Controller
     public function postPaymentWithStripe(StripeRequest $request)
     {
     	
-    	$total_price =$this->getFinalPrice();
+    	$order_price =$this->getFinalPrice();
         $input = $request->all();
 	    $input = array_except($input,array('_token')); 
 	    $payments_setting = PaymentsSetting::first();  
@@ -106,7 +104,7 @@ class StripeController extends Controller
             $charge = $stripe->charges()->create([
                 'card' 			=> $card['id'],
                 'currency' 		=> 'USD',
-                'amount'   		=>  $total_price,
+                'amount'   		=>  $order_price,
                 'description' 	=> 'Add in wallet',
                 'customer' 		=> $customer['id'],
             ]);

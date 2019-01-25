@@ -812,7 +812,8 @@ class OrdersController extends DataController
 	
 	
 	//calculate tax
-	public function calculateTax($tax_zone_id){
+	public function calculateTax($tax_zone_id)
+	{
 		
 		$result = array();
 		

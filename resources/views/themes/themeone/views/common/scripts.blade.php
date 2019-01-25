@@ -239,7 +239,6 @@ jQuery( document ).ready( function () {
 			data: '&device_id='+device_id,			
 			success: function (res) {},
 		});
-		 
 		 //$scope.oneSignalCookie();
 		});
 	   }
@@ -254,8 +253,8 @@ jQuery( document ).ready( function () {
 	@endif	
 	
 	@if(Request::path() == 'checkout')		
-		getZonesBilling();	
-		paymentMethods();
+		//getZonesBilling();	
+		//paymentMethods();
 	@endif
 	
 

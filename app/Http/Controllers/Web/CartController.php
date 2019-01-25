@@ -775,11 +775,11 @@ class CartController extends DataController
 		//current date
 		$currentDate		=	date('Y-m-d 00:00:00',time());
 		
-		$data =  Coupon::where([
-				['code', '=', $coupon_code],
-			]);
+		$data =  Coupon::where(['code' => $coupon_code])
+						->whereDate('expiry_date', '>=', date('Y-m-d'))
+						;
 		
-		if(session('coupon')=='' or count(session('coupon'))==0){
+		if(session('coupon')=='' or count(session('coupon'))==0) {
 			session(['coupon' => array()]);
 			session(['coupon_discount' => 0]);
 		}
@@ -787,8 +787,8 @@ class CartController extends DataController
 		
 		$session_coupon_ids = array();
 		$session_coupon_data = array();
-		if(!empty(session('coupon'))){		
-			foreach(session('coupon') as $session_coupon){	
+		if(!empty(session('coupon'))) {		
+			foreach(session('coupon') as $session_coupon) {	
 				array_push($session_coupon_data, $session_coupon);				
 				$session_coupon_ids[] = $session_coupon->coupans_id;
 							
@@ -796,15 +796,15 @@ class CartController extends DataController
 		}
 		
 		$coupons = $data->get();	
-		
-		if(count($coupons)>0){
+		$coupon=array();
+		if(count($coupons)>0) {
 			
 			if(!empty(auth()->guard('customer')->user()->email) and in_array(auth()->guard('customer')->user()->email , explode(',', $coupons[0]->email_restrictions))){
-				$response = array('success'=>'2', 'message'=>Lang::get("website.You are not allowed to use this coupon"));
-			}else{
-				if($coupons[0]->usage_limit > 0 and $coupons[0]->usage_limit == $coupons[0]->usage_count ){
-					$response = array('success'=>'2', 'message'=>Lang::get("website.This coupon has been reached to its maximum usage limit"));
-				}else{					
+				return $response = array('success'=>'2', 'message'=>Lang::get("website.You are not allowed to use this coupon"));
+			} else {
+				if($coupons[0]->usage_limit > 0 and $coupons[0]->usage_limit <= $coupons[0]->usage_count ) {
+					return $response = array('success'=>'2', 'message'=>Lang::get("website.This coupon has been reached to its maximum usage limit"));
+				} else {					
 					
 					$carts = $this->myCart(array());					
 					$total_cart_items = count($carts);
@@ -815,15 +815,15 @@ class CartController extends DataController
 					$price_of_sales_product = 0;
 					$exclude_sale_items = array();
 					$currentDate = time();
-					foreach( $carts as $cart){
+					foreach( $carts as $cart) {
 						
 						//check if amy coupons applied						
-						if(!empty( $session_coupon_ids)){
+						if(!empty( $session_coupon_ids)) {
 							$individual_use++;
 						}
 						
 						//user limit 
-						if(in_array($coupons[0]->coupans_id , $session_coupon_ids)){
+						if(in_array($coupons[0]->coupans_id , $session_coupon_ids)) {
 							$used_by_user++;
 						}
 						
@@ -831,7 +831,7 @@ class CartController extends DataController
 						$price+= $cart->final_price * $cart->customers_basket_quantity;
 						
 						    //if cart items are special product
-							if($coupons[0]->exclude_sale_items == 1){
+							if($coupons[0]->exclude_sale_items == 1) {
 							$products_id = $cart->products_id;
 							$sales_item = Special::where([
 									['status', '=', '1'],
@@ -851,21 +851,21 @@ class CartController extends DataController
 					$total_special_items = count($exclude_sale_items);
 					
 					if($coupons[0]->individual_use == '1' and $individual_use > 0){
-						$response = array('success'=>'2', 'message'=>Lang::get("website.The coupon cannot be used in conjunction with other coupons"));
+						return $response = array('success'=>'2', 'message'=>Lang::get("website.The coupon cannot be used in conjunction with other coupons"));
 						
 					}else{
 						
 						//check limit 
 						if($coupons[0]->usage_limit_per_user > 0 and $coupons[0]->usage_limit_per_user <= $used_by_user ){							
-							$response = array('success'=>'2', 'message'=>Lang::get("website.coupon is used limit"));
+							return $response = array('success'=>'2', 'message'=>Lang::get("website.coupon is used limit"));
 						}else{
 						
 						$cart_price = $price+0-$discount_price;
 						
 						if($coupons[0]->minimum_amount > 0 and $coupons[0]->minimum_amount >= $cart_price){							
-							$response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount limit is low than minimum price"));							
+							return $response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount limit is low than minimum price"));							
 						}elseif($coupons[0]->maximum_amount > 0 and $coupons[0]->maximum_amount <= $cart_price){
-							$response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount limit is exceeded than maximum price"));
+							return $response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount limit is exceeded than maximum price"));
 							}else{								
 								
 								//exclude sales item
@@ -874,7 +874,7 @@ class CartController extends DataController
 								//print 'current cart price: '.$cart_price;
 								
 								if($coupons[0]->exclude_sale_items == 1 and $total_special_items == $total_cart_items){
-									$response = array('success'=>'2', 'message'=>Lang::get("website.Coupon cannot be applied this product is in sale"));
+									return $response = array('success'=>'2', 'message'=>Lang::get("website.Coupon cannot be applied this product is in sale"));
 								}else{
 									
 									if($coupons[0]->discount_type=='fixed_cart'){
@@ -886,7 +886,7 @@ class CartController extends DataController
 											$coupon[] = $coupons[0];
 										
 										}else{
-											$response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than total price"));
+											return $response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than total price"));
 										}
 										
 										//session(['coupon' => $coupon]);
@@ -904,7 +904,7 @@ class CartController extends DataController
 											$coupon[] = $coupons[0];
 										
 										}else{
-											$response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than total price"));
+											return $response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than total price"));
 										}
 										
 										//session(['coupon' => $coupon]);
@@ -1012,7 +1012,7 @@ class CartController extends DataController
 										
 										//check if all cart products are equal to that product which have greater discount amount
 										if($total_cart_items == $items_greater_price){
-											$response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than product price"));
+											return $response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than product price"));
 										}else{
 											//$total_price = $cart_price-$product_discount_price;
 											$coupon_discount = $product_discount_price;
@@ -1131,7 +1131,7 @@ class CartController extends DataController
 										
 										//check if all cart products are equal to that product which have greater discount amount
 										if($total_cart_items == $items_greater_price){
-											$response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than product price"));
+											return $response = array('success'=>'2', 'message'=>Lang::get("website.Coupon amount is greater than product price"));
 										}else{
 											//$total_price = $cart_price-$product_discount_price;
 											$coupon_discount = $product_discount_price;
