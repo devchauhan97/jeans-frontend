@@ -29,6 +29,32 @@ class Basket extends Model
 		}
 		return	$cart;
 	}
+	public function scopegetCart(){
+
+		return self::Join('specials', function($join){
+
+				$join->on('specials.products_id','=', 'customers_basket.products_id');
+				$join->where([['specials.status', '=', '1'],
+									['specials.expires_date', '>', time()]]);
+			})->join('products_to_categories','products_to_categories.products_id', 'customers_basket.products_id')
+			->select('customers_basket.*', 'specials.*','products_to_categories.categories_id' )
+				->where('customers_basket.is_order', '=', '0')
+				->where(['customers_basket.is_order' => '0','customers_basket.customers_id' => session('customers_id')]);
+		
+	}
+	public function scopegetCartTotalAmount(){
+
+		$carts =self::where(['is_order' => '0','customers_id' => session('customers_id')])
+					 
+					 ->get();
+		$price=0;
+		foreach( $carts as $cart) {
+			//cart price
+			$price+= $cart->final_price * $cart->customers_basket_quantity;
+		}
+		return $price;
+	}
+
 	public function scopeMyBasketCart($query)
 	{
 

@@ -3,7 +3,7 @@
 <script src="{!! asset('js/jquery-ui.min-1.12.1.js') !!}"></script>
 <!-- owl carousel -->
 <script src="{!! asset('js/owl.carousel.min.js') !!}"></script>
-
+<script src="https://checkout.stripe.com/v2/checkout.js"></script>
 <!--- google map-->
 <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&libraries=geometry&key=AIzaSyCQq_d3bPGfsIAlenXUG5RtZsKZKzOmrMw"></script> -->
 
@@ -12,6 +12,7 @@
 <!------- //paypal -------->
 
 <script type="text/javascript">
+
 // window.onload = function(e){ 
  	
 // 	var paypal_public_key = document.getElementById('paypal_public_key').value;
@@ -78,6 +79,18 @@
 jQuery(document).ready(function(e) {
  
 	
+// jQuery('#strpe').on('click', function(event) {
+// event.preventDefault();
+// var $button = jQuery(this),
+// $form = $button.parents('form');
+// var opts = jQuery.extend({}, $button.data(), {
+// token: function(result) {
+// $form.append(jQuery('<input>').attr({ type: 'hidden', name: 'stripeToken', value: result.id })).submit();
+// }
+// });
+// StripeCheckout.open(opts);
+// });
+
     jQuery(document).on('click',"#stripe_btn",function(){
 
 		var formData = jQuery('#stript_from').serialize();

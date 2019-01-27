@@ -385,6 +385,17 @@
                                   </tr>
                               </tbody>
                           </table>
+                          <form action="." method="post">
+<noscript>You must <a href="http://www.enable-javascript.com" target="_blank">enable JavaScript</a> in your web browser in order to pay via Stripe.</noscript>
+<input
+type="submit"
+value="Pay with Card"
+data-key="pk_test_LL4ootDDzuctxEyl4wnYfoW5"
+data-amount="500"
+data-currency="cad"
+data-name="Example Company Inc"
+data-description="Stripe payment for $5"
+/></form>
                       </div>
                     </div> 
                   </div>

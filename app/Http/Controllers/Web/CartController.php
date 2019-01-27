@@ -775,9 +775,6 @@ class CartController extends DataController
 		//current date
 		$currentDate		=	date('Y-m-d 00:00:00',time());
 		
-		$data =  Coupon::where(['code' => $coupon_code])
-						->whereDate('expiry_date', '>=', date('Y-m-d'))
-						;
 		
 		if(session('coupon')=='' or count(session('coupon'))==0) {
 			session(['coupon' => array()]);
@@ -794,7 +791,13 @@ class CartController extends DataController
 							
 			}
 		}
-		
+
+		return Coupon::applyCoupon($coupon_code,$session_coupon_data,$session_coupon_ids) ;
+
+		/*old code */
+		$data =  Coupon::where(['code' => $coupon_code])
+						->whereDate('expiry_date', '>=', date('Y-m-d'))
+						;
 		$coupons = $data->get();	
 		$coupon=array();
 		if(count($coupons)>0) {
@@ -811,16 +814,13 @@ class CartController extends DataController
 					$price = 0;
 					$discount_price = 0;
 					$used_by_user = 0;
-					$individual_use = 0;
 					$price_of_sales_product = 0;
 					$exclude_sale_items = array();
 					$currentDate = time();
 					foreach( $carts as $cart) {
 						
 						//check if amy coupons applied						
-						if(!empty( $session_coupon_ids)) {
-							$individual_use++;
-						}
+						
 						
 						//user limit 
 						if(in_array($coupons[0]->coupans_id , $session_coupon_ids)) {
@@ -850,7 +850,7 @@ class CartController extends DataController
 					
 					$total_special_items = count($exclude_sale_items);
 					
-					if($coupons[0]->individual_use == '1' and $individual_use > 0){
+					if($coupons[0]->individual_use == '1' and !empty( $session_coupon_ids)){
 						return $response = array('success'=>'2', 'message'=>Lang::get("website.The coupon cannot be used in conjunction with other coupons"));
 						
 					}else{
