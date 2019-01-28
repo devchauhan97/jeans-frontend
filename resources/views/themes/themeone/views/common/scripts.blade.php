@@ -411,8 +411,16 @@ jQuery( document ).ready( function () {
 		
 	//change_options
 	jQuery(document).on('change', '.{{ $attributes_data['option']['name'] }}', function(e){
-		
+
 		var {{ $attributes_data['option']['name'] }} = jQuery("#{{ $attributes_data['option']['name'] }}").val();
+		var attribute ='?'
+		//if ('{{ $attributes_data['option']['name'] }}' == 'Colors'){
+			attribute=attribute+'Colors='+jQuery('.Colors option:selected').val()
+		//}
+		//if ('{{ $attributes_data['option']['name'] }}' == 'Size'){
+			attribute=attribute+'&Size='+jQuery('.Size option:selected').val()
+		//}
+		window.location.href='{{Url::to("product-detail/".Request::segment(2))}}'+ attribute;
 		
 		var value_price = jQuery('option:selected', this).attr('value_price');
 		var prefix = jQuery('option:selected', this).attr('prefix');

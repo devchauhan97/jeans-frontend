@@ -1,11 +1,5 @@
 <?php
-/*
-Project Name: IonicEcommerce
-Project URI: http://ionicecommerce.com
-Author: VectorCoder Team
-Author URI: http://vectorcoder.com/
-Version: 1.0
-*/
+
 namespace App\Http\Controllers\Web;
 //validator is builtin class in laravel
 use Validator;
@@ -215,6 +209,8 @@ class ProductsController extends DataController
 		$title 			= 	array('pageTitle' => Lang::get('website.Product Detail'));
 		$result 		= 	array();
 		$result['commonContent'] = $this->commonContent();
+		$color =$request->color;
+		$size =$request->size;
 		
 		//min_price
 		if(!empty($request->min_price)){

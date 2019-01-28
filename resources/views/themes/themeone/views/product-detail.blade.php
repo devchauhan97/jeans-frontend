@@ -187,8 +187,12 @@
                                                     <label for="{{ $attributes_data['option']['name'] }}" class="col-sm-12 col-form-label">{{ $attributes_data['option']['name'] }}</label>		
                                                     <div class="col-sm-12">								
                                                         <select name="{{ $attributes_data['option']['id'] }}"  class="form-control {{ $attributes_data['option']['name'] }}">
+                                                          <?php
+                                                          $name =$attributes_data['option']['name'];
+                                                          ?>
+                                                          <option value="0" >Select {{ $name }}</option>
                                                             @foreach( $attributes_data['values'] as $values_data )
-                                                            <option value="{{ $values_data['id'] }}" prefix = '{{ $values_data['price_prefix'] }}'  value_price ="{{ $values_data['price']+0 }}" >{{ $values_data['value'] }}</option>								
+                                                            <option value="{{ $values_data['id'] }}" prefix = '{{ $values_data['price_prefix'] }}'  value_price ="{{ $values_data['price']+0 }}" @if(Request()->{$name}  == $values_data['id'] ) selected @endIf>{{ $values_data['value'] }}</option>								
                                                             @endforeach								
                                                         </select>								
                                                     </div>							
