@@ -157,6 +157,13 @@ return [
 	'Cart has been updated successfully'=>'Cart has been updated successfully!',
 		
 	'Coupon can not be apllied to empty cart'=>'Coupon can not be apllied to empty cart.',
+
+	'The coupon cannot be used in .Becouse conjunction coupons already exists'=>'The coupon cannot be used in .Becouse conjunction coupons already exists.',
+
+	'The coupon cannot be used in conjunction with other coupons'=>'The coupon cannot be used in conjunction with other coupons.',
+
+	//'Coupon can not be apllied to empty cart'=>'Coupon can not be apllied to empty cart.',
+
 		
 	'cartEmptyText'=>'You have no items in your shopping cart.<br>Click <a href="shop">here</a> to continue shopping.',
 		
@@ -585,6 +592,8 @@ return [
 		
 	'Popular Categories'=>'Popular Categories',
 		
+	'Error on selecting payment method'=>'Error on selecting payment method.',
+
 	'Error while placing order'=>'Error while placing order.',
 		
 	'Payment has been processed successfully'=>'Payment has been processed successfully!',

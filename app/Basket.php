@@ -31,17 +31,14 @@ class Basket extends Model
 	}
 	public function scopegetCart(){
 
-		return self::Join('specials', function($join){
-
-				$join->on('specials.products_id','=', 'customers_basket.products_id');
-				$join->where([['specials.status', '=', '1'],
-									['specials.expires_date', '>', time()]]);
-			})->join('products_to_categories','products_to_categories.products_id', 'customers_basket.products_id')
-			->select('customers_basket.*', 'specials.*','products_to_categories.categories_id' )
-				->where('customers_basket.is_order', '=', '0')
-				->where(['customers_basket.is_order' => '0','customers_basket.customers_id' => session('customers_id')]);
+		return self::with('specials')->with('categories')
+						// ->join('products_to_categories','products_to_categories.products_id', 'customers_basket.products_id')
+						//->select('customers_basket.products_id' )
+				// /->where('customers_basket.is_order', '=', '0')
+						->where(['is_order' => '0','customers_id' => session('customers_id')]);
 		
 	}
+
 	public function scopegetCartTotalAmount(){
 
 		$carts =self::where(['is_order' => '0','customers_id' => session('customers_id')])
@@ -118,4 +115,18 @@ class Basket extends Model
 		}				
 		return($result); 
 	}
+
+	public function specials() 
+	{
+
+		return $this->hasOne(Special::class,'products_id','products_id')->where([['status', '=', '1'],
+												['expires_date', '>', time()]]);
+	}
+
+	public function categories() 
+	{
+		///return $this->hasone(ProductsToCategory::class,'products_id','products_id');
+		return $this->hasOne(ProductsToCategory::class,'products_id','products_id')->orderby('categories_id','desc');
+	}
+	
 }

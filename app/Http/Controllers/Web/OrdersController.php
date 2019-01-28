@@ -46,9 +46,15 @@ use App\FlateRate;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\ShippingAddressRequest ;
 use App\Http\Requests\BillingAddressRequest ;
-class OrdersController extends DataController
+use Cartalyst\Stripe\Laravel\Facades\Stripe;
+use App\Events\SendProductOrderMail;
+use Event;
+use App\AddressBook;
+//use App\Http\Controllers\Web\StripeController;
+use App\Traits\StripePayment;
+class OrdersController extends DataController 
 {
-	
+	use StripePayment;
     /**
      * Create a new controller instance.
      *
@@ -104,10 +110,13 @@ class OrdersController extends DataController
 			}
 						
 			//shipping address
-			$myVar = new ShippingAddressController();
+			//$myVar = new ShippingAddressController();
 			if(!empty(auth()->guard('customer')->user()->customers_default_address_id)){
 				$address_id = auth()->guard('customer')->user()->customers_default_address_id;
-				$address = $myVar->getShippingAddress($address_id);
+				//$address = $myVar->getShippingAddress($address_id);
+
+				$address = AddressBook::getShippingAddress($address_id);
+				 
 				if(!empty($address)){
 					$address = $address[0];
 				}else{
@@ -127,8 +136,9 @@ class OrdersController extends DataController
 			}
 			
 			
-			$result['countries'] = $myVar->countries();
-			$result['zones'] = $myVar->zones($countries_id);					
+			$result['countries'] =  DB::table('countries')->get();	// $myVar->countries();
+			$result['zones'] =  DB::table('zones')->where('zone_country_id', $countries_id)->get();
+			//$myVar->zones($countries_id);					
 			
 			
 			//get tax
@@ -143,7 +153,7 @@ class OrdersController extends DataController
 			$result['shipping_methods'] = $this->shipping_methods();
 			
 			//payment methods
-			$result['payment_methods'] = $this->getPaymentMethods();
+			// /$result['payment_methods'] = $this->getPaymentMethods();
 			
 			
 			//price
@@ -155,12 +165,13 @@ class OrdersController extends DataController
 				session(['products_price' => $price]);
 			}
         	
-			
+			$result['payments_setting'] = PaymentsSetting::first();
+			//dd($result['payments_setting']);
 			//breaintree token
 			// $token = $this->generateBraintreeTokenWeb();
 			// session(['braintree_token' => $token]);
 			$result['curr_year']=date('Y');
-			 
+			$this->applyShippingCost(); 
 			return view("checkout", $title)->with('result', $result); 
 		}
 		
@@ -237,6 +248,10 @@ class OrdersController extends DataController
 			session(['billing_address' => $billing_address]);
 		}
 		
+		return redirect()->back();		
+	}
+	function applyShippingCost(){
+
 		/* Applay flate rate force fully*/
 		$shipping_method = ShippingMethod::where(['methods_type_link'=> 'flateRate'])->first();
 		//'status'=>1,'isDefault' => 1;
@@ -253,10 +268,8 @@ class OrdersController extends DataController
 		 
 		session(['payment_method' => 'stripe','shipping_detail' => (object) $shipping_detail]);
 
-		return redirect()->back();		
 	}
-	
-	/*//checkout/payment/method
+	//checkout/payment/method
 	public function checkoutPaymentMethod(Request $request)
 	{
 		
@@ -273,7 +286,7 @@ class OrdersController extends DataController
 		return redirect()->back();		
 		
 	}
-	
+	/*
 	//order_detail
 	public function paymentComponent(Request $request)
 	{		
@@ -436,7 +449,7 @@ class OrdersController extends DataController
 		//payment methods 
 		$payments_setting =PaymentsSetting::get();
 		
-		if($payment_method == 'braintree'){
+		/*if($payment_method == 'braintree'){
 			
 			//braintree transaction with nonce
 			$is_transaction  = '1'; 			# For payment through braintree
@@ -490,51 +503,22 @@ class OrdersController extends DataController
 					$payment_status = "failed";
 				}
 				
-		} else if($payment_method == 'stripe') {				#### stipe payment
-		
-			//require file
-			require_once app_path('stripe/config.php');
+		} else */
+		if($payment_method == 'stripe') {				#### stipe payment
 			
-			//get token from app
-			$token  = $request->token;
+			$trns = $this->postPaymentWithStripe($request->token,$email,$order_price);
+ 			if($trns['success'] == true){
+			 	$order_information = $trns['order_information'];
+				$payment_status = "success";
+			}else{
+				$payment_status = "failed";	 
+			}
 			
-			$customer = \Stripe\Customer::create(array(
-			  'email' => $email,
-			  'source'  => $token
-			));
-			
-			$charge = \Stripe\Charge::create(array(
-			  'customer' => $customer->id,
-			  'amount'   => 100*$order_price,
-			  'currency' => 'usd'
-			));
-			
-			 if($charge->paid == true){
-				 $order_information = array(
-						'paid'=>'true',
-						'transaction_id'=>$charge->id,
-						'type'=>$charge->outcome->type,
-						'balance_transaction'=>$charge->balance_transaction,
-						'status'=>$charge->status,
-						'currency'=>$charge->currency,
-						'amount'=>$charge->amount,
-						'created'=>date('d M,Y', $charge->created),
-						'dispute'=>$charge->dispute,
-						'customer'=>$charge->customer,
-						'address_zip'=>$charge->source->address_zip,
-						'seller_message'=>$charge->outcome->seller_message,
-						'network_status'=>$charge->outcome->network_status,
-						'expirationMonth'=>$charge->outcome->type
-					);
-					
-					$payment_status = "success";
-					
-			 }else{
-					$payment_status = "failed";	 
-			 }
+		} else {
+			return redirect()->back()->with('error', Lang::get("website.Error on selecting payment method"));	
 			
 		}
-		else if($payment_method == 'cash_on_delivery'){
+		/*else if($payment_method == 'cash_on_delivery'){
 			$cod_description = PaymentDescription::where([['payment_name','Cash On Delivery'],['language_id',Session::get('language_id')]])->get();
 			$payment_method = $cod_description[0]->name;
 			$payment_status='success';
@@ -545,12 +529,12 @@ class OrdersController extends DataController
 			$payment_method = $cod_description[0]->name;
 			$payment_status='success';
 			$order_information = json_decode($request->nonce, JSON_UNESCAPED_SLASHES);				
-		} 
+		} */
 		
 		//check if order is verified
 		if($payment_status=='success'){
 			
-			$orders_id = Order::insertGetId(
+			$orders_id = Order::create(
 				[	 'customers_id' => $customers_id,
 					 'customers_name'  => $delivery_firstname.' '.$delivery_lastname,
 					 'customers_street_address' => $delivery_street_address,
@@ -599,10 +583,10 @@ class OrdersController extends DataController
 					 'coupon_amount' 	 =>		$coupon_amount,
 				 	 'total_tax'		 =>		$total_tax,
 					 'ordered_source' 	 => 	'1',
-				]);
+				])->orders_id;
 			
-			 //orders status history
-			 $orders_history_id = OrdersStatusHistory::insertGetId(
+		 	//orders status history
+			OrdersStatusHistory::create(
 				[	 'orders_id'  => $orders_id,
 					 'orders_status_id' => $orders_status,
 					 'date_added'  => $date_added,
@@ -611,13 +595,13 @@ class OrdersController extends DataController
 				]);
 				
 				
-			 $myVar = new CartController();
-			 $cart = $myVar->myCart(array());		 
+			$myVar = new CartController();
+			$cart = $myVar->myCart(array());		 
 			 
-			 foreach($cart as $products){
-				//get produt info	
-		
-				$orders_products_id = OrdersProduct::insertGetId(
+			foreach($cart as $products){
+			//get produt info	
+
+				$orders_products_id = OrdersProduct::create(
 					[		 		
 						 'orders_id' 		 => 	$orders_id,
 						 'products_id' 	 	 =>		$products->products_id,
@@ -626,12 +610,12 @@ class OrdersController extends DataController
 						 'final_price' 		 =>  	$products->final_price*$products->customers_basket_quantity,
 						 'products_tax' 	 =>  	$products_tax,
 						 'products_quantity' =>  	$products->customers_basket_quantity,
-					]);
+					])->orders_products_id;
 				 
 				 
 				if(!empty($products->attributes)){
 					foreach($products->attributes as $attribute){
-						OrdersProductsAttribute::insert(
+						OrdersProductsAttribute::create(
 						[
 							 'orders_id' => $orders_id,
 							 'products_id'  => $products->products_id,
@@ -643,62 +627,63 @@ class OrdersController extends DataController
 						]);						
 					}
 				}
-							
-			 }
-			
-			$responseData = array('success'=>'1', 'data'=>array(), 'message'=>"Order has been placed successfully.");
-			
-			//send order email to user			
-			$order =Order::LeftJoin('orders_status_history', 'orders_status_history.orders_id', '=', 'orders.orders_id')
-				->LeftJoin('orders_status', 'orders_status.orders_status_id', '=' ,'orders_status_history.orders_status_id')
-				->where('orders.orders_id', '=', $orders_id)->orderby('orders_status_history.date_added', 'DESC')->get();
-			
-		//foreach
-		foreach($order as $data){
-			$orders_id	 = $data->orders_id;
-			
-			$orders_products =OrdersProduct::join('products', 'products.products_id','=', 'orders_products.products_id')
-				->select('orders_products.*', 'products.products_image as image')
-				->where('orders_products.orders_id', '=', $orders_id)->get();
-				$i = 0;
-				$total_price  = 0;
-				$product = array();
-				$subtotal = 0;
-				foreach($orders_products as $orders_products_data){
-					$product_attribute = OrdersProductsAttribute::where([
-							['orders_products_id', '=', $orders_products_data->orders_products_id],
-							['orders_id', '=', $orders_products_data->orders_id],
-						])
-						->get();
 						
-					$orders_products_data->attribute = $product_attribute;
-					$product[$i] = $orders_products_data;
-					//$total_tax	 = $total_tax+$orders_products_data->products_tax;
-					$total_price = $total_price+$orders_products[$i]->final_price;					
-					$subtotal += $orders_products[$i]->final_price;					
-					$i++;
-				}
+			}
+			
+			// $responseData = array('success'=>'1', 'data'=>array(), 'message'=>"Order has been placed successfully.");
+			
+			// //send order email to user			
+			// $order =Order::LeftJoin('orders_status_history', 'orders_status_history.orders_id', '=', 'orders.orders_id')
+			// 	->LeftJoin('orders_status', 'orders_status.orders_status_id', '=' ,'orders_status_history.orders_status_id')
+			// 	->where('orders.orders_id', '=', $orders_id)->orderby('orders_status_history.date_added', 'DESC')->get();
+			
+			// //foreach
+			// foreach($order as $data) {
+
+			// 	$orders_id	 = $data->orders_id;
 				
-			$data->data = $product;
-			$orders_data[] = $data;
-		}
+			// 	$orders_products =OrdersProduct::join('products', 'products.products_id','=', 'orders_products.products_id')
+			// 		->select('orders_products.*', 'products.products_image as image')
+			// 		->where('orders_products.orders_id', '=', $orders_id)->get();
+			// 		$i = 0;
+			// 		$total_price  = 0;
+			// 		$product = array();
+			// 		$subtotal = 0;
+			// 		foreach($orders_products as $orders_products_data){
+			// 			$product_attribute = OrdersProductsAttribute::where([
+			// 					['orders_products_id', '=', $orders_products_data->orders_products_id],
+			// 					['orders_id', '=', $orders_products_data->orders_id],
+			// 				])
+			// 				->get();
+							
+			// 			$orders_products_data->attribute = $product_attribute;
+			// 			$product[$i] = $orders_products_data;
+			// 			//$total_tax	 = $total_tax+$orders_products_data->products_tax;
+			// 			$total_price = $total_price+$orders_products[$i]->final_price;					
+			// 			$subtotal += $orders_products[$i]->final_price;					
+			// 			$i++;
+			// 		}
+					
+			// 	$data->data = $product;
+			// 	$orders_data[] = $data;
+			// }
 		
-			$orders_status_history = OrdersStatusHistory::LeftJoin('orders_status', 'orders_status.orders_status_id', '=' ,'orders_status_history.orders_status_id')
-				->orderBy('orders_status_history.date_added', 'desc')
-				->where('orders_id', '=', $orders_id)->get();
+			// $orders_status_history = OrdersStatusHistory::LeftJoin('orders_status', 'orders_status.orders_status_id', '=' ,'orders_status_history.orders_status_id')
+			// 	->orderBy('orders_status_history.date_added', 'desc')
+			// 	->where('orders_id', '=', $orders_id)->get();
 					
-			$orders_status = OrdersStatus::get();
+			// $orders_status = OrdersStatus::get();
 					
-			$ordersData['orders_data']		 	 	=	$orders_data;
-			$ordersData['total_price']  			=	$total_price;
-			$ordersData['orders_status']			=	$orders_status;
-			$ordersData['orders_status_history']    =	$orders_status_history;
-			$ordersData['subtotal']    				=	$subtotal;
+			// $ordersData['orders_data']		 	 	=	$orders_data;
+			// $ordersData['total_price']  			=	$total_price;
+			// $ordersData['orders_status']			=	$orders_status;
+			// $ordersData['orders_status_history']    =	$orders_status_history;
+			// $ordersData['subtotal']    				=	$subtotal;
 			
 			// notification/email
 			// $myVar = new AlertController();
 			//$alertSetting = $myVar->orderAlert($ordersData);
-			
+			Event::fire(new SendProductOrderMail($orders_id));
 			if(session('step')=='4'){
 				session(['step' => array()]);
 			}	

@@ -78,18 +78,7 @@
 <script type="text/javascript">
 jQuery(document).ready(function(e) {
  
-	
-// jQuery('#strpe').on('click', function(event) {
-// event.preventDefault();
-// var $button = jQuery(this),
-// $form = $button.parents('form');
-// var opts = jQuery.extend({}, $button.data(), {
-// token: function(result) {
-// $form.append(jQuery('<input>').attr({ type: 'hidden', name: 'stripeToken', value: result.id })).submit();
-// }
-// });
-// StripeCheckout.open(opts);
-// });
+ 
 
     jQuery(document).on('click',"#stripe_btn",function(){
 
@@ -131,8 +120,7 @@ jQuery(document).ready(function(e) {
 	 })
 });
 </script> 
-
-<!-- <script src="https://js.stripe.com/v3/"></script> 
+<script src="https://js.stripe.com/v3/"></script> 
 
 <script src="{!! asset('js/stripe_card.js') !!}" data-rel-js></script> 
 
@@ -220,7 +208,7 @@ jQuery(document).ready(function(e) {
 
   registerElements([cardNumber, cardExpiry, cardCvc], 'example2');
 })();
-</script> --> 
+</script> 
 @endif 
 
 <script type="application/javascript">
