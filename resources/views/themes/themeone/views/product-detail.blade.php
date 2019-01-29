@@ -174,7 +174,7 @@
                                     <form name="attributes" id="add-Product-form" method="post" >
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                                         <input type="hidden" name="products_id" value="{{$result['detail']['product_data'][0]->products_id}}">
-                                        <input type="hidden" name="products_price" id="products_price" value="@if(!empty($result['detail']['product_data'][0]->discount_price)){{$result['detail']['product_data'][0]->discount_price+0}}@else{{$result['detail']['product_data'][0]->products_price+0}}@endif">
+                                        <input type="hidden" name="products_price" id="products_price" value="@if(!empty($result['detail']['product_data'][0]->discount_price)){{$result['detail']['product_data'][0]->discount_price+$result['detail']['product_data'][0]->attributes_price}}@else{{$result['detail']['product_data'][0]->products_price+$result['detail']['product_data'][0]->attributes_price}}@endif">
                                         <input type="hidden" name="checkout" id="checkout_url" value="@if(!empty(app('request')->input('checkout'))) {{ app('request')->input('checkout') }} @else false @endif" >	
                                         
                                         @if(count($result['detail']['product_data'][0]->attributes)>0)                                            
@@ -220,7 +220,13 @@
                                             <div class="price-box">
                                                 <span>@lang('website.Total Price')&nbsp;:</span>
                                                 <span class="total_price">
-                                                @if(!empty($result['detail']['product_data'][0]->discount_price)){{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->discount_price+0}}@else{{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->products_price+0}}@endif
+                                                @if(!empty($result['detail']['product_data'][0]->discount_price))
+                                                    {{$web_setting[19]->value}}
+                                                    {{$result['detail']['product_data'][0]->discount_price+$result['detail']['product_data'][0]->attributes_price}}
+                                                @else
+                                                {{$web_setting[19]->value}}
+                                                {{$result['detail']['product_data'][0]->products_price+$result['detail']['product_data'][0]->attributes_price}}@endif
+
                                                 </span>				
                                             </div>  
                                             <div class="buttons">

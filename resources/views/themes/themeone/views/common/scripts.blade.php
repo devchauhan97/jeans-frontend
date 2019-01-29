@@ -882,7 +882,6 @@ jQuery(document).on('click', '.add-to-Cart', function(e){
 		url: '{{ URL::to("/add/cart")}}',
 		type: "POST",
 		data: formData,
-		
 		success: function (res) {
 			if(res.trim() == "already added"){
 				//notification

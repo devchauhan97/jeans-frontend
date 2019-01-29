@@ -11,14 +11,14 @@
     
          @if(count($result['commonContent']['cart'])>0)
          <?php
-                            $total_amount=0;
-                            $qunatity=0;
-                        ?>
-                        @foreach($result['commonContent']['cart'] as $cart_data)
-                    
-                        <?php 
-                        $total_amount += $cart_data->final_price*$cart_data->customers_basket_quantity;
-                        $qunatity     += $cart_data->customers_basket_quantity; ?>
+            $total_amount=0;
+            $qunatity=0;
+        ?>
+        @foreach($result['commonContent']['cart'] as $cart_data)
+    
+        <?php 
+        $total_amount += $cart_data->final_price*$cart_data->customers_basket_quantity;
+        $qunatity     += $cart_data->customers_basket_quantity; ?>
         <div class="cart-box">
             <div class="cart-img">              
                 <img src="{{getFtpImage($cart_data->image)}}" width="auto" height="70" alt="{{$cart_data->products_name}}">

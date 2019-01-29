@@ -209,8 +209,6 @@ class ProductsController extends DataController
 		$title 			= 	array('pageTitle' => Lang::get('website.Product Detail'));
 		$result 		= 	array();
 		$result['commonContent'] = $this->commonContent();
-		$color =$request->color;
-		$size =$request->size;
 		
 		//min_price
 		if(!empty($request->min_price)){
@@ -259,13 +257,13 @@ class ProductsController extends DataController
 		$result['sub_category_name'] = $sub_category_name;
 		$result['sub_category_slug'] = $sub_category_slug;
 		
-		$myVar = new DataController();
-		$data = array('page_number'=>'0', 'type'=>'', 'products_id'=>$products[0]->products_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price);
-		$detail = $myVar->products($data);
+		//$myVar = new DataController();
+		$data = array('page_number'=>'0', 'type'=>'', 'products_id'=>$products[0]->products_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price,'color'=>$request->Colors, 'size'=>$request->Size);
+		$detail = $this->products($data);
 		$result['detail'] = $detail;
 		
-		$data = array('page_number'=>'0', 'type'=>'', 'categories_id'=>$result['detail']['product_data'][0]->categories_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price);
-		$simliar_products = $myVar->products($data);
+		$data = array('page_number'=>'0', 'type'=>'', 'categories_id'=>$result['detail']['product_data'][0]->categories_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price,'color'=>$request->Colors, 'size'=>$request->Size);
+		$simliar_products = $this->products($data);
 		$result['simliar_products'] = $simliar_products;
 		
 		$cart = '';
