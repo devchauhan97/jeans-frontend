@@ -22,6 +22,30 @@ class Product extends Model
 
 		return $this->hasOne(ProductsDescription::class,'products_id');
 	}
+
+	public  function category()
+	{
+
+		return $this->hasOne(Category::class,'categories_id');
+	}
+
+	public  function sub_category()
+	{
+
+		return $this->hasOne(Category::class,'categories_id');
+	}
+	public  function categories_description()
+	{
+ 
+		return $this->hasOne(CategoryDescription::class,'categories_id');
+	}
+	
+	public  function products_to_categories() //used
+	{
+		return $this->hasMany(ProductsToCategory::class,'products_id');
+	}
+
+
 	public  function special()
 	{
 

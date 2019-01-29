@@ -17,5 +17,10 @@ class ProductsToCategory extends Model
 
 	public function category() {
 	    return $this->hasOne(Category::class, 'categories_id');
-	}	
+	}
+		
+	public function category_description(){ 
+
+		return $this->hasMany(CategoryDescription::class,'categories_id','categories_id')->where('language_id',1);
+	}
 }

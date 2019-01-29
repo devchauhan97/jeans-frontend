@@ -12,4 +12,9 @@ class ProductsAttribute extends Model
 
 	//use user id of admin
 	protected $primaryKey = 'products_attributes_id'; 
+
+	public function products_option()
+	{
+		return $this->hasOne(ProductsOption::class,'products_options_id','options_id');
+	} 
 }

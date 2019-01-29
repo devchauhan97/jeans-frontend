@@ -11,5 +11,11 @@ class ProductsOption extends Model
 	protected $guarded = ['products_options_id'];
 
 	//use user id of admin
-	protected $primaryKey = 'products_options_id'; 
+	protected $primaryKey = 'products_options_id';
+
+	public function products_attribute(){
+
+		return $this->hasMany(ProductsAttribute::class,'options_id','products_options_id');
+	} 
+
 }

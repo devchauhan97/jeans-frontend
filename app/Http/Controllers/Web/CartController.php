@@ -49,7 +49,8 @@ class CartController extends DataController
      */
 	
 	//myCart 
-	public function viewcart(Request $request){
+	public function viewcart(Request $request)
+	{
 		
 		$title = array('pageTitle' => Lang::get("website.View Cart"));
 		$result = array();

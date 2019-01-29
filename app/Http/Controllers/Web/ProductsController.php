@@ -29,7 +29,9 @@ use App\ProductsAttribute;
 
 //email
 use Illuminate\Support\Facades\Mail;
-
+use App\ProductsAttributesImage;
+use App\ProductsImage;
+use App\LikedProduct;
 class ProductsController extends DataController
 {
 	
@@ -198,10 +200,10 @@ class ProductsController extends DataController
 	}
 	
 	//access object for custom pagination
-	function accessObjectArray($var){
+	function accessObjectArray($var)
+	{
 	  return $var;
 	}
-
 	//productDetail 
 	public function productDetail(Request $request)
 	{
@@ -210,60 +212,228 @@ class ProductsController extends DataController
 		$result 		= 	array();
 		$result['commonContent'] = $this->commonContent();
 		
-		//min_price
-		if(!empty($request->min_price)){
-			$min_price = $request->min_price;
-		}else{
-			$min_price = '';
-		}
 		
-		//max_price
-		if(!empty($request->max_price)){
-			$max_price = $request->max_price;
-		}else{
-			$max_price = '';
-		}	
-				
-		if(!empty($request->limit)){
-			$limit = $request->limit;
-		}else{
-			$limit = 15;
-		}
-		
-		$products = Product::where('products_slug',$request->slug)->get();
-		
+		$products = Product::
+							//with('products_to_categories.category_description')
+							 where('products_slug',$request->slug)
+
+							->first();
+							 
+		if(!count($products))
+			 return response(redirect(url('/404')), 404);
+
 		//category		
-		$category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->leftJoin('products_to_categories','products_to_categories.categories_id','=','categories.categories_id')->where('products_to_categories.products_id',$products[0]->products_id)->where('categories.parent_id',0)->where('language_id',Session::get('language_id'))->get();
+		// $category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->leftJoin('products_to_categories','products_to_categories.categories_id','=','categories.categories_id')->where('products_to_categories.products_id',$products->products_id)->where('categories.parent_id',0)->where('language_id',Session::get('language_id'))->first();
+
+		// $category_slug = '';
+		// $category_name = '';
+
+		// if(!empty($category) and count($category)>0){
+		// 	$category_slug = $category->categories_slug;
+		// 	$category_name = $category->categories_name;
+		// } 
+
+		// $sub_category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->leftJoin('products_to_categories','products_to_categories.categories_id','=','categories.categories_id')->where('products_to_categories.products_id',$products->products_id)->where('categories.parent_id','>',0)->where('language_id',Session::get('language_id'))->first();
+
+		// $sub_category_name = '';
+		// $sub_category_slug = '';
+		// if(!empty($sub_category) and count($sub_category)>0){
+		// 	$sub_category_name = $sub_category->categories_name;
+		// 	$sub_category_slug = $sub_category->categories_slug;		
+		// } 
 		
-		if(!empty($category) and count($category)>0){
-			$category_slug = $category[0]->categories_slug;
-			$category_name = $category[0]->categories_name;
-		}else{
-			$category_slug = '';
-			$category_name = '';
-		}
-		$sub_category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->leftJoin('products_to_categories','products_to_categories.categories_id','=','categories.categories_id')->where('products_to_categories.products_id',$products[0]->products_id)->where('categories.parent_id','>',0)->where('language_id',Session::get('language_id'))->get();
-		
-		if(!empty($sub_category) and count($sub_category)>0){
-			$sub_category_name = $sub_category[0]->categories_name;
-			$sub_category_slug = $sub_category[0]->categories_slug;		
-		}else{
-			$sub_category_name = '';
-			$sub_category_slug = '';	
-		}
-		
-		$result['category_name'] = $category_name;
-		$result['category_slug'] = $category_slug;
-		$result['sub_category_name'] = $sub_category_name;
-		$result['sub_category_slug'] = $sub_category_slug;
+		// $result['category_name'] = $category_name;
+		// $result['category_slug'] = $category_slug;
+		// $result['sub_category_name'] = $sub_category_name;
+		// $result['sub_category_slug'] = $sub_category_slug;
 		
 		//$myVar = new DataController();
-		$data = array('page_number'=>'0', 'type'=>'', 'products_id'=>$products[0]->products_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price,'color'=>$request->Colors, 'size'=>$request->Size);
-		$detail = $this->products($data);
-		$result['detail'] = $detail;
+		// $data = array('page_number'=>'0', 'type'=>'', 'products_id'=>$products[0]->products_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price,'color'=>$request->Colors, 'size'=>$request->Size);
+		// $detail = $this->products($data);
+
+		// ----------------------------------
+		$categories = ProductsToCategory::LeftJoin('products', 'products.products_id', '=', 'products_to_categories.products_id')
+				->LeftJoin('categories_description','categories_description.categories_id','=','products_to_categories.categories_id')
+				->leftJoin('manufacturers','manufacturers.manufacturers_id','=','products.manufacturers_id')
+				->leftJoin('manufacturers_info','manufacturers.manufacturers_id','=','manufacturers_info.manufacturers_id')
+				->leftJoin('products_description','products_description.products_id','=','products.products_id');
+		$categories->where('products.products_id','=', $products->products_id);
+		$categories->where('products_description.language_id','=',Session::get('language_id'))
+			->where('categories_description.language_id','=',Session::get('language_id'))
+			->where('products_quantity','>','0');
 		
-		$data = array('page_number'=>'0', 'type'=>'', 'categories_id'=>$result['detail']['product_data'][0]->categories_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price,'color'=>$request->Colors, 'size'=>$request->Size);
+		$categories->groupBy('products.products_id');
+			
+		//count
+		$total_record = $categories->toSql();
+		//dd($total_record);
+
+		$products  = $categories->get();
+
+		$detail = array();
+		$result2 = array();
+			
+			//check if record exist
+		if(count($products)>0) {
+			$index = 0;	
+			foreach ($products as $products_data){
+
+				$products_id = $products_data->products_id;
+				
+				//multiple images
+				 
+				$products_images = ProductsImage::select('image')->where('products_id','=', $products_id)->orderBy('sort_order', 'ASC')->get();	
+
+				$products_data->images =  $products_images;
+				/**Get attribute image */ 
+				if(isset($request->Colors) || isset($request->Size)){
+					$products_attributes_image = ProductsAttributesImage::select('image')->where('products_id','=', $products_id)
+					->where(function($query) use ($request){
+						$query->orWhere('options_values_id',$request->Colors);
+
+						$query->orWhere('options_values_id',$request->Size);
+					})
+					->get();	
+					//dd($products_attributes_image->toSql());
+					if(count($products_attributes_image))
+						$products_data->images =  $products_attributes_image;
+				}
+				array_push($detail,$products_data);
+				$options = array();
+				$attr = array();
+			
+			//like product
+				if(!empty(session('customers_id'))){
+					$liked_customers_id						=	session('customers_id');	
+					$categories = LikedProduct::where('liked_products_id', '=', $products_id)->where('liked_customers_id', '=', $liked_customers_id)->get();
+					
+					if(count($categories)>0){
+						$detail[$index]->isLiked = '1';
+					}else{
+						$detail[$index]->isLiked = '0';
+					}
+				}else{
+					$detail[$index]->isLiked = '0';						
+				}
+			
+			// fetch all options add join from products_options table for option name
+				$products_attribute = ProductsAttribute::where('products_id','=', $products_id)->groupBy('options_id')->get();
+				$attributes_price=0;
+				if(count($products_attribute)) {
+				$index2 = 0;
+					foreach($products_attribute as $attribute_data){
+						$option_name = ProductsOption::where('language_id','=', Session::get('language_id'))->where('products_options_id','=', $attribute_data->options_id)->get();
+						
+						if(count($option_name)>0){
+							
+							$temp = array();
+							$temp_option['id'] = $attribute_data->options_id;
+							$temp_option['name'] = $option_name[0]->products_options_name;
+							$temp_option['is_default'] = $attribute_data->is_default;
+							$attr[$index2]['option'] = $temp_option;
+
+							// fetch all attributes add join from products_options_values table for option value name
+							$attributes_value_query =  ProductsAttribute::where('products_id','=', $products_id)->where('options_id','=', $attribute_data->options_id)->get();
+							$k = 0;
+								foreach($attributes_value_query as $products_option_value){
+									$option_value = ProductsOptionsValue::where('products_options_values_id','=', $products_option_value->options_values_id)->get();
+									$temp_i['id'] = $products_option_value->options_values_id;
+									$temp_i['value'] = $option_value[0]->products_options_values_name;
+									$temp_i['price'] = $products_option_value->options_values_price;
+									$temp_i['price_prefix'] = $products_option_value->price_prefix;
+									if(in_array($temp_i['id'], [$request->Colors,$request->Size])) {
+
+										if($products_option_value->price_prefix == '+')
+											$attributes_price += $products_option_value->options_values_price;
+										else
+											$attributes_price -= $products_option_value->options_values_price;
+									}
+									
+									array_push($temp,$temp_i);
+
+								}
+								$attr[$index2]['values'] = $temp;
+								$detail[$index]->attributes = 	$attr;	
+								$index2++;
+						}
+					}
+					//$attributes_price=0;
+					$detail[$index]->attributes_price=$attributes_price;
+				}else{
+					$detail[$index]->attributes = 	array();	
+				}
+
+				$index++;
+			}
+		} 
+		/* $products_attribute = ProductsAttribute::with(['products_option.products_attribute'=> function ($query) use ($products_id) {
+            $query->where('products_id','=', $products_id);
+        }])->where('products_id','=', $products_id)
+		//$products_attribute = ProductsOption::with('products_attributes')
+		 
+		->groupBy('options_id')
+		->get();
+		
+		foreach ($products_attribute as $key => $value) {
+
+			$temp = array();
+			$temp_option['id'] = $value->options_id;
+			$temp_option['name'] = $value->products_options_name;
+			$temp_option['is_default'] = $attribute_data->is_default;
+			$temp=array();
+			foreach ($value->products_option->products_attribute as $key => $products_attribute) {
+			
+				$temp[] =['name' => $value,'id' => $products_attribute->options_values_id,'price'=>$products_attribute->options_values_price,'price_prefix'=>$products_attribute->price_prefix];	
+			}
+			$result['attributes']['option'][]=$temp;
+		}*/
+		// ---------------------------
+		$result['detail']['product_data'] =$detail;
+		 // ["products_id" => 8,
+   //    "categories_id" => 1,
+   //    "created_at" => null,
+   //    "updated_at" => null,
+   //    "products_quantity" => 9995,
+   //    "products_model" => null,
+   //    "products_image" => "product_images/1502181584.pPOLO2-26008953_standard_v400.jpg",
+   //    "products_price" => "125.50",
+   //    "products_date_added" => "2017-08-08 08:39:44",
+   //    "products_last_modified" => "2019-01-29 05:38:52",
+   //    "products_date_available" => null,
+   //    "products_weight" => "0.500",
+   //    "products_weight_unit" => "Kilogram",
+   //    "products_status" => 1,
+   //    "products_tax_class_id" => 1,
+   //    "manufacturers_id" => null,
+   //    "products_ordered" => 8,
+   //    "products_liked" => 3,
+   //    "low_limit" => 0,
+   //    "products_slug" => "standard-fit-cotton-popover",
+   //    "is_feature" => null,
+   //    "categories_description_id" => 1,
+   //    "language_id" => 1,
+   //    "categories_name" => "Men's Clothing",
+   //    "manufacturers_name" => null,
+   //    "manufacturers_image" => null,
+   //    "date_added" => null,
+   //    "last_modified" => null,
+   //    "manufacturers_slug" => null,
+   //    "languages_id" => null,
+   //    "manufacturers_url" => null,
+   //    "url_clicked" => null,
+   //    "date_last_click" => null,
+   //    "id" => 15,
+   //    "products_name" => "STANDARD FIT COTTON POPOVER",
+   //    "products_description" => "<p>Standard Fit: a comfortable, relaxed silhouette. If you favored our Classic Fit or Custom Fit, you will like this updated version. Size medium has a 30&quot;",
+   //    "products_url" => null,
+   //    "products_viewed" => 0
+   //  ];
+
+		
+
+		$data = array('page_number'=>'0', 'type'=>'', 'categories_id'=>$detail[0]->categories_id, 'limit'=>5, 'min_price'=>0, 'max_price'=>0,'color'=>$request->Colors, 'size'=>$request->Size);
 		$simliar_products = $this->products($data);
+
 		$result['simliar_products'] = $simliar_products;
 		
 		$cart = '';
