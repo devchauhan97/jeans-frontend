@@ -561,7 +561,7 @@ class DataController extends Controller
 			
 			// fetch all options add join from products_options table for option name
 				$products_attribute = ProductsAttribute::where('products_id','=', $products_id)->groupBy('options_id')->get();
-				$attributes_price=0;
+				 
 				if(count($products_attribute)) {
 				$index2 = 0;
 					foreach($products_attribute as $attribute_data){
@@ -578,20 +578,12 @@ class DataController extends Controller
 							// fetch all attributes add join from products_options_values table for option value name
 							$attributes_value_query =  ProductsAttribute::where('products_id','=', $products_id)->where('options_id','=', $attribute_data->options_id)->get();
 							$k = 0;
-								foreach($attributes_value_query as $products_option_value){
+								foreach($attributes_value_query as $products_option_value) {
 									$option_value = ProductsOptionsValue::where('products_options_values_id','=', $products_option_value->options_values_id)->get();
 									$temp_i['id'] = $products_option_value->options_values_id;
 									$temp_i['value'] = $option_value[0]->products_options_values_name;
 									$temp_i['price'] = $products_option_value->options_values_price;
 									$temp_i['price_prefix'] = $products_option_value->price_prefix;
-									if(in_array($temp_i['id'], [@$data['color'],@$data['size']])) {
-
-										if($products_option_value->price_prefix == '+')
-											$attributes_price += $products_option_value->options_values_price;
-										else
-											$attributes_price -= $products_option_value->options_values_price;
-									}
-									
 									array_push($temp,$temp_i);
 
 								}
@@ -601,7 +593,6 @@ class DataController extends Controller
 						}
 					}
 					//$attributes_price=0;
-					$result[$index]->attributes_price=$attributes_price;
 				}else{
 					$result[$index]->attributes = 	array();	
 				}

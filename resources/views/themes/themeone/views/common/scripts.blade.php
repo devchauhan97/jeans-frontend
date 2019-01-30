@@ -399,20 +399,20 @@ jQuery( document ).ready( function () {
 		var message = 'sadsad';		
 		notification(message);
 	});
-
-	@if(!empty($result['detail']['product_data'][0]->attributes))
-		@foreach( $result['detail']['product_data'][0]->attributes as $attributes_data )
+//-------------------------------------------------------------------------
+@if(!empty( $result['attributes'] ))
+@foreach(  $result['attributes']  as $attributes_data )
 	{{ $attributes_data['option']['name'] }}();
 	
 	function {{ $attributes_data['option']['name'] }}(){
 		var value_price = jQuery('option:selected', ".{{$attributes_data['option']['name']}}").attr('value_price');
 		jQuery("#{{ $attributes_data['option']['name'] }}").val(value_price);
 	}
-		
+	
+
 	//change_options
 	jQuery(document).on('change', '.{{ $attributes_data['option']['name'] }}', function(e){
-
-		var {{ $attributes_data['option']['name'] }} = jQuery("#{{ $attributes_data['option']['name'] }}").val();
+ 		var {{ $attributes_data['option']['name'] }} = jQuery("#{{ $attributes_data['option']['name'] }}").val();
 		var attribute ='?'
 		//if ('{{ $attributes_data['option']['name'] }}' == 'Colors'){
 			attribute=attribute+'Colors='+jQuery('.Colors option:selected').val()
@@ -420,8 +420,27 @@ jQuery( document ).ready( function () {
 		//if ('{{ $attributes_data['option']['name'] }}' == 'Size'){
 			attribute=attribute+'&Size='+jQuery('.Size option:selected').val()
 		//}
-		window.location.href='{{Url::to("product-detail/".Request::segment(2))}}'+ attribute;
-		
+		var option 		='{{ $attributes_data['option']['name'] }}';
+		var option_id 	=jQuery('option:selected', this).val();
+		var pram_serch 	=getParam(option);
+		var url 		=window.location.search ;
+		if(pram_serch != false) {
+			var searchParams = new URLSearchParams(window.location.search);
+			searchParams.set(option,option_id)
+			var newParams = searchParams.toString()
+			window.location.href='{{Url::to("product-detail/".Request::segment(2))}}'+'?'+newParams
+		} else {
+			 
+			if( !url ){
+				window.location.href=window.location+'?'+'{{ $attributes_data['option']['name'] }}='+option_id
+				 
+			}else{
+				window.location.href=url+'&'+'{{ $attributes_data['option']['name'] }}='+jQuery('option:selected', this).val();
+			}
+		}
+		return false;
+		//---old code
+ 	
 		var value_price = jQuery('option:selected', this).attr('value_price');
 		var prefix = jQuery('option:selected', this).attr('prefix');
 		var current_price = jQuery('#products_price').val();
@@ -878,28 +897,34 @@ jQuery(document).on('click', '.add-to-Cart', function(e){
 	var formData = jQuery("#add-Product-form").serialize();
 	var url = jQuery('#checkout_url').val();
 	var message;
+
 	jQuery.ajax({
 		url: '{{ URL::to("/add/cart")}}',
 		type: "POST",
 		data: formData,
 		success: function (res) {
-			if(res.trim() == "already added"){
+			if(res.trim() == "already added") {
 				//notification
 				message = 'Product is added!';
-			}else{
+			} else {
 				jQuery('.head-cart-content').html(res);
 				message = 'Product is added!';
 				jQuery(parent).addClass('active');
 			}
-				if(url.trim()=='true'){
-					window.location.href = '{{ URL::to("/checkout")}}';
-				}else{
-					jQuery('#loader').css('display','none');
-					//window.location.href = '{{ URL::to("/viewcart")}}';
-					//message = "@lang('website.Product is added')";			
-					//notification(message);
-				}
+			if(url.trim()=='true') {
+				window.location.href = '{{ URL::to("/checkout")}}';
+			} else {
+				jQuery('#loader').css('display','none');
+				//window.location.href = '{{ URL::to("/viewcart")}}';
+				//message = "@lang('website.Product is added')";			
+				//notification(message);
+			}
 		},
+		error: function (reject,exception) {
+				jQuery('#loader').css('display','none');
+				notification( reject.responseJSON );
+                
+        }
 	});
 });
 
@@ -1694,5 +1719,15 @@ jQuery(document).ready(function() {
 
   
 });
-
+function getParam( name )
+	{
+	 name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+	 var regexS = "[\\?&]"+name+"=([^&#]*)";
+	 var regex = new RegExp( regexS );
+	 var results = regex.exec( window.location.href );
+	 if( results == null )
+	  return false;
+	else
+	 return results[0];
+	}	
 </script>

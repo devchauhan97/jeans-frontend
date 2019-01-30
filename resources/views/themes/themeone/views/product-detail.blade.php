@@ -49,7 +49,7 @@
                                             <img class="img-thumbnail" src="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" alt="img-fluid">
                                         </div>
     
-                                        @foreach( $result['detail']['product_data'][0]->images as $key=>$images )
+                                        @foreach( $result['product_images'] as $key=>$images )
                                             <div class="item carousel-item" data-slide-number="{{++$key}}">
                                                 <img class="img-thumbnail" src="{{getFtpImage($images->image)}}" alt="img-fluid">
                                             </div>
@@ -63,7 +63,7 @@
                                             </a>
                                         </div>
                                                     
-                                        @foreach( $result['detail']['product_data'][0]->images as $key=>$images )
+                                        @foreach( $result['product_images'] as $key=>$images )
                                             <div class="thumbnail" data-slide-to="{{++$key}}" data-target="#product-slider">
                                                 <a id="carousel-selector-1">
                                                     <img class="img-thumbnail " src="{{getFtpImage($images->image) }}" alt="img-fluid">
@@ -87,29 +87,20 @@
                             <div class="col-12 col-lg-7">
                                 <div class="product-summary">
                                     <div class="like-box">
-                                        <span products_id='{{$result['detail']['product_data'][0]->products_id}}' class="fa @if($result['detail']['product_data'][0]->isLiked==1) fa-heart @else fa-heart-o @endif is_liked">
+                                        <span products_id='{{$result['detail']['product_data'][0]->products_id}}' class="fa @if($result['isLiked']==1) fa-heart @else fa-heart-o @endif is_liked">
                                         	<span class="badge badge-secondary">{{$result['detail']['product_data'][0]->products_liked}}</span>
                                         </span>                                          
                                     </div>                                    
                                     <h3 class="product-title">{{$result['detail']['product_data'][0]->products_name}}</h3> 
                                    <div class="star-ratings">
+                                        <i class="fa fa-star aria-hidden="true"></i>
 
-<i class="fa fa-star aria-hidden="true"></i>
+                                        <i class="fa fa-star aria-hidden="true"></i>
 
-<i class="fa fa-star aria-hidden="true"></i>
+                                        <i class="fa fa-star aria-hidden="true"></i>
+                                        <a href="#" class="rating">393 Ratings</a> & <a href="#" class="reviews">262 Reviews</a>
 
-<i class="fa fa-star aria-hidden="true"></i>
-
- 
-
-<a href="#" class="rating">393 Ratings</a> & <a href="#" class="reviews">262 Reviews</a>
-
- 
-
-</div>
-
-
-                                
+                                    </div>
                                     <div class="product-info">
                                         
                                         @if(!empty($result['category_name']) and !empty($result['sub_category_name']))
@@ -172,13 +163,15 @@
             
                                     <form name="attributes" id="add-Product-form" method="post" >
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
                                         <input type="hidden" name="products_id" value="{{$result['detail']['product_data'][0]->products_id}}">
-                                        <input type="hidden" name="products_price" id="products_price" value="@if(!empty($result['detail']['product_data'][0]->discount_price)){{$result['detail']['product_data'][0]->discount_price+$result['detail']['product_data'][0]->attributes_price}}@else{{$result['detail']['product_data'][0]->products_price+$result['detail']['product_data'][0]->attributes_price}}@endif">
+                                        <input type="hidden" name="products_price" id="products_price" value="@if(!empty($result['detail']['product_data'][0]->discount_price)){{$result['detail']['product_data'][0]->discount_price+$result['attributes_price']}}@else{{$result['detail']['product_data'][0]->products_price+$result['attributes_price']}}@endif">
+                                        
                                         <input type="hidden" name="checkout" id="checkout_url" value="@if(!empty(app('request')->input('checkout'))) {{ app('request')->input('checkout') }} @else false @endif" >	
                                         
-                                        @if(count($result['detail']['product_data'][0]->attributes)>0)                                            
+                                        @if(count($result['attributes'])>0)                                            
                                             <div class="form-row">  
-                                                @foreach( $result['detail']['product_data'][0]->attributes as $attributes_data )                     
+                                                @foreach( $result['attributes'] as $attributes_data )                     
                                                 <input type="hidden" name="option_name[]" value="{{ $attributes_data['option']['name'] }}" >
                                                 <input type="hidden" name="option_id[]" value="{{ $attributes_data['option']['id'] }}" >
                                                 <input type="hidden" name="{{ $attributes_data['option']['name'] }}" id="{{ $attributes_data['option']['name'] }}" value="0" >								
@@ -221,10 +214,10 @@
                                                 <span class="total_price">
                                                 @if(!empty($result['detail']['product_data'][0]->discount_price))
                                                     {{$web_setting[19]->value}}
-                                                    {{$result['detail']['product_data'][0]->discount_price+$result['detail']['product_data'][0]->attributes_price}}
+                                                    {{$result['detail']['product_data'][0]->discount_price+$result['attributes_price']}}
                                                 @else
                                                 {{$web_setting[19]->value}}
-                                                {{$result['detail']['product_data'][0]->products_price+$result['detail']['product_data'][0]->attributes_price}}@endif
+                                                {{$result['detail']['product_data'][0]->products_price+$result['attributes_price']}}@endif
 
                                                 </span>				
                                             </div>  

@@ -252,11 +252,20 @@ class ProductsController extends DataController
 		// $detail = $this->products($data);
 
 		// ----------------------------------
-		$categories = ProductsToCategory::LeftJoin('products', 'products.products_id', '=', 'products_to_categories.products_id')
+		$categories = ProductsToCategory::with('other_images')->LeftJoin('products', 'products.products_id', '=', 'products_to_categories.products_id')
 				->LeftJoin('categories_description','categories_description.categories_id','=','products_to_categories.categories_id')
 				->leftJoin('manufacturers','manufacturers.manufacturers_id','=','products.manufacturers_id')
 				->leftJoin('manufacturers_info','manufacturers.manufacturers_id','=','manufacturers_info.manufacturers_id')
-				->leftJoin('products_description','products_description.products_id','=','products.products_id');
+				->leftJoin('products_description','products_description.products_id','=','products.products_id')
+				->leftJoin('liked_products',function($q){
+					$q->on('liked_products.liked_products_id','=','products.products_id');
+					$q->where('liked_products.liked_customers_id', '=', session('customers_id'));
+				});
+
+		$categories->LeftJoin('specials', function ($join)   {  
+				$join->on('specials.products_id', '=', 'products_to_categories.products_id')->where('status', '=', '1')->where('expires_date', '>', time());
+			})->select('products.*','products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'products_to_categories.categories_id', 'categories_description.*','liked_products.*');
+
 		$categories->where('products.products_id','=', $products->products_id);
 		$categories->where('products_description.language_id','=',Session::get('language_id'))
 			->where('categories_description.language_id','=',Session::get('language_id'))
@@ -267,13 +276,126 @@ class ProductsController extends DataController
 		//count
 		$total_record = $categories->toSql();
 		//dd($total_record);
-
-		$products  = $categories->get();
-
+		$products_data  = $categories->first();
+		//dd($products_data );
 		$detail = array();
 		$result2 = array();
 			
-			//check if record exist
+		$products_id = $products_data->products_id;
+		//multiple images
+		$products_images =  $products_data->other_images;
+
+		array_push($detail,$products_data);
+ 	
+		// ******
+		// *****like product
+		// ***********
+		if($products_data->liked_customers_id>0){
+			$result['isLiked'] = '1';
+		}else{
+			$result['isLiked'] = '0';
+		}
+		// ******
+		// *****list added arttribute to products
+		// ***********
+		$products_attribute = ProductsAttribute::with(['products_option.products_attribute'=> function ($query) use ($products_id) {
+				            $query->where('products_id','=', $products_id);
+				        }])
+						->where('products_id','=', $products_id)
+						->groupBy('options_id')
+						->get();
+		//dd( $products_attribute);
+		$products_attribute_list=	[];//$products_attribute->toArray()	;	
+		foreach ($products_attribute as $key => $value) {
+
+			if(count($value->products_option))
+			$products_attribute_list[] = $request->{$value->products_option->products_options_name};
+
+		}
+		 
+		$attributes_price = 0;
+		$attributes = [];
+		foreach ( $products_attribute as $key => $value) {
+
+			$temp=array();
+			if(count($value->products_option)) {
+
+				foreach ($value->products_option->products_attribute as $key => $row) {
+
+					$p_o_v=ProductsOptionsValue::where('products_options_values_id',$row->options_values_id)->first();
+
+					$temp[] =['value'=>$p_o_v->products_options_values_name,'id' => $row->options_values_id,'price'=>$row->options_values_price,'price_prefix'=>$row->price_prefix];
+
+					if(in_array($row->options_values_id, $products_attribute_list)) {
+
+						if($row->price_prefix == '+')
+							$attributes_price += $row->options_values_price;
+						else
+							$attributes_price -= $products_option_value->options_values_price;
+					}	
+				}
+				$attributes[]=['option'=>['name' => $value->products_option->products_options_name,'id' => $value->options_id],'values'=>$temp];
+			}
+		}
+		$result['attributes'] =$attributes;
+
+		// ******
+		// ******Get attribute image 
+		// ************* 
+		if(count($products_attribute_list)) {
+
+			$products_attributes_image = ProductsAttributesImage::select('image')->where('products_id','=', $products_id)
+			->whereIn('options_values_id',$products_attribute_list)
+			->get();	
+ 			if(count($products_attributes_image))
+				$products_images =  $products_attributes_image;
+		}
+
+		$result['product_images'] =$products_images;
+		$result['attributes_price']=$attributes_price;
+		$result['detail']['product_data'] =$detail; 
+		// ******
+		// ******Get simliar products******
+		$result['simliar_products'] = $this->simliar_products($detail[0]->categories_id);
+		
+		//$myVar = new CartController();
+		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();
+		//dd($result['commonContent']);
+		//liked products
+		//$result['liked_products'] = LikedProduct::likedProducts();		
+		
+		return view("product-detail", $title)->with('result', $result); 
+	}
+	// ******
+	// ******make category wise simliar products
+	// ******
+	public function simliar_products($categories_id) {
+
+		$categories = ProductsToCategory::LeftJoin('products', 'products.products_id', '=', 'products_to_categories.products_id')
+				->LeftJoin('categories_description','categories_description.categories_id','=','products_to_categories.categories_id')
+				->leftJoin('manufacturers','manufacturers.manufacturers_id','=','products.manufacturers_id')
+				->leftJoin('manufacturers_info','manufacturers.manufacturers_id','=','manufacturers_info.manufacturers_id')
+				->leftJoin('products_description','products_description.products_id','=','products.products_id');
+				
+		$categories->LeftJoin('specials', function ($join)  {  
+				$join->on('specials.products_id', '=', 'products_to_categories.products_id')->where('status', '=', '1')->where('expires_date', '>',time());
+			})->select('products.*','products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'products_to_categories.categories_id', 'categories_description.*');
+
+
+		$categories->where('products_to_categories.categories_id','=', $categories_id);
+		$categories->where('products_description.language_id','=',Session::get('language_id'))
+			->where('categories_description.language_id','=',Session::get('language_id'))
+			->where('products_quantity','>','0');
+		
+		$categories->groupBy('products.products_id');
+			
+		//count
+		$total_record = $categories->toSql();
+		//dd($total_record);
+
+		$products  = $categories->take(5)->get();
+		$result =[];
+
 		if(count($products)>0) {
 			$index = 0;	
 			foreach ($products as $products_data){
@@ -281,24 +403,10 @@ class ProductsController extends DataController
 				$products_id = $products_data->products_id;
 				
 				//multiple images
-				 
-				$products_images = ProductsImage::select('image')->where('products_id','=', $products_id)->orderBy('sort_order', 'ASC')->get();	
-
+				$products_images = ProductsImage::select('image')->where('products_id','=', $products_id)->orderBy('sort_order', 'ASC')->get();		
 				$products_data->images =  $products_images;
-				/**Get attribute image */ 
-				if(isset($request->Colors) || isset($request->Size)){
-					$products_attributes_image = ProductsAttributesImage::select('image')->where('products_id','=', $products_id)
-					->where(function($query) use ($request){
-						$query->orWhere('options_values_id',$request->Colors);
-
-						$query->orWhere('options_values_id',$request->Size);
-					})
-					->get();	
-					//dd($products_attributes_image->toSql());
-					if(count($products_attributes_image))
-						$products_data->images =  $products_attributes_image;
-				}
-				array_push($detail,$products_data);
+				
+				array_push($result,$products_data);
 				$options = array();
 				$attr = array();
 			
@@ -308,12 +416,12 @@ class ProductsController extends DataController
 					$categories = LikedProduct::where('liked_products_id', '=', $products_id)->where('liked_customers_id', '=', $liked_customers_id)->get();
 					
 					if(count($categories)>0){
-						$detail[$index]->isLiked = '1';
+						$result[$index]->isLiked = '1';
 					}else{
-						$detail[$index]->isLiked = '0';
+						$result[$index]->isLiked = '0';
 					}
 				}else{
-					$detail[$index]->isLiked = '0';						
+					$result[$index]->isLiked = '0';						
 				}
 			
 			// fetch all options add join from products_options table for option name
@@ -341,7 +449,7 @@ class ProductsController extends DataController
 									$temp_i['value'] = $option_value[0]->products_options_values_name;
 									$temp_i['price'] = $products_option_value->options_values_price;
 									$temp_i['price_prefix'] = $products_option_value->price_prefix;
-									if(in_array($temp_i['id'], [$request->Colors,$request->Size])) {
+									if(in_array($temp_i['id'], [@$data['color'],@$data['size']])) {
 
 										if($products_option_value->price_prefix == '+')
 											$attributes_price += $products_option_value->options_values_price;
@@ -353,99 +461,21 @@ class ProductsController extends DataController
 
 								}
 								$attr[$index2]['values'] = $temp;
-								$detail[$index]->attributes = 	$attr;	
+								$result[$index]->attributes = 	$attr;	
 								$index2++;
 						}
 					}
 					//$attributes_price=0;
-					$detail[$index]->attributes_price=$attributes_price;
+					$result[$index]->attributes_price=$attributes_price;
 				}else{
-					$detail[$index]->attributes = 	array();	
+					$result[$index]->attributes = 	array();	
 				}
 
 				$index++;
 			}
-		} 
-		/* $products_attribute = ProductsAttribute::with(['products_option.products_attribute'=> function ($query) use ($products_id) {
-            $query->where('products_id','=', $products_id);
-        }])->where('products_id','=', $products_id)
-		//$products_attribute = ProductsOption::with('products_attributes')
-		 
-		->groupBy('options_id')
-		->get();
-		
-		foreach ($products_attribute as $key => $value) {
-
-			$temp = array();
-			$temp_option['id'] = $value->options_id;
-			$temp_option['name'] = $value->products_options_name;
-			$temp_option['is_default'] = $attribute_data->is_default;
-			$temp=array();
-			foreach ($value->products_option->products_attribute as $key => $products_attribute) {
-			
-				$temp[] =['name' => $value,'id' => $products_attribute->options_values_id,'price'=>$products_attribute->options_values_price,'price_prefix'=>$products_attribute->price_prefix];	
-			}
-			$result['attributes']['option'][]=$temp;
-		}*/
-		// ---------------------------
-		$result['detail']['product_data'] =$detail;
-		 // ["products_id" => 8,
-   //    "categories_id" => 1,
-   //    "created_at" => null,
-   //    "updated_at" => null,
-   //    "products_quantity" => 9995,
-   //    "products_model" => null,
-   //    "products_image" => "product_images/1502181584.pPOLO2-26008953_standard_v400.jpg",
-   //    "products_price" => "125.50",
-   //    "products_date_added" => "2017-08-08 08:39:44",
-   //    "products_last_modified" => "2019-01-29 05:38:52",
-   //    "products_date_available" => null,
-   //    "products_weight" => "0.500",
-   //    "products_weight_unit" => "Kilogram",
-   //    "products_status" => 1,
-   //    "products_tax_class_id" => 1,
-   //    "manufacturers_id" => null,
-   //    "products_ordered" => 8,
-   //    "products_liked" => 3,
-   //    "low_limit" => 0,
-   //    "products_slug" => "standard-fit-cotton-popover",
-   //    "is_feature" => null,
-   //    "categories_description_id" => 1,
-   //    "language_id" => 1,
-   //    "categories_name" => "Men's Clothing",
-   //    "manufacturers_name" => null,
-   //    "manufacturers_image" => null,
-   //    "date_added" => null,
-   //    "last_modified" => null,
-   //    "manufacturers_slug" => null,
-   //    "languages_id" => null,
-   //    "manufacturers_url" => null,
-   //    "url_clicked" => null,
-   //    "date_last_click" => null,
-   //    "id" => 15,
-   //    "products_name" => "STANDARD FIT COTTON POPOVER",
-   //    "products_description" => "<p>Standard Fit: a comfortable, relaxed silhouette. If you favored our Classic Fit or Custom Fit, you will like this updated version. Size medium has a 30&quot;",
-   //    "products_url" => null,
-   //    "products_viewed" => 0
-   //  ];
-
-		
-
-		$data = array('page_number'=>'0', 'type'=>'', 'categories_id'=>$detail[0]->categories_id, 'limit'=>5, 'min_price'=>0, 'max_price'=>0,'color'=>$request->Colors, 'size'=>$request->Size);
-		$simliar_products = $this->products($data);
-
-		$result['simliar_products'] = $simliar_products;
-		
-		$cart = '';
-		//$myVar = new CartController();
-		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();
-		
-		//liked products
-		$result['liked_products'] = $this->likedProducts();	
-		
-		return view("product-detail", $title)->with('result', $result); 
+		}
+		return ['product_data'=>$result];
 	}
-	
 	
 	public function filterProducts(Request $request)
 	{
