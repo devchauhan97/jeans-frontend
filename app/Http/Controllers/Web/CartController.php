@@ -34,6 +34,7 @@ use App\Special;
 use App\ProductsToCategory;
 use Cache;
 use Response;
+use App\ProductsAttribute;
 class CartController extends DataController
 {
 	
@@ -310,8 +311,6 @@ class CartController extends DataController
 		return view("cartButton")->with('result', $result);
 	}	
 	
-	
-	
 	//addToCart
 	public function addToCart(Request $request)
 	{
@@ -397,45 +396,62 @@ class CartController extends DataController
 		if( count($exist) == 0 ) {					
 
 			$customers_basket_id = Basket::insertGetId(
-				[
-					 'customers_id' => $customers_id,
-					 'products_id'  => $products_id,
-					 'session_id'   => $session_id,
-					 'customers_basket_quantity' => $customers_basket_quantity,
-					 'final_price' => $final_price,
-					 'customers_basket_date_added' => $customers_basket_date_added,
-				]);
+											[
+												 'customers_id' => $customers_id,
+												 'products_id'  => $products_id,
+												 'session_id'   => $session_id,
+												 'customers_basket_quantity' => $customers_basket_quantity,
+												 'final_price' => $final_price,
+												 'customers_basket_date_added' => $customers_basket_date_added,
+											]);
 				
-				if(count($request->option_id)>0){
-					foreach($request->option_id as $option_id){
-						
-						BasketAttribute::insert(
-						[
-							 'customers_id' => $customers_id,
-							 'products_id'  => $products_id,
-							 'products_options_id' =>$option_id,
-							 'products_options_values_id'  =>  $request->$option_id,
-							 'session_id' => $session_id,
-							 'customers_basket_id'=>$customers_basket_id,
-						]);
-						
-					 }
+			if(count($request->option_id)>0){
+
+				foreach($request->option_id as $option_id){
+					
+					BasketAttribute::insert(
+					[
+						 'customers_id' => $customers_id,
+						 'products_id'  => $products_id,
+						 'products_options_id' =>$option_id,
+						 'products_options_values_id'  =>  $request->$option_id,
+						 'session_id' => $session_id,
+						 'customers_basket_id'=>$customers_basket_id,
+					]);
+					
+				 }
+			 
+			} else if(!empty($detail['product_data'][0]->attributes)){
 				 
-				}else if(!empty($detail['product_data'][0]->attributes)){
-					 
-					foreach($detail['product_data'][0]->attributes as $attribute){	
-	
-						BasketAttribute::insert(
-						[
-							 'customers_id' => $customers_id,
-							 'products_id'  => $products_id,
-							 'products_options_id' =>$attribute['option']['id'],
-							 'products_options_values_id'  =>  $attribute['values'][0]['id'],
-							 'session_id' => $session_id,
-							 'customers_basket_id'=>$customers_basket_id,
-						]);
-					}
+				foreach($detail['product_data'][0]->attributes as $attribute){	
+
+					BasketAttribute::insert(
+					[
+						 'customers_id' => $customers_id,
+						 'products_id'  => $products_id,
+						 'products_options_id' =>$attribute['option']['id'],
+						 'products_options_values_id'  =>  $attribute['values'][0]['id'],
+						 'session_id' => $session_id,
+						 'customers_basket_id'=>$customers_basket_id,
+					]);
 				}
+			} else {
+				 
+				$products_attribute = ProductsAttribute::where([
+						 'is_default' 	=> 1,
+						 'products_id'  => $products_id])->first();
+
+					BasketAttribute::insert(
+					[
+						 'customers_id' => $customers_id,
+						 'products_id'  => $products_id,
+						 'products_options_id' =>$products_attribute->options_id,
+						 'products_options_values_id'  => $products_attribute->options_values_id,
+						 'session_id' => $session_id,
+						 'customers_basket_id'=>$customers_basket_id,
+					]);
+			}
+
 
 		} else {
 			
@@ -497,11 +513,7 @@ class CartController extends DataController
 							}
 						}
 					}	
-				
-					
 				}
-				
-				
 				//attribute exist
 				if($basket_id==0){
 					

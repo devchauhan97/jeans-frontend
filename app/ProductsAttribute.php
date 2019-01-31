@@ -13,8 +13,18 @@ class ProductsAttribute extends Model
 	//use user id of admin
 	protected $primaryKey = 'products_attributes_id'; 
 
+
 	public function products_option()
 	{
 		return $this->hasOne(ProductsOption::class,'products_options_id','options_id');
 	} 
+	public function defalut_products_option()
+	{
+		return $this->hasOne(ProductsOption::class,'products_options_id','options_id');
+	}
+
+	public function defalut_products_options_values()
+	{
+		return $this->hasOne(ProductsOptionsValue::class,'products_options_values_id','options_values_id');
+	}
 }

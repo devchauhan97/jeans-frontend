@@ -200,7 +200,7 @@ class ProductsController extends DataController
 	}
 	
 	//access object for custom pagination
-	function accessObjectArray($var)
+	public function accessObjectArray($var)
 	{
 	  return $var;
 	}
@@ -312,7 +312,7 @@ class ProductsController extends DataController
 			$products_attribute_list[] = $request->{$value->products_option->products_options_name};
 
 		}
-		 
+		 //dd($products_attribute);
 		$attributes_price = 0;
 		$attributes = [];
 		foreach ( $products_attribute as $key => $value) {
@@ -324,7 +324,7 @@ class ProductsController extends DataController
 
 					$p_o_v=ProductsOptionsValue::where('products_options_values_id',$row->options_values_id)->first();
 
-					$temp[] =['value'=>$p_o_v->products_options_values_name,'id' => $row->options_values_id,'price'=>$row->options_values_price,'price_prefix'=>$row->price_prefix];
+					$temp[] =['value'=>$p_o_v->products_options_values_name,'id' => $row->options_values_id,'price'=>$row->options_values_price,'price_prefix'=>$row->price_prefix,'is_default'=>$row->is_default];
 
 					if(in_array($row->options_values_id, $products_attribute_list)) {
 

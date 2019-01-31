@@ -71,7 +71,6 @@
                                             </div>
                                         @endforeach
                                     </div>
-                                    
                                     <a class="carousel-control-prev" href="#product-slider" role="button" data-slide="prev">
                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                         <span class="sr-only">@lang('website.Previous')</span>
@@ -121,44 +120,39 @@
                                     </div>
                                     <div class="select-size">
 
-    <h4>select size</h4>
+                                        <h4>select size</h4>
 
-    <span class="size-chart">Size Chart</span>
+                                        <span class="size-chart">Size Chart</span>
 
-        <ul>
+                                        <ul>
 
-            <li>28</li>
+                                            <li>28</li>
 
-            <li>30</li>
+                                            <li>30</li>
 
-            <li>32</li>
+                                            <li>32</li>
 
-            <li>34</li>
+                                            <li>34</li>
 
-            <li>36</li>
+                                            <li>36</li>
 
-            <li>40</li>
+                                            <li>40</li>
 
-            <li>42</li>
+                                            <li>42</li>
 
-                </ul>
+                                        </ul>
 
-</div>
-
-            
-                                     <div class="product-price">
+                                    </div>
+                                    <div class="product-price">
                                         @if(!empty($result['detail']['product_data'][0]->discount_price))
                                             <span class="discount">
                                                     {{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->discount_price+0}} 
                                             </span>
                                         @endif		
-                                        
                                         <!--discount_price-->
                                         <span class="price @if(!empty($result['detail']['product_data'][0]->discount_price)) line-through @else change_price @endif" >
                                             {{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->products_price+0}}
                                         </span>                                    
-                                                                
-                                            
                                     </div>
             
                                     <form name="attributes" id="add-Product-form" method="post" >
@@ -182,9 +176,10 @@
                                                           <?php
                                                           $name =$attributes_data['option']['name'];
                                                           ?>
-                                                          <option value="0" >Select {{ $name }}</option>
+                                                          <option  selected disabled>Select {{ $name }}</option>
                                                             @foreach( $attributes_data['values'] as $values_data )
-                                                            <option value="{{ $values_data['id'] }}" prefix = '{{ $values_data['price_prefix'] }}'  value_price ="{{ $values_data['price']+0 }}" @if(Request()->{$name}  == $values_data['id'] ) selected @endIf>{{ $values_data['value'] }}</option>								
+
+                                                            <option value="{{ $values_data['id'] }}" prefix = '{{ $values_data['price_prefix'] }}'  value_price ="{{ $values_data['price']+0 }}" @if(Request()->{$name}  == $values_data['id'] ) selected   @endIf>{{ $values_data['value'] }}</option>								
                                                             @endforeach								
                                                         </select>								
                                                     </div>							

@@ -75,7 +75,15 @@ class DefaultController extends DataController
 		//dd($result['commonContent']);
 		/*get top featured product*/
 		//$result['featured'] =$this->getFeaturedProduct();
-		$pr = Product::select('products.*','products_description.products_name','specials.specials_new_products_price as discount_price')
+				
+		$pr = Product::with(['defalut_products_attributes'=> function ($join)  {  
+					$join
+					// /->where('products_id', '=', 'products.products_id')
+					->where('is_default', '=', '1')
+
+					->with(['defalut_products_option','defalut_products_options_values'])
+					;
+				}])->select('products.*','products_description.products_name','specials.specials_new_products_price as discount_price')
 				->join('products_description','products_description.products_id','=','products.products_id')
 				->LeftJoin('specials', function ($join)  {  
 					$join->on('specials.products_id', '=', 'products.products_id')
@@ -91,39 +99,37 @@ class DefaultController extends DataController
 		$top_seller =	clone $pr;
 		$top_deals  =	clone $pr;
  	    
-		$result['featured'] = Cache::remember('cache_featured', 3600, function()  use ($featured){ 
-									return $featured->where('products.is_feature', '=', 1)
+		$result['featured'] =  	$featured->where('products.is_feature', '=', 1)
 									->groupBy('products.products_id')
 									->limit(4)
 									->get();
-								});
+								 
+		//dd($result['featured']);							
 		/*get top seller product*/
-		$result['top_seller'] =  Cache::remember('cache_top_seller', 3600, function() use ($top_seller){ 
-									return  $top_seller->where('products.is_feature', '=', 0)
+		$result['top_seller'] = $top_seller->where('products.is_feature', '=', 0)
 											->orderBy('products.products_ordered', 'DESC')
 											->groupBy('products.products_id')
 											->limit(4)
 											->get();
-								});
+								 
 		//special products
-		$result['special'] = Cache::remember('cache_special', 3600, function()  use ($top_deals){ 
-										return $top_deals->where('products.is_feature', '=', 0)
+		$result['special'] = 	$top_deals->where('products.is_feature', '=', 0)
 												->orderBy('specials.products_id', 'DESC')
 												->groupBy('products.products_id')
 												->limit(4)
 												->get();
-					 				});
+					 			
 		//current time
 		$currentDate = Carbon::now()->toDateTimeString();
 		$chave = 'slides_'.Carbon::now()->toDateString();
 		
-	    $result['slides'] = Cache::remember($chave, 3600, function() use ($currentDate) { 
-								return SlidersImage::select('sliders_id as id', 'sliders_title as title', 'sliders_url as url', 'sliders_image as image', 'type', 'sliders_title as title')
+	    $result['slides'] = //Cache::remember($chave, 3600, function() use ($currentDate) { 
+								  SlidersImage::select('sliders_id as id', 'sliders_title as title', 'sliders_url as url', 'sliders_image as image', 'type', 'sliders_title as title')
 								   ->where('status', '=', '1')
 								   ->where('languages_id', '=', session('language_id'))
 								   ->where('expires_date', '>', $currentDate)
 					   			   ->get();
-							 });
+							// });
 
 	 
 		
