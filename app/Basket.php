@@ -20,6 +20,7 @@ class Basket extends Model
 
 		$cart = $query->join('products', 'products.products_id','=', 'customers_basket.products_id')
 			->join('products_description', 'products_description.products_id','=', 'products.products_id')
+
 			->select('customers_basket.*', 'products.products_model as model', 'products.products_image as image', 'products_description.products_name as products_name', 'products.products_quantity as quantity', 'products.products_price as price', 'products.products_weight as weight', 'products.products_weight_unit as unit' )->where('customers_basket.is_order', '=', '0')->where('products_description.language_id','=', Session::get('language_id') );
 			
 		if(empty(session('customers_id'))){
@@ -29,13 +30,16 @@ class Basket extends Model
 		}
 		return	$cart;
 	}
+
+	public function customers_basket_attributes(){
+
+		return $this->hasOne(BasketAttribute::class,'customers_basket_id','customers_basket_id');
+	}
+
 	public function scopegetCart(){
 
 		return self::with('specials')->with('categories')
-						// ->join('products_to_categories','products_to_categories.products_id', 'customers_basket.products_id')
-						//->select('customers_basket.products_id' )
-				// /->where('customers_basket.is_order', '=', '0')
-						->where(['is_order' => '0','customers_id' => session('customers_id')]);
+					->where(['is_order' => '0','customers_id' => session('customers_id')]);
 		
 	}
 

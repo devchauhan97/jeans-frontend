@@ -59,12 +59,22 @@ class SendProductOrderMailFired
                 $subtotal = 0;
                 foreach($orders_products as $orders_products_data) {
 
-                    $product_attribute = OrdersProductsAttribute::where([
+                    $product_attribute = OrdersProductsAttribute::leftjoin('products_attributes_images',function($q1){
+                                        $q1->on('options_values_id','orders_products_attributes.products_options_values_id');
+                                    })->where([
                             ['orders_products_id', '=', $orders_products_data->orders_products_id],
                             ['orders_id', '=', $orders_products_data->orders_id],
                         ])
                         ->get();
-                        
+                    $image = $orders_products_data->image;
+
+                    if( count($product_attribute) )
+                    {
+                         $image = $product_attribute[0]->image;
+                    }
+                    
+                    $orders_products_data->image = $image; 
+
                     $orders_products_data->attribute = $product_attribute;
                     $product[$i] = $orders_products_data;
                     //$total_tax     = $total_tax+$orders_products_data->products_tax;

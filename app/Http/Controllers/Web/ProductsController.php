@@ -285,7 +285,7 @@ class ProductsController extends DataController
 		//multiple images
 		$products_images =  $products_data->other_images;
 
-		array_push($detail,$products_data);
+		//array_push($detail,$products_data);
  	
 		// ******
 		// *****like product
@@ -308,8 +308,12 @@ class ProductsController extends DataController
 		$products_attribute_list=	[];//$products_attribute->toArray()	;	
 		foreach ($products_attribute as $key => $value) {
 
-			if(count($value->products_option))
-			$products_attribute_list[] = $request->{$value->products_option->products_options_name};
+			if(count($value->products_option)) {
+				foreach ($value->products_option->products_attribute as $key => $row) {
+					if($row->is_default !=1) 
+					$products_attribute_list[] = $request->{$value->products_option->products_options_name};
+				}
+			}
 
 		}
 		 //dd($products_attribute);
@@ -338,25 +342,28 @@ class ProductsController extends DataController
 			}
 		}
 		$result['attributes'] =$attributes;
-
 		// ******
 		// ******Get attribute image 
 		// ************* 
 		if(count($products_attribute_list)) {
 
 			$products_attributes_image = ProductsAttributesImage::select('image')->where('products_id','=', $products_id)
-			->whereIn('options_values_id',$products_attribute_list)
-			->get();	
- 			if(count($products_attributes_image))
-				$products_images =  $products_attributes_image;
+												->whereIn('options_values_id',$products_attribute_list)
+												->first();	
+ 			if(count($products_attributes_image)) {
+
+				$products_images = [];
+				$products_data['products_image'] =  $products_attributes_image->image;
+
+ 			}
 		}
 
-		$result['product_images'] =$products_images;
-		$result['attributes_price']=$attributes_price;
-		$result['detail']['product_data'] =$detail; 
+		$result['product_images'] 	=$products_images;
+		$result['attributes_price']	=$attributes_price;
+		$result['detail']['product_data'][] =$products_data; 
 		// ******
 		// ******Get simliar products******
-		$result['simliar_products'] = $this->simliar_products($detail[0]->categories_id);
+		$result['simliar_products'] = $this->simliar_products($products_data['categories_id']);
 		
 		//$myVar = new CartController();
 		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();

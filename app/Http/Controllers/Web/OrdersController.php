@@ -50,7 +50,6 @@ use Cartalyst\Stripe\Laravel\Facades\Stripe;
 use App\Events\SendProductOrderMail;
 use Event;
 use App\AddressBook;
-//use App\Http\Controllers\Web\StripeController;
 use App\Traits\StripePayment;
 class OrdersController extends DataController 
 {
@@ -447,7 +446,7 @@ class OrdersController extends DataController
 		
 		
 		//payment methods 
-		$payments_setting =PaymentsSetting::get();
+		$payments_setting = PaymentsSetting::get();
 		
 		/*if($payment_method == 'braintree'){
 			
@@ -617,13 +616,14 @@ class OrdersController extends DataController
 					foreach($products->attributes as $attribute){
 						OrdersProductsAttribute::create(
 						[
-							 'orders_id' => $orders_id,
-							 'products_id'  => $products->products_id,
-							 'orders_products_id'  => $orders_products_id,
-							 'products_options' =>$attribute->attribute_name,
-							 'products_options_values'  =>  $attribute->attribute_value,
-							 'options_values_price'  =>  $attribute->values_price,
-							 'price_prefix'  =>  $attribute->prefix
+							 'orders_id' 					=> $orders_id,
+							 'products_id'  				=> $products->products_id,
+							 'orders_products_id'  			=> $orders_products_id,
+							 'products_options_values_id' 	=>$attribute->products_options_values_id,
+							 'products_options' 			=>$attribute->attribute_name,
+							 'products_options_values'  	=>  $attribute->attribute_value,
+							 'options_values_price'  		=>  $attribute->values_price,
+							 'price_prefix'  				=>  $attribute->prefix
 						]);						
 					}
 				}
@@ -740,7 +740,8 @@ class OrdersController extends DataController
 	}
 	
 	//viewMyOrder
-	public function viewOrder(Request $request){
+	public function viewOrder(Request $request)
+	{
 		
 		$title = array('pageTitle' => Lang::get("website.View Order"));
 		$result = array();	
@@ -749,45 +750,52 @@ class OrdersController extends DataController
 		
 		//orders		
 		$orders = Order::orderBy('date_purchased','DESC')->where('orders_id','=', $request->id)->where('customers_id',Session('customers_id'))->get();	
-		if(count($orders)>0){
-		$index = 0;		
-		foreach($orders as $orders_data){
+		if(count($orders)>0) {
+			$index = 0;		
+			foreach($orders as $orders_data) {
+					
+				$orders_status_history = OrdersStatusHistory::LeftJoin('orders_status', 'orders_status.orders_status_id', '=', 'orders_status_history.orders_status_id')
+					->select('orders_status.orders_status_name', 'orders_status.orders_status_id')
+					->where('orders_id', '=', $orders_data->orders_id)->orderby('orders_status_history.orders_status_history_id', 'DESC')->limit(1)->get();
 				
-			$orders_status_history = OrdersStatusHistory::LeftJoin('orders_status', 'orders_status.orders_status_id', '=', 'orders_status_history.orders_status_id')
-				->select('orders_status.orders_status_name', 'orders_status.orders_status_id')
-				->where('orders_id', '=', $orders_data->orders_id)->orderby('orders_status_history.orders_status_history_id', 'DESC')->limit(1)->get();
-			
-			$products_array = array();
-			$index2 = 0;
-			$order_products = OrdersProduct::join('products','products.products_id','=','orders_products.products_id')
-				->select('products.products_image as image', 'products.products_model as model', 'orders_products.*')
-				->where('orders_id',$orders_data->orders_id)->get();
-			
-			foreach($order_products as $products){
-				array_push($products_array,$products);
-				$attributes = OrdersProductsAttribute::where([['orders_id',$products->orders_id],['orders_products_id',$products->orders_products_id]])->get();
-				if(count($attributes)==0){
-					$attributes = $attributes;
+				$products_array = array();
+				$index2 = 0;
+				$order_products = OrdersProduct::join('products','products.products_id','=','orders_products.products_id')
+					->select('products.products_image as image', 'products.products_model as model', 'orders_products.*')
+					->where('orders_id',$orders_data->orders_id)->get();
+				
+				foreach($order_products as $products) {
+					array_push($products_array,$products);
+					$attributes = OrdersProductsAttribute::leftjoin('products_attributes_images',function($q1){
+                                        $q1->on('options_values_id','orders_products_attributes.products_options_values_id');
+                                    })->where([['orders_id',$products->orders_id],['orders_products_id',$products->orders_products_id]])->get();
+					/*if(count($attributes)==0) {
+						$attributes = $attributes;
+					}*/
+					$image = $products->image;
+	                if( count($attributes) )
+	                {
+	                     $image = $attributes[0]->image;
+	                }
+	                $products_array[$index2]->image = $image;  
+					$products_array[$index2]->attributes = $attributes;
+					$index2++;
+					
 				}
 				
-				$products_array[$index2]->attributes = $attributes;
-				$index2++;
+				$orders_status_history = OrdersStatusHistory::LeftJoin('orders_status', 'orders_status.orders_status_id', '=' ,'orders_status_history.orders_status_id')
+				->orderBy('orders_status_history.date_added', 'desc')
+				->where('orders_id', '=', $orders_data->orders_id)->get();
 				
+				$orders[$index]->statusess = $orders_status_history;
+				$orders[$index]->products = $products_array;
+				$orders[$index]->orders_status_id = $orders_status_history[0]->orders_status_id;
+				$orders[$index]->orders_status = $orders_status_history[0]->orders_status_name;
+				$index++;
+			
 			}
-			
-			$orders_status_history = OrdersStatusHistory::LeftJoin('orders_status', 'orders_status.orders_status_id', '=' ,'orders_status_history.orders_status_id')
-			->orderBy('orders_status_history.date_added', 'desc')
-			->where('orders_id', '=', $orders_data->orders_id)->get();
-			
-			$orders[$index]->statusess = $orders_status_history;
-			$orders[$index]->products = $products_array;
-			$orders[$index]->orders_status_id = $orders_status_history[0]->orders_status_id;
-			$orders[$index]->orders_status = $orders_status_history[0]->orders_status_name;
-			$index++;
-		
-		}
-				
-		$result['orders'] = $orders;
+					
+			$result['orders'] = $orders;
 			return view("view-order", $title)->with('result', $result); 
 		}else{
 			return redirect('orders');

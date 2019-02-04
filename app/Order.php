@@ -26,5 +26,9 @@ class Order extends Model
 	{
 
 		return $this->hasMany(OrdersProduct::class,'orders_id');
+	}
+	public function orders_products_attributes(){
+
+		return $this->hasOne(OrdersProductsAttribute::class,'orders_id','orders_id');
 	}  
 }

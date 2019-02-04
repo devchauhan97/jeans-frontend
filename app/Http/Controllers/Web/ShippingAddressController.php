@@ -185,7 +185,7 @@ class ShippingAddressController extends DataController
 				'entry_zone_id'             	=>   $entry_zone_id,
 				'customers_id'             		=>   $customers_id,
 				// 'entry_gender'					=>   $entry_gender,
-				//'entry_company'					=>   $entry_company
+				'entry_company'					=>   $entry_company
 			);	
 			
 			//add address into address book

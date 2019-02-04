@@ -71,7 +71,7 @@
                                       @foreach($result['address'] as $address_data)
                                         <tr>
                                           <td scope="row" align="center" valign="center"><input class="form-control default_address" address_id="{{$address_data->address_id}}" type="radio" name="default" @if($address_data->default_address == $address_data->address_id) checked @endif></td>
-                                          <td align="left">{{$address_data->firstname}}, {{$address_data->lastname}}, {{$address_data->street}}, {{$address_data->city}}, {{$address_data->zone_name}}, {{$address_data->country_name}}, {{$address_data->postcode}}</td>
+                                          <td align="left">{{$address_data->firstname}}, {{$address_data->lastname}}, {{$address_data->company}},{{$address_data->street}}, {{$address_data->city}}, {{$address_data->zone_name}}, {{$address_data->country_name}}, {{$address_data->postcode}}</td>
                                           <td align="left"><a class="badge badge-light" href="{{ URL::to('/shipping/address?address_id='.$address_data->address_id)}}"><i class="fa fa-pencil" aria-hidden="true"></i> </a>
                                           @if($address_data->default_address != $address_data->address_id) 
                                           <a href="#" class="badge badge-danger deleteMyAddress" address_id ="{{ $address_data->address_id }}"><i class="fa fa-trash" aria-hidden="true"></i></a> @endif
@@ -162,7 +162,14 @@
                                                 
                                             </div>
                                         </div>
-                                        
+                                        <div class="form-group row">
+                                            <label for="entry_lastname" class="col-sm-4 col-form-label">@lang('website.Company')</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" name="entry_company" class="form-control" id="entry_company" @if(!empty($result['editAddress'])) value="{{$result['editAddress'][0]->company  }}" @endif>
+                                                <!-- <span class="help-block error-content" hidden>@lang('website.Please enter your last name')</span> -->
+                                                
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
                                             <label for="entry_street_address" class="col-sm-4 col-form-label">@lang('website.Address')</label>
                                             <div class="col-sm-8">
@@ -190,11 +197,15 @@
                                             <label for="entry_zone_id" class="col-sm-4 col-form-label">@lang('website.State')</label>
                                             <div class="col-sm-8">
                                                 <select name="entry_zone_id" id="entry_zone_id" class="form-control">
-                                                    <option value="">@lang('website.Select Zone')</option>
-                                                    @if(!empty($result['zones']))
-                                                    @foreach($result['zones'] as $zones)
-                                                    <option value="{{$zones->zone_id}}" @if(!empty($result['editAddress'])) @if($zones->zone_id==$result['editAddress'][0]->zone_id) selected @endif @endif>{{$zones->zone_name}}</option>
-                                                    @endforeach
+                                                    
+
+                                                    @if(!empty($result['zones']) && count($result['zones']))
+                                                      <option value="" selected disabled="">@lang('website.Select Zone')</option>
+                                                      @foreach($result['zones'] as $zones)
+                                                      <option value="{{$zones->zone_id}}" @if(!empty($result['editAddress'])) @if($zones->zone_id==$result['editAddress'][0]->zone_id) selected @endif @endif>{{$zones->zone_name}}</option>
+                                                      @endforeach
+                                                      @else 
+                                                       <option value="Other" selected>Other</option>
                                                     @endif
                                                 </select>
                                                 <!-- <span class="help-block error-content" hidden>@lang('website.Please select your state')</span>  -->

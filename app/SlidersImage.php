@@ -14,4 +14,11 @@ class SlidersImage extends Model
 
 	//use user id of admin
 	protected $primaryKey = 'sliders_id'; 
+
+	public function scopehomeSilder()
+    {
+       return $this->where('status', '=', '1')
+				   //->where('languages_id', '=', session('language_id'))
+				   ->where('expires_date', '>=', time());
+    }
 }

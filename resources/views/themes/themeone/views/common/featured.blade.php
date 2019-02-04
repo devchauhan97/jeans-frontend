@@ -20,8 +20,6 @@
                         }else{
                             $parm='';
                         }
-                    
-                     
                     ?>
                     <a href="{{ URL::to('/product-detail/'.$products->products_slug.$parm)}}"><span class="wishlist-icon"><img src="{{asset('images/eye_icon.png')}}" alt="wishlist"></span></a>
 

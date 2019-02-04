@@ -1,27 +1,34 @@
               
 <?php $qunatity=0; ?>                
-                @foreach($result['commonContent']['cart'] as $cart_data)                
-                    <?php $qunatity += $cart_data->customers_basket_quantity; ?>                    
-                @endforeach
-               <a class="cart-icon" onclick="getmodal();"  href="#"><img src="{{asset('').'images/cart_icon.png'}}" alt="photo icon">
-                    <span class="cart-number">{{ $qunatity }}</span></a>
+@foreach($result['commonContent']['cart'] as $cart_data)                
+    <?php $qunatity += $cart_data->customers_basket_quantity; ?>                    
+@endforeach
+<a class="cart-icon" onclick="getmodal();"  href="#">
+<img src="{{asset('images/cart_icon.png')}}" alt="photo icon">
+<span class="cart-number">{{ $qunatity }}</span></a>
+<div class="cart-modall">
+<!-- cart modal -->
+@if(count($result['commonContent']['cart'])>0)
+     <?php
+        $total_amount=0;
+        $qunatity=0;
+    ?>
+    @foreach($result['commonContent']['cart'] as $cart_data)
 
-           <div class="cart-modall">
-           <!-- cart modal -->
-    
-         @if(count($result['commonContent']['cart'])>0)
-         <?php
-            $total_amount=0;
-            $qunatity=0;
-        ?>
-        @foreach($result['commonContent']['cart'] as $cart_data)
-    
-        <?php 
-        $total_amount += $cart_data->final_price*$cart_data->customers_basket_quantity;
-        $qunatity     += $cart_data->customers_basket_quantity; ?>
+    <?php 
+    $total_amount += $cart_data->final_price*$cart_data->customers_basket_quantity;
+    $qunatity     += $cart_data->customers_basket_quantity; ?>
         <div class="cart-box">
             <div class="cart-img">              
-                <img src="{{getFtpImage($cart_data->image)}}" width="auto" height="70" alt="{{$cart_data->products_name}}">
+                <?php
+                    $image=$cart_data->image;
+                    if( isset($cart_data->customers_basket_attributes->image) )
+                    {   
+                       $image = $cart_data->customers_basket_attributes->image;
+                    }
+                ?>
+                <img src="{{getFtpImage($image)}}" width="auto" height="70" alt="{{$cart_data->products_name}}">
+
                 <a href="javascript:void(0)" onClick="delete_cart_product({{$cart_data->customers_basket_id}})" class="close-icon">
                 <img src="{{asset('images/close_icon.png')}}" alt="cart icon"></a>
                 
@@ -32,7 +39,7 @@
                 <span class="price" href="#">{{$web_setting[19]->value}}{{$cart_data->final_price*$cart_data->customers_basket_quantity}}</span>
             </div>
         </div>
-          @endforeach    
+   @endforeach    
         
 
         <div class="total">
@@ -49,9 +56,9 @@
         @else
         <div class="cart-box text-left">
         @lang('website.You have no items in your shopping cart')
-    </div>
-    @endif
+        </div>
+@endif
     
-    </div>
+</div>
                     
    

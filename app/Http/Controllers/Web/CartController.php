@@ -289,10 +289,7 @@ class CartController extends DataController
 			 }
 							 
 		}
-				
-			
-			
-			
+		 	
 		//apply coupon
 		if(count(session('coupon'))>0){
 			$session_coupon_data = session('coupon');
@@ -355,9 +352,10 @@ class CartController extends DataController
 		}	
 		
 		$data   = array( 'page_number'=>'0', 'type'=>'', 'products_id'=>$products_id, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
-		$myVar  = new DataController();
-		$detail = $myVar->products($data);
+		//$myVar  = new DataController();
+		$detail = $this->products($data);
 		
+
 		if( empty($customers_id) ){
 			
 			$exist = Basket::where([
@@ -440,6 +438,7 @@ class CartController extends DataController
 				$products_attribute = ProductsAttribute::where([
 						 'is_default' 	=> 1,
 						 'products_id'  => $products_id])->first();
+				if(count($products_attribute)) {
 
 					BasketAttribute::insert(
 					[
@@ -450,6 +449,12 @@ class CartController extends DataController
 						 'session_id' => $session_id,
 						 'customers_basket_id'=>$customers_basket_id,
 					]);
+
+				} 
+				// else {
+				// 	return Response::json("Product does not have option",403);
+				// }
+
 			}
 
 
@@ -636,9 +641,9 @@ class CartController extends DataController
 
 						
 		}
-	
 		
 		$result['commonContent'] = $this->commonContent();
+		//dd($result['commonContent']);
 		return view("cartButton")->with('result', $result);
 	}	
 	//updateCart
@@ -688,9 +693,13 @@ class CartController extends DataController
 	//mycart
 	public function myCart($baskit_id)
 	{		
-		$cart = Basket::join('products', 'products.products_id','=', 'customers_basket.products_id')
-			->join('products_description', 'products_description.products_id','=', 'products.products_id')
-			->select('customers_basket.*', 'products.products_model as model', 'products.products_image as image', 'products_description.products_name as products_name', 'products.products_quantity as quantity', 'products.products_price as price', 'products.products_weight as weight', 'products.products_weight_unit as unit', 'products.products_slug', 'products.products_quantity')->where([
+		$cart = Basket::with(['customers_basket_attributes' => function($q){
+						$q->leftjoin('products_attributes_images',function($q1){
+							$q1->on('options_values_id','customers_basket_attributes.products_options_values_id');
+						});
+					}])->join('products', 'products.products_id','=', 'customers_basket.products_id')
+					->join('products_description', 'products_description.products_id','=', 'products.products_id')
+					->select('customers_basket.*', 'products.products_model as model', 'products.products_image as image', 'products_description.products_name as products_name', 'products.products_quantity as quantity', 'products.products_price as price', 'products.products_weight as weight', 'products.products_weight_unit as unit', 'products.products_slug', 'products.products_quantity')->where([
 						['customers_basket.is_order', '=', '0'],
 						['products_description.language_id', '=', Session::get('language_id')],
 					]);
@@ -719,7 +728,7 @@ class CartController extends DataController
 					->leftjoin('products_attributes', function($join){
 						$join->on('customers_basket_attributes.products_id', '=', 'products_attributes.products_id')->on('customers_basket_attributes.products_options_id', '=', 'products_attributes.options_id')->on('customers_basket_attributes.products_options_values_id', '=', 'products_attributes.options_values_id');						
 					})
-					->select('products_options.products_options_name as attribute_name', 'products_options_values.products_options_values_name as attribute_value', 'customers_basket_attributes.products_options_id as options_id', 'customers_basket_attributes.products_options_values_id as options_values_id', 'products_attributes.price_prefix as prefix', 'products_attributes.options_values_price as values_price' )
+					->select('products_options.products_options_name as attribute_name', 'products_options_values.products_options_values_name as attribute_value', 'products_options_values.products_options_values_id as products_options_values_id', 'customers_basket_attributes.products_options_id as options_id', 'customers_basket_attributes.products_options_values_id as options_values_id', 'products_attributes.price_prefix as prefix', 'products_attributes.options_values_price as values_price' )
 					
 					->where('customers_basket_attributes.products_id', '=', $cart_data->products_id)
 					->where('customers_basket_id', '=', $cart_data->customers_basket_id);					

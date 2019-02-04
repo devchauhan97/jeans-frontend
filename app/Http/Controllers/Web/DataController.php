@@ -44,8 +44,7 @@ use App\Basket;
 use Cache;
 class DataController extends Controller
 {
-	
-    /**
+	/**
      * Create a new controller instance.
      *
      * @return void
@@ -117,8 +116,6 @@ class DataController extends Controller
 	public function commonContent()
 	{
 		
-		//$languages = Language::where('is_default','1')->get();
-		
 		if(empty(Session::get('language_id'))) {
 			session(['language_id' => 1]);
 		}
@@ -139,15 +136,12 @@ class DataController extends Controller
 			$session_id=session('customers_id');
 		}
 
-		$cart = Basket::BasketCart($session_id);
-		
-		$result['cart'] = 
-						//Cache::remember('basket_cart'.$session_id, 3600, function() use ($cart)
-							// {
-							// 	return 
-								$cart->get();
-						  // });
-
+		$result['cart'] = Basket::with(['customers_basket_attributes' => function($q){
+ 										$q->leftjoin('products_attributes_images',function($q1){
+										$q1->on('options_values_id','customers_basket_attributes.products_options_values_id');
+									});
+						}])->BasketCart($session_id)->get();
+		 
 		if(count($result['cart'])==0) {
 
 			session(['step' => '0']);
@@ -211,12 +205,9 @@ class DataController extends Controller
 		*/	
 		$result['setting'] = $this->web_setting;
 
-		$result['pages'] =  Cache::remember('pages_description', 3600, function()
-							{
-
-								 return  Page::leftJoin('pages_description', 'pages_description.page_id', '=', 'pages.page_id')
+		$result['pages'] =  Page::leftJoin('pages_description', 'pages_description.page_id', '=', 'pages.page_id')
 														->where([['type','2'],['status','1'],['pages_description.language_id',session('language_id')]])->orderBy('pages_description.name', 'ASC')->get();
-							});
+							 
 		
 		if(!empty(session('customers_id'))) {
 			$cache_like_product='cache_like_product_'.session('customers_id');

@@ -224,7 +224,14 @@
                             <td align="left" class="item">
                                 <input type="hidden" name="cart[]" value="{{$products->customers_basket_id}}">
                                 <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="cart-thumb">
-                                    <img class="img-fluid" src="{{getFtpImage($products->image)}}" alt="{{$products->products_name}}" alt="">
+                                    <?php
+                                        $image = $products->image;
+                                        if( isset($products->customers_basket_attributes->image) )
+                                        {
+                                           $image = $products->customers_basket_attributes->image;
+                                        }
+                                    ?>
+                                    <img class="img-fluid" src="{{getFtpImage($image)}}" alt="{{$products->products_name}}" alt="">
                                 </a>
                                 <div class="cart-product-detail">
                                     <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="title">
