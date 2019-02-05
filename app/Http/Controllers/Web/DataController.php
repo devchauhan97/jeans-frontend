@@ -22,9 +22,6 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 //for requesting a value 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-//for Carbon a value 
-use Carbon;
-
 //email
 use Illuminate\Support\Facades\Mail;
 use Session;

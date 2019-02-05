@@ -960,134 +960,6 @@ jQuery(document).on('click', '.update-single-Cart', function(e){
 	});
 });
 
-//validate form
-
-jQuery(document).on('submit', '.form-validate', function(e){
-
-	var error = "";
-	
-	//to validate text field
-
-	jQuery(".field-validate").each(function() {
-		if(this.value == '') {
-			jQuery(this).closest(".form-group").addClass('has-error');
-			jQuery(this).next(".error-content").removeAttr('hidden');
-			error = "has error";
-		}else{
-			jQuery(this).closest(".form-group").removeClass('has-error');
-			jQuery(this).next(".error-content").attr('hidden', true);
-		}
-	});
-	
-	/*jQuery(".phone-validate").each(function() {
-		if(this.value == '' && isNaN(this.value)) {
-			jQuery(this).closest(".form-group").addClass('has-error');
-			jQuery(this).next(".error-content").removeAttr('hidden');
-			error = "has error";
-		}else{
-			jQuery(this).closest(".form-group").removeClass('has-error');
-			jQuery(this).next(".error-content").attr('hidden', true);
-		}
-	});*/
-	
-	
-	var check = 0;
-	jQuery(".password").each(function() {
-		var regex = "^\\s+$";
-		if(this.value.match(regex)) {
-			jQuery(this).closest(".form-group").addClass('has-error');
-			jQuery(this).next(".error-content").removeAttr('hidden');
-			error = "has error";				
-		}else{
-			if(check == 1){
-				 var res = passwordMatch();
-
-					if(res=='matched'){
-						jQuery('.password').closest(".form-group").removeClass('has-error');
-						jQuery('#re_password').closest('.re-password-content').children('.error-content-password').add('hidden');
-					}else if(res=='error'){
-						jQuery('.password').closest(".form-group").addClass('has-error');						
-						jQuery('#re_password').closest('.re-password-content').children('.error-content-password').removeAttr('hidden');						
-						error = "has error";
-					}
-				}else{
-					jQuery(this).closest(".form-group").removeClass('has-error');
-					jQuery(this).next(".error-content").attr('hidden', true);
-				}
-				 check++;
-			}
-
-	});
-	
-
-	jQuery(".number-validate").each(function() {
-		if(this.value == '' || isNaN(this.value)) {
-			jQuery(this).closest(".form-group").addClass('has-error');
-			jQuery(this).next(".error-content").removeAttr('hidden');
-			error = "has error";
-		}else{
-			jQuery(this).closest(".form-group").removeClass('has-error');
-			jQuery(this).next(".error-content").attr('hidden', true);
-		}
-	});
-
-
-
-	//
-
-	jQuery(".email-validate").each(function() {
-
-		var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-
-		if(this.value != '' && validEmail.test(this.value)) {
-
-			jQuery(this).closest(".form-group").removeClass('has-error');
-
-			jQuery(this).next(".error-content").attr('hidden', true);
-
-
-
-		}else{
-
-			jQuery(this).closest(".form-group").addClass('has-error');
-
-			jQuery(this).next(".error-content").removeAttr('hidden');
-
-			error = "has error";
-
-		}
-
-	});
-
-	
-	jQuery(".checkbox-validate").each(function() {
-		
-		if(jQuery(this).prop('checked') == true){
-			jQuery(this).closest(".form-group").removeClass('has-error');
-			jQuery(this).closest('.checkbox-parent').children('.error-content').attr('hidden', true);						
-		}else{
-			jQuery(this).closest(".form-group").addClass('has-error');
-			jQuery(this).closest('.checkbox-parent').children('.error-content').removeAttr('hidden');
-
-			error = "has error";
-		}
-
-	});
-
-
-
-	if(error=="has error"){
-
-		return false;
-
-	}
-
-
-
-});
-
-
-
 //focus form field
 
 jQuery(document).on('keyup focusout change', '.field-validate', function(e){
@@ -1730,4 +1602,167 @@ function getParam( name )
 	else
 	 return results[0];
 	}	
+	function getSubscription() {
+
+		jQuery('#loader').css('display','flex');
+		jQuery('.help-block').hide()
+		var email = jQuery('#new_letter_email').val();
+
+		jQuery.ajax({
+			url: '{{ URL::to("/news/letter/")}}',
+			type: "POST",
+			data: '&email='+email+'&_token='+jQuery('meta[name="csrf-token"]').attr('content'),
+			success: function (res) {
+
+				console.log(res)
+				if( res.success ) {
+					notification(res.message);
+				}
+				jQuery('#loader').hide();
+			},
+			error: function (reject,exception) {
+				
+				console.log( reject, 'exception' , exception)
+	            if( reject.status === 422 ) {
+	                var errors = jQuery.parseJSON(reject.responseText);
+	                jQuery.each(errors, function (key, val) {
+	                    jQuery('[name="'+key+'"]').next('span').show()
+	                	jQuery('[name="'+key+'"]').next('span').html(val[0])
+	                });
+
+	            } else {
+	            	notification(reject.responseJSON);
+	            }
+
+	            jQuery('#loader').hide();
+	        }
+		});
+
+	}
+
+	//validate form
+
+jQuery(document).on('submit', '.form-validate', function(e){
+
+	var error = "";
+	
+	//to validate text field
+
+	jQuery(this).find(".field-validate").each(function() {
+		if(this.value == '') {
+			jQuery(this).closest(".form-group").addClass('has-error');
+			jQuery(this).next(".error-content").removeAttr('hidden');
+			error = "has error";
+		}else{
+			jQuery(this).closest(".form-group").removeClass('has-error');
+			jQuery(this).next(".error-content").attr('hidden', true);
+		}
+	});
+	
+	/*jQuery(".phone-validate").each(function() {
+		if(this.value == '' && isNaN(this.value)) {
+			jQuery(this).closest(".form-group").addClass('has-error');
+			jQuery(this).next(".error-content").removeAttr('hidden');
+			error = "has error";
+		}else{
+			jQuery(this).closest(".form-group").removeClass('has-error');
+			jQuery(this).next(".error-content").attr('hidden', true);
+		}
+	});*/
+	
+	
+	var check = 0;
+	jQuery(this).find(".password").each(function() {
+		var regex = "^\\s+$";
+		if(this.value.match(regex)) {
+			jQuery(this).closest(".form-group").addClass('has-error');
+			jQuery(this).next(".error-content").removeAttr('hidden');
+			error = "has error";				
+		}else{
+			if(check == 1){
+				 var res = passwordMatch();
+
+					if(res=='matched'){
+						jQuery('.password').closest(".form-group").removeClass('has-error');
+						jQuery('#re_password').closest('.re-password-content').children('.error-content-password').add('hidden');
+					}else if(res=='error'){
+						jQuery('.password').closest(".form-group").addClass('has-error');						
+						jQuery('#re_password').closest('.re-password-content').children('.error-content-password').removeAttr('hidden');						
+						error = "has error";
+					}
+				}else{
+					jQuery(this).closest(".form-group").removeClass('has-error');
+					jQuery(this).next(".error-content").attr('hidden', true);
+				}
+				 check++;
+			}
+
+	});
+	
+
+	jQuery(this).find(".number-validate").each(function() {
+		if(this.value == '' || isNaN(this.value)) {
+			jQuery(this).closest(".form-group").addClass('has-error');
+			jQuery(this).next(".error-content").removeAttr('hidden');
+			error = "has error";
+		}else{
+			jQuery(this).closest(".form-group").removeClass('has-error');
+			jQuery(this).next(".error-content").attr('hidden', true);
+		}
+	});
+
+
+
+	//
+
+	jQuery(this).find(".email-validate").each(function() {
+
+		var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+
+		if(this.value != '' && validEmail.test(this.value)) {
+
+			jQuery(this).closest(".form-group").removeClass('has-error');
+
+			jQuery(this).next(".error-content").attr('hidden', true);
+
+
+
+		}else{
+
+			jQuery(this).closest(".form-group").addClass('has-error');
+
+			jQuery(this).next(".error-content").removeAttr('hidden');
+
+			error = "has error";
+
+		}
+
+	});
+
+	
+	jQuery(this).find(".checkbox-validate").each(function() {
+		
+		if(jQuery(this).prop('checked') == true){
+			jQuery(this).closest(".form-group").removeClass('has-error');
+			jQuery(this).closest('.checkbox-parent').children('.error-content').attr('hidden', true);						
+		}else{
+			jQuery(this).closest(".form-group").addClass('has-error');
+			jQuery(this).closest('.checkbox-parent').children('.error-content').removeAttr('hidden');
+
+			error = "has error";
+		}
+
+	});
+
+
+
+	if(error=="has error"){
+
+		return false;
+
+	}
+
+
+
+});
 </script>

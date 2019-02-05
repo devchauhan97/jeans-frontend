@@ -84,7 +84,7 @@ class CustomerForgotPasswordController extends DataController
 	{
 
 		$title = array('pageTitle' => Lang::get("website.Reset Password"));
-		$result = PasswordReset::where('token',$request->token)->first();
+		$result['password_reset'] = PasswordReset::where('token',$request->token)->first();
 		
 		if( count($result) > 0 ) {
 			 

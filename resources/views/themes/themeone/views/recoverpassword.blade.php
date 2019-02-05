@@ -46,7 +46,7 @@
                @endif
 			 <form name="updateresetpassword" class="" enctype="multipart/form-data" action="{{ URL::to('update/reset/password')}}" method="post">
                 <input type="hidden" name="_token" value="{{csrf_token()}}">
-                 <input type="hidden" name="token" value="{{$result->token}}">
+                 <input type="hidden" name="token" value="{{$result['password_reset']->token}}">
                  
                 <div class="form-group row">
                     <label for="new_password" class="col-sm-4 col-form-label">@lang('website.New Password')</label>

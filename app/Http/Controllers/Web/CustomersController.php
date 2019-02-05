@@ -53,6 +53,8 @@ use App\Http\Requests\CustomerSignupRequest;
 
 use App\Http\Requests\CustomerPasswordUpdateRequest;
 use App\Http\Requests\CustomerLoginRequest;
+use App\Events\CustomerRegisterMail;
+use Event;
 
 class CustomersController extends DataController
 {
@@ -263,7 +265,8 @@ class CustomersController extends DataController
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleSocialLoginCallback($social) {
+    public function handleSocialLoginCallback($social) 
+    {
 
 		$old_session = Session::getId();
 		
@@ -332,9 +335,11 @@ class CustomersController extends DataController
 			$customer_data['password'] =  Hash::make($password);
 			$user_data = Customer::create($customer_data);
 			$customers_id = $user_data->customers_id;
-			$user_data = $existUser;
+			//$user_data = $existUser;
+			Event::fire(new CustomerRegisterMail($user_data));
+  
 		}
-		 
+
 		//$user_data = Customer::where('customers_id', '=', $customers_id)->get();
 		 
 		/*
@@ -395,7 +400,7 @@ class CustomersController extends DataController
 						
 				// $result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();					
 				return redirect()->intended('/')->with('result', $user_data);
-			}
+		}
 //		
 //		auth()->login($user_data);
 //		
@@ -637,6 +642,7 @@ class CustomersController extends DataController
 			//email and notification			
 			//$myVar = new AlertController();
 			//$alertSetting = $myVar->createUserAlert($customers);
+			Event::fire(new CustomerRegisterMail($customer));
 			return redirect()->intended('/')->with('result');
 
 		} else {

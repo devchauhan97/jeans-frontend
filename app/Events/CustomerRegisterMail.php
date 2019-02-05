@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SendProductOrderMail
+class CustomerRegisterMail
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,11 +19,11 @@ class SendProductOrderMail
      *
      * @return void
      */
-    public $orders_id;
-    
-    public function __construct($orders_id)
+    public $customer;
+
+    public function __construct($customer)
     {
-        $this->orders_id   = $orders_id;
+        $this->customer   = $customer;
     }
 
     /**
@@ -34,6 +34,6 @@ class SendProductOrderMail
     public function broadcastOn()
     {
         return [];
-       // return new PrivateChannel('channel-name');
+        //return new PrivateChannel('channel-name');
     }
 }

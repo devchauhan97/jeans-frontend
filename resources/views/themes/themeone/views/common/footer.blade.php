@@ -31,7 +31,7 @@
                         <li> <a href="{{ URL::to('/page?name='.$page->slug)}}"><i class="fa fa-angle-double-right" aria-hidden="true"></i>{{$page->name}}</a> </li>
                     @endforeach
                 @endif            
-                <li> <a href="{{ URL::to('/contact')}}"><i class="fa fa-angle-double-right" aria-hidden="true"></i>@lang('website.Contact Us')</a> </li>
+                <li> <a href="{{ URL::to('/contact-us')}}"><i class="fa fa-angle-double-right" aria-hidden="true"></i>@lang('website.Contact Us')</a> </li>
               </ul>
             </div>
         </div>

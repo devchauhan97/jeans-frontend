@@ -50,7 +50,7 @@ Route::post('/language/', array(
 	Route::get('/', 'DefaultController@index');
 	Route::get('/index', 'DefaultController@index');
 	
-	Route::get('/contact', 'ContactController@contactUs');
+	Route::get('/contact-us', 'ContactController@contactUs');
 	Route::post('/contact', 'ContactController@processContactUs');
 	
 	//news section
@@ -58,9 +58,7 @@ Route::post('/language/', array(
 	// Route::get('/news-detail/{slug}', 'NewsController@newsDetail');
 	// Route::post('/loadMoreNews', 'NewsController@loadMoreNews');	
 	
-	
-	 
-	
+	Route::post('/news/letter','NewsLetterController@addEmail');
 	/*
 	|--------------------------------------------------------------------------
 	| categories / products Controller Routes
@@ -70,14 +68,10 @@ Route::post('/language/', array(
 	| 
 	|
 	*/
-	
 	Route::get('/shop', 'ProductsController@shop');
 	Route::post('/shop', 'ProductsController@shop');
 	Route::get('/product-detail/{slug}', 'ProductsController@productDetail');
 	Route::post('/filterProducts', 'ProductsController@filterProducts');
-	
-	
-	
 	/*
 	|--------------------------------------------------------------------------
 	| Cart Controller Routes

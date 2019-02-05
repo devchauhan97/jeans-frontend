@@ -23,9 +23,6 @@ use Lang;
 //for requesting a value 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-
-//for Carbon a value 
-use Carbon;
 use App\Device;
 use App\AlertSetting;
 use App\Setting;

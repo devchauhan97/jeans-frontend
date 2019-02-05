@@ -6,7 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-
+use App\Setting;
+use Lang;
 class SendResetPassword extends Notification
 {
     use Queueable;
@@ -42,17 +43,13 @@ class SendResetPassword extends Notification
      */
     public function toMail($notifiable)
     {
-        // //return (new MailMessage)
-        //             // ->line('The introduction to the notification.')
-        //             // ->action('Notification Action', url('/'))
-        //             // ->line('Thank you for using our application!');
-        // dd($this->users);
-       // dd($notifiable->token);
+        
         $url = url('/password/reset/'.$notifiable->token);
-  
+        $setting = Setting::where(['name'=>'app_name'])->first(['value']); //get app name
+        $app_name = $setting->value;
         return (new MailMessage)
-                ->subject('Test')
-                ->markdown('mail.recoverPassword',['user'=> $this->users,'url'=>$url]);
+                ->subject($app_name.Lang::get("labels.fogotPasswordEmailTitle"))
+                ->markdown('mail.recoverPassword',['user'=> $this->users,'url' => $url,'app_name' => $setting->value]);
     }
 
     /**

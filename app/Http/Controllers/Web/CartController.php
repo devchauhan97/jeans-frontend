@@ -22,8 +22,6 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 //for requesting a value 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-//for Carbon a value 
-use Carbon;
 use Session;
 use Lang;
 use App\Category;

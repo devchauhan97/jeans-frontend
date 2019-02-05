@@ -12,7 +12,7 @@
                   @else
 				<li><a href="{{ URL::to('/login')}}">Login/Register</a></li>
 				@endif
-				<li><a href="{{ URL::to('/contact')}}">Contact Us</a></li>
+				<li><a href="{{ URL::to('/contact-us')}}">Contact Us</a></li>
 			</ul>
 		</div>
     

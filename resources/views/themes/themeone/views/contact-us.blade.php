@@ -35,7 +35,6 @@
                 <div class="col-12 col-md-6 col-lg-8">
                 	<p>
                     @lang('website.Dummy Text')</p>
-                    
                     <form name="signup" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('/contact')}}" method="post">
                         <input type="hidden" name="_token" value="{{csrf_token()}}">
                         <div class="form-group">
@@ -57,12 +56,11 @@
                             <button type="submit" class="btn btn-dark">@lang('website.Send')</button>
                         </div>
                     </form>
-                    
                     @if(session()->has('success') )
                         <div class="alert alert-success">
                             {{ session()->get('success') }}
                         </div>
-                     @endif
+                    @endif
                 </div>
                 
                 <div class="col-12 col-md-6 col-lg-4">
