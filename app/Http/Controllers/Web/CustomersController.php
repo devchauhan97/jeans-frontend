@@ -336,8 +336,9 @@ class CustomersController extends DataController
 			$user_data = Customer::create($customer_data);
 			$customers_id = $user_data->customers_id;
 			//$user_data = $existUser;
-			Event::fire(new CustomerRegisterMail($user_data));
-  
+			if (filter_var($user_data->email, FILTER_VALIDATE_EMAIL)) {
+			 	Event::fire(new CustomerRegisterMail($user_data));
+			}
 		}
 
 		//$user_data = Customer::where('customers_id', '=', $customers_id)->get();
@@ -642,7 +643,10 @@ class CustomersController extends DataController
 			//email and notification			
 			//$myVar = new AlertController();
 			//$alertSetting = $myVar->createUserAlert($customers);
-			Event::fire(new CustomerRegisterMail($customer));
+			
+			if (filter_var($customer->email, FILTER_VALIDATE_EMAIL)) {
+				Event::fire(new CustomerRegisterMail($customer));
+			}
 			return redirect()->intended('/')->with('result');
 
 		} else {
