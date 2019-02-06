@@ -188,8 +188,8 @@ class OrdersController extends DataController
 		}		
 				
 		foreach($request->all() as $key=>$value) {
+
 		  $shipping_data[$key] = $value;
-		  
 		  //billing address 
 		  if($key=='firstname'){
 			 $billing_data['billing_firstname'] = $value;
@@ -240,6 +240,7 @@ class OrdersController extends DataController
 			$billing_address = (object) $billing_data;
 			$billing_address->same_billing_address = 0;
 			session(['billing_address' => $billing_address]);
+			
 		} else {
 			
 			$billing_address = session('billing_address');
@@ -772,11 +773,12 @@ class OrdersController extends DataController
 					/*if(count($attributes)==0) {
 						$attributes = $attributes;
 					}*/
-					$image = $products->image;
-	                if( count($attributes) )
-	                {
-	                     $image = $attributes[0]->image;
-	                }
+					if(count($attributes) > 0 &&   isset($attributes[0]->products_attributes_image_id) ) {
+                         $image = $attributes[0]->image;
+                    } else {
+						$image = $products->image;
+                    }
+
 	                $products_array[$index2]->image = $image;  
 					$products_array[$index2]->attributes = $attributes;
 					$index2++;

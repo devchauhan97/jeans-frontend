@@ -13,8 +13,8 @@
     </div>  -->  
     
  	<form enctype="multipart/form-data" name="filters" method="get">
-        <input type="hidden" name="min_price" id="min_price" value="0">
-        <input type="hidden" name="max_price" id="max_price" value="{{$result['filters']['maxPrice']}}">
+        <input type="hidden" name="min_price" id="min_price"  value="{{app('request')->input('min_price')}}">
+        <input type="hidden" name="max_price" id="max_price"  value="{{app('request')->input('max_price')}}">
         @if(app('request')->input('filters_applied')==1)
         <input type="hidden" name="filters_applied" id="filters_applied" value="1">
         <input type="hidden" name="options" id="options" value="<?php echo implode($result['filter_attribute']['options'],',')?>">

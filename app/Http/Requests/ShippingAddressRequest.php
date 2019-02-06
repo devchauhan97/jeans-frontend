@@ -26,7 +26,7 @@ class ShippingAddressRequest extends FormRequest
         return [
             'firstname'         =>   'required|max:32',
             'lastname'          =>   'required|max:32',
-            'company'           =>   'required|max:250',
+           // 'company'           =>   'required|max:250',
             'street'            =>   'required|max:250',
             'countries_id'      =>   'required',
             'zone_id'           =>   'required',

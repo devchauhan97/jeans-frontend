@@ -27,4 +27,10 @@ class NewsLetterRequest extends FormRequest
             'email'=>'required|email'
         ];
     }
+    public function messages()
+    {
+        return [
+            'email.required' => 'Please provide email address.',
+        ];
+    }
 }

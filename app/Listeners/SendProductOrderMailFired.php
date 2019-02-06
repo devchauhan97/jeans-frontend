@@ -49,14 +49,15 @@ class SendProductOrderMailFired
         foreach($order as $data) {
 
             $orders_id   = $data->orders_id;
-            
             $orders_products =OrdersProduct::join('products', 'products.products_id','=', 'orders_products.products_id')
                 ->select('orders_products.*', 'products.products_image as image')
                 ->where('orders_products.orders_id', '=', $orders_id)->get();
+
                 $i = 0;
                 $total_price  = 0;
                 $product = array();
                 $subtotal = 0;
+
                 foreach($orders_products as $orders_products_data) {
 
                     $product_attribute = OrdersProductsAttribute::leftjoin('products_attributes_images',function($q1){
@@ -66,11 +67,11 @@ class SendProductOrderMailFired
                             ['orders_id', '=', $orders_products_data->orders_id],
                         ])
                         ->get();
-                    $image = $orders_products_data->image;
-
-                    if( count($product_attribute) )
-                    {
+                        
+                    if(count($product_attribute) > 0 &&  isset($product_attribute[0]->products_attributes_image_id) ) {
                          $image = $product_attribute[0]->image;
+                    } else {
+                        $image = $orders_products_data->image;
                     }
                     
                     $orders_products_data->image = $image; 
@@ -103,25 +104,25 @@ class SendProductOrderMailFired
         //setting 
         $setting =  Setting::get();
         $ordersData['app_name'] = $setting[18]->value;
+
         $ordersData['orders_data'][0]->admin_email = $setting[70]->value;   
         
         if($alertSetting[0]->order_email == 1 ) {
-            
             //admin email
             if(!empty($ordersData['orders_data'][0]->admin_email)) {
+
                 Mail::send('/mail/orderEmail', ['ordersData' => $ordersData], function($m) use ($ordersData){
-                    $m->to($ordersData['orders_data'][0]->admin_email)->subject('Ecommerce App: An order has been placed')
+                    $m->to($ordersData['orders_data'][0]->admin_email)->subject($ordersData['app_name'].': An order has been placed')
                     ->getSwiftMessage()
                     ->getHeaders()
                     ->addTextHeader('x-mailgun-native-send', 'true')
                     ;   
                 });
             }
-            
             //customer email
             if(!empty($ordersData['orders_data'][0]->email)) {
                 Mail::send('/mail/orderEmail', ['ordersData' => $ordersData], function($m) use ($ordersData){
-                    $m->to($ordersData['orders_data'][0]->email)->subject('Ecommerce App: Your order has been placed')
+                    $m->to($ordersData['orders_data'][0]->email)->subject($ordersData['app_name'].': Your order has been placed')
                     ->getSwiftMessage()
                     ->getHeaders()
                     ->addTextHeader('x-mailgun-native-send', 'true')

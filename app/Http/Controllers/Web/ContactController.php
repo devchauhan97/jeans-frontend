@@ -13,7 +13,9 @@ use App\Setting;
 use App\Customer;
 use App\Notifications\ContactUs;
 use Illuminate\Support\Facades\Notification;
-
+use Mail;
+use App\Events\ContactUsMail;
+use Event;
 class ContactController extends DataController
 {
     //myContactUs
@@ -35,23 +37,29 @@ class ContactController extends DataController
 		$subject 	=  $request->subject;
 		$message 	=  $request->message;
 		
-		//$result['commonContent'] = $this->commonContent();
-		$site_setting= Setting::where('name','contact_us_email')->first();
-
-		$data = array('name'=>$name, 'email'=>$email, 'subject'=>$subject, 'message'=>$message, 'adminEmail'=>$site_setting['value']);
+		// $setting= Setting::get();
+		// $app_name = $setting[18]->value;	
+		// $admin_email = $setting[3]->value;
+ 
+		$data = array(	'name'=>$name, 'email'=>$email, 
+						'subject'=>$subject, 'message'=>$message, 
+						//'adminEmail'=>$admin_email
+					);
 		 
-		\Mail::send('/mail/contactUs', ['data' => $data], function($m) use ($data){
-			$m->to($data['adminEmail'])->subject(Lang::get("website.contact us title"))->getSwiftMessage()
-			->getHeaders()
-			->addTextHeader('x-mailgun-native-send', 'true');	
-		});
+		// \Mail::send('/mail/contactUs', ['data' => $data], function($m) use ($data,$app_name){
+		// 	$m->to($data['adminEmail'])->subject($app_name.Lang::get("website.contact us title"))->getSwiftMessage()
+		// 	->getHeaders()
+		// 	->addTextHeader('x-mailgun-native-send', 'true');	
+		// });
 		 
 		// $site_setting= Setting::select('value as email ')->where('name','contact_us_email')->first();
 		// //$user=Customer::where('customers_id',4)->first();
 		// $site_setting->notify(new ContactUs($data));
 		//Notification::send(new ContactUs($data));
-		// Notification::send($data, new ContactUs($site_setting));
-
+		//$administrators= Admin::where(['adminType' => 1,'isActive' => 1])->get();
+		//Notification::send($administrators, new ContactUs($data));
+		 
+		Event::fire(new ContactUsMail($data));
 		return redirect()->back()->with('success', Lang::get("website.contact us message"));
 	}
 }

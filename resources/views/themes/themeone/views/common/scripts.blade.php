@@ -1276,9 +1276,7 @@ jQuery(document).on('focusout','.qty',function(){
 		});
 
 	});
-
-	
-
+ 
 	//deleteMyAddress
 	jQuery(document).on('click', '.deleteMyAddress', function(e){
 		jQuery('#loader').css('display','flex');
@@ -1294,34 +1292,37 @@ jQuery(document).on('focusout','.qty',function(){
 		});
 	});
 
-jQuery('.slide-toggle').on('click', function(event){
- jQuery('.color-panel').toggleClass('active');
-});
+	jQuery('.slide-toggle').on('click', function(event){
+	 jQuery('.color-panel').toggleClass('active');
+	});
 
-	 jQuery( function() {		 
-	  var maximum_price = jQuery( ".maximum_price" ).val();
-	  jQuery( "#slider-range" ).slider({
-		range: true,
-		min: 0,
-		max: maximum_price,
-		values: [ 0, maximum_price ],
-		slide: function( event, ui ) {
-			jQuery('#min_price').val(ui.values[ 0 ] );
-			jQuery('#max_price').val(ui.values[ 1 ] );
-		   
-			jQuery('#min_price_show').val( ui.values[ 0 ] );
-			jQuery('#max_price_show').val( ui.values[ 1 ] );
-		},
-		create: function(event, ui){
-			jQuery(this).slider('value',20);
-		}
-	   });	   
-	   jQuery( "#min_price_show" ).val( jQuery( "#slider-range" ).slider( "values", 0 ) );	   
-	   jQuery( "#max_price_show" ).val(jQuery( "#slider-range" ).slider( "values", 1 ) );
-	   //jQuery( "#slider-range" ).slider( "option", "max", 50 );
-	 });
-	 
- 	
+	jQuery( function() {		 
+		var maximum_price = jQuery( ".maximum_price" ).val();
+
+		var min_price_show = jQuery( "#min_price" ).val();
+		var max_price_show = jQuery( "#max_price" ).val() ;
+
+		var max_seleted= max_price_show ? max_price_show: maximum_price
+		jQuery( "#slider-range" ).slider({
+			range: true,
+			min: 0,
+			max: maximum_price,
+			values: [ min_price_show, max_seleted ],
+			slide: function( event, ui ) {
+				jQuery('#min_price').val(ui.values[ 0 ] );
+				jQuery('#max_price').val(ui.values[ 1 ] );
+			   
+				jQuery('#min_price_show').val( ui.values[ 0 ] );
+				jQuery('#max_price_show').val( ui.values[ 1 ] );
+			},
+			create: function(event, ui){
+				jQuery(this).slider('value',20);
+			}
+		});	   
+		jQuery( "#min_price_show" ).val( jQuery( "#slider-range" ).slider( "values", 0 ) );	   
+		jQuery( "#max_price_show" ).val(jQuery( "#slider-range" ).slider( "values", 1 ) );
+		//jQuery( "#slider-range" ).slider( "option", "max", 50 );
+	});
 		
 
 //tooltip enable
@@ -1601,7 +1602,8 @@ function getParam( name )
 	  return false;
 	else
 	 return results[0];
-	}	
+	}
+
 	function getSubscription() {
 
 		jQuery('#loader').css('display','flex');
@@ -1626,8 +1628,9 @@ function getParam( name )
 	            if( reject.status === 422 ) {
 	                var errors = jQuery.parseJSON(reject.responseText);
 	                jQuery.each(errors, function (key, val) {
-	                    jQuery('[name="'+key+'"]').next('span').show()
-	                	jQuery('[name="'+key+'"]').next('span').html(val[0])
+	                    //jQuery('[name="'+key+'"]').next('span').show()
+	                	//jQuery('[name="'+key+'"]').next('span').html(val[0])
+	                	notification(val[0]);
 	                });
 
 	            } else {
@@ -1669,7 +1672,6 @@ jQuery(document).on('submit', '.form-validate', function(e){
 			jQuery(this).next(".error-content").attr('hidden', true);
 		}
 	});*/
-	
 	
 	var check = 0;
 	jQuery(this).find(".password").each(function() {
@@ -1754,15 +1756,10 @@ jQuery(document).on('submit', '.form-validate', function(e){
 
 	});
 
-
-
-	if(error=="has error"){
+	if(error=="has error") {
 
 		return false;
 
 	}
-
-
-
 });
 </script>

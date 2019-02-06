@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Lang;
 
 class ContactUs extends Notification
 {
@@ -16,10 +17,19 @@ class ContactUs extends Notification
      *
      * @return void
      */
-    public $user;
-    public function __construct($user)
+    public $data;
+
+    public function __construct($data)
     {
-        $this->user = $user;
+        $this->data = $data;
+    }
+
+    public function build()
+    {
+        // return  $this->withSwiftMessage(function ($message) {
+        //    $message->getHeaders()
+        //            ->addTextHeader('x-mailgun-native-send', 'true');
+        // });
     }
 
     /**
@@ -43,13 +53,9 @@ class ContactUs extends Notification
     {
 
         return (new MailMessage)
-            //->from('info@sometimes-it-wont-work.com', 'Admin')
-            ->subject('Contact')
-            ->markdown('mail.contactUs', ['data' => $this->user]);
-        // return (new MailMessage)
-        //             ->line('The introduction to the notification.')
-        //             ->action('Notification Action', url('/'))
-        //             ->line('Thank you for using our application!');
+                    ->subject(Lang::get("website.contact us title"))
+                    ->view('mail.contactUs', ['data' => $this->data]);
+        
     }
 
     /**

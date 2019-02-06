@@ -23,7 +23,6 @@
                 <h3>@lang('website.Shop')</h3>
                 <ol class="breadcrumb">                    
                     <li class="breadcrumb-item"><a href="{{ URL::to('/')}}">@lang('website.Home')</a></li>
-                    
                     @if(!empty($result['category_name']) and !empty($result['sub_category_name']))
                         <li class="breadcrumb-item"><a href="{{ URL::to('/shop')}}">@lang('website.Shop')</a></li>
                         <li class="breadcrumb-item"><a href="{{ URL::to('/shop?category='.$result['category_slug'])}}">{{$result['category_name']}}</a></li>
@@ -51,8 +50,6 @@
                     <div class="col-12 col-lg-3 spaceright-0">
                         @include('common.sidebar_shop')
                     </div>
-                    
-       
                     <div class="col-12 col-lg-9">
                         <div class="col-12 spaceright-0">
                             <div class="row">

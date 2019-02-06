@@ -26,10 +26,10 @@ class BillingAddressRequest extends FormRequest
         return [
                 'billing_firstname'         =>   'required|max:32',
                 'billing_lastname'          =>   'required|max:32',
-                'billing_company'           =>   'required|max:250',
+                //'billing_company'           =>   'required|max:250',
                 'billing_street'            =>   'required|max:250',
                 'billing_countries_id'      =>  $this->request->get('same_billing_address') == 1 ?  '': 'required',
-                'billing_zone_id'           =>   $this->request->get('same_billing_address')  == 1 ?   '': 'required',
+                'billing_zone_id'           =>  $this->request->get('same_billing_address')  == 1 ?   '': 'required',
                 'billing_city'              =>   'required',
                 'billing_zip'          =>   'required',
             

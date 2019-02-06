@@ -79,7 +79,7 @@
                     </div>
                     <div class="form-group col-md-6">
                       <label for="firstName">@lang('website.Company')</label>
-                      <input type="text" class="form-control field-validate" id="company" name="company" value="@if(count(session('shipping_address'))>0) {{session('shipping_address')->company}}@endif">
+                      <input type="text" class="form-control" id="company" name="company" value="@if(count(session('shipping_address'))>0) {{session('shipping_address')->company}}@endif">
                       <span class="help-block error-content" hidden>@lang('website.Please enter your company name')</span> 
                     </div>
                     <div class="form-group col-md-6">
@@ -120,7 +120,7 @@
                     </div>
                     <div class="form-group col-md-6">
                       <label for="lastName">@lang('website.Zip/Postal Code')</label>
-                      <input type="text" class="form-control" id="postcode" name="postcode" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->postcode}}@endif">
+                      <input type="text" class="form-control field-validate" id="postcode" name="postcode" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->postcode}}@endif">
                       <span class="help-block error-content" hidden>@lang('website.Please enter your Zip/Postal Code')</span> 
                     </div>        
                   </div>    
@@ -369,9 +369,15 @@
                         </svg>
                         <span class="message"></span>
                       </div>
-
-                      <button type="submit" class="btn btn-dark" data-tid="elements_examples.form.pay_button">@lang('website.Pay') {{$web_setting[19]->value}}{{number_format((float)$total_price+0, 2, '.', '')}}</button>
-                      
+                      <div class="row">
+                        <button type="submit" class="btn btn-dark" data-tid="elements_examples.form.pay_button">
+                          @lang('website.Pay') {{$web_setting[19]->value}}{{number_format((float)$total_price+0, 2, '.', '')}}
+                          <span class="spinner-border hide" ></span>
+                        </button>
+                      </div>
+                      <div class="row">
+                        <a  class="btn btn-primary  reset" style="margin: 40px 15px 0;width: calc(100% - 30px)" role="button"> Reset </a>
+                      </div>
                     </form>
                     <div class="success" style="display: none;">
                       <div class="icon">

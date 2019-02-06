@@ -68,8 +68,8 @@ function registerElements(elements, exampleName) {
 
     // Show a loading screen...
     example.classList.add('submitting');
-
-    // Disable all inputs.
+    example.querySelector('.spinner-border').classList.remove('hide');
+   // Disable all inputs.
     disableInputs();
 
     // Gather additional customer data we may have collected in our form.
@@ -92,20 +92,21 @@ function registerElements(elements, exampleName) {
     stripe.createToken(elements[0], additionalData).then(function(result) {
       // Stop loading!
       example.classList.remove('submitting');
-
+      example.querySelector('.spinner-border').classList.add('hide');
       if (result.token) {
         // If we received a token, show the token ID.
        // example.querySelector('.token').innerText = result.token.id;
        // example.classList.add('submitted');
-	   console.log(result.token.id);
-	   
-	   //var token = striptePyament(result.token.id);
-	   example.classList.add('submitted');
-	   
-	   //order token id and post form
-	   var token = result.token.id;
-	   jQuery('#update_cart_form').prepend('<input type="hidden" name="token" value="'+token+'">');
-	   jQuery("#update_cart_form").submit();
+    	   console.log(result.token.id);
+    	   
+    	   //var token = striptePyament(result.token.id);
+    	   example.classList.add('submitted');
+    	   jQuery('#stripeModel').modal('toggle');
+         jQuery('#loader').show();
+         //order token id and post form
+    	   var token = result.token.id;
+    	   jQuery('#update_cart_form').prepend('<input type="hidden" name="token" value="'+token+'">');
+    	   jQuery("#update_cart_form").submit();
 	   
 	   
       } else {

@@ -25,6 +25,11 @@ class EventServiceProvider extends ServiceProvider
 
             'App\Listeners\CustomerRegisterMailFired',
 
+        ],
+        'App\Events\ContactUsMail' => [
+
+            'App\Listeners\ContactUsMailFired',
+
         ]
     ];
 

@@ -19,14 +19,8 @@
 			<div class="row">
 				<div class="col-md-2 col-sm-2 pull-right">
 					<!-- <form name="signup" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('/contact')}}" method="post"> -->
-                    <input type="hidden" name="_token" value="{{csrf_token()}}">
-                    <div class="form-group">
-                        <input type="text" class="form-control field-validate" id="new_letter_email" name="email">
-						<span class="help-block error-content" hidden> </span>
-                    </div>
-                    <div class="button">
-                        <button type="submit" onclick="getSubscription()" class="btn btn-dark">@lang('website.Send')</button>
-                    </div>
+
+                   
 	                <!-- </form> -->
 	            </div>
        		</div>
@@ -44,7 +38,16 @@
 					<ul class="text-center">
 						<li class="bold">Online Order Related Queries</li>
 						<li class="footer-number">{{$result['commonContent']['setting'][11]->value}}</li>
-						<li class="time">9:00 AM - 5:00 PM</li>
+						<li class="time"> <input type="hidden" name="_token" value="{{csrf_token()}}">
+                    <div class="form-group">
+                        <input type="text" class="form-control field-validate" id="new_letter_email" name="email" placeholder="Enter Email">
+						<span class="help-block error-content" hidden> </span>
+                    </div>
+                    <div class="button">
+                        <button type="submit" onclick="getSubscription()" class="btn btn-dark">Subscribe Now!
+                        </button>
+                    </div>
+                	</li>
 						<li>For Business Enquiries | <a href="{{Url::to('/contact-us')}}">Contact Us</a></li>
 					</ul>
 				</div>

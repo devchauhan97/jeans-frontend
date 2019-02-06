@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 class OrdersProductsAttribute extends Model
 {
-   protected $guard = "customers";
+    protected $guard = "customers";
   
 	protected $table = 'orders_products_attributes';
 
