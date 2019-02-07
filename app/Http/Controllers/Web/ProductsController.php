@@ -349,17 +349,26 @@ class ProductsController extends DataController
 
 			$products_attributes_image = ProductsAttributesImage::select('image')->where('products_id','=', $products_id)
 												->whereIn('options_values_id',$products_attribute_list)
-												->first();	
+												->get();	
  			if(count($products_attributes_image)) {
 
-				$products_images = [];
-				$products_data['products_image'] =  $products_attributes_image->image;
+				$other_option_img =[];
+				foreach ($products_attributes_image as $key => $value) {
+
+					if($key == 0) {
+						$products_data->products_image=$products_attributes_image[$key]->image;
+					} else {
+						$other_option_img[] = $products_attributes_image[$key];
+					}
+
+				}
+				$products_images =  $other_option_img;
 
  			}
 		}
 
-		$result['product_images'] 	=$products_images;
-		$result['attributes_price']	=$attributes_price;
+		$result['product_images'] 	= $products_images;
+		$result['attributes_price']	= $attributes_price;
 		$result['detail']['product_data'][] =$products_data; 
 		// ******
 		// ******Get simliar products******
@@ -400,7 +409,7 @@ class ProductsController extends DataController
 		$total_record = $categories->toSql();
 		//dd($total_record);
 
-		$products  = $categories->take(5)->get();
+		$products  = $categories->take(4)->get();
 		$result =[];
 
 		if(count($products)>0) {

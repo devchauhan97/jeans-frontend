@@ -305,7 +305,6 @@ class CartController extends DataController
 		$result['commonContent'] = $this->commonContent();
 		return view("cartButton")->with('result', $result);
 	}	
-	
 	//addToCart
 	public function addToCart(Request $request)
 	{
@@ -353,8 +352,7 @@ class CartController extends DataController
 		//$myVar  = new DataController();
 		$detail = $this->products($data);
 		
-
-		if( empty($customers_id) ){
+		if( empty($customers_id) ) {
 			
 			$exist = Basket::where([
 					['session_id', '=', $session_id],
@@ -374,10 +372,15 @@ class CartController extends DataController
 		
 		//price is not default
 		if(!empty($request->products_price)) {
+			
 			$final_price = $request->products_price;
+
 		} elseif(!empty($detail['product_data'][0]->discount_price)) {
+
 			$final_price = $detail['product_data'][0]->discount_price;
+		
 		} else {
+
 			$final_price = $detail['product_data'][0]->products_price;
 		}
 		

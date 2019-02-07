@@ -606,7 +606,7 @@ class OrdersController extends DataController
 						 'orders_id' 		 => 	$orders_id,
 						 'products_id' 	 	 =>		$products->products_id,
 						 'products_name'	 => 	$products->products_name,
-						 'products_price'	 =>  	$products->price,
+						 'products_price'	 =>  	$products->final_price,
 						 'final_price' 		 =>  	$products->final_price*$products->customers_basket_quantity,
 						 'products_tax' 	 =>  	$products_tax,
 						 'products_quantity' =>  	$products->customers_basket_quantity,

@@ -125,7 +125,7 @@
                                             @if(count($result['orders']) > 0)
                                                 @foreach( $result['orders'][0]->products as $products)
                                                 <?php 
-                                                    $price+= $products->final_price * $products->products_quantity;					
+                                                    $price+= $products->final_price;					
                                                 ?>
                                                 <tr>
                                                     <td align="left" class="item">
@@ -144,10 +144,10 @@
                                                         </div>
                                                     </td>
                                                     
-                                                    <td align="right" class="price"><span>{{$result['orders'][0]->currency}}{{$products->final_price+0}}</span></td>
+                                                    <td align="right" class="price"><span>{{$result['orders'][0]->currency}}{{$products->products_price+0}}</span></td>
                                                     <td align="right" class="Qty"><span>{{$products->products_quantity}}</span></td>
                                                 
-                                                    <td align="right" class="subtotal"><span>{{$result['orders'][0]->currency}}{{$products->products_quantity*$products->final_price+0}}</span>
+                                                    <td align="right" class="subtotal"><span>{{$result['orders'][0]->currency}}{{$products->final_price+0}}</span>
                                                     </td>
                                                 </tr>    
                                                 @endforeach

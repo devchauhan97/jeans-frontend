@@ -1,10 +1,12 @@
 @extends('layouts')
 @section('customcss')
+
 @if(!empty(session("theme")))
     <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 @else
     <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 @endif
+<!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}"> -->
 <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
 <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
@@ -122,25 +124,21 @@
 
                                         <h4>select size</h4>
 
-                                        <span class="size-chart">Size Chart</span>
+                                        <span class="size-chart" data-toggle="modal" data-target="#size_chart">Size Chart</span>
+                                        <div class="modal fade" id="size_chart"  role="dialog">
+                                              <div class="modal-dialog modal-lg"">
+                                                <div class="modal-content">
+                                                  <div class="modal-header">
+                                                    <h4 class="modal-title">Size Chart</h4>
+                                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                  </div>
 
-                                        <ul>
-
-                                            <li>28</li>
-
-                                            <li>30</li>
-
-                                            <li>32</li>
-
-                                            <li>34</li>
-
-                                            <li>36</li>
-
-                                            <li>40</li>
-
-                                            <li>42</li>
-
-                                        </ul>
+                                                  <div class="modal-body">
+                                                    <img src="{!! asset('images/sizechart.png') !!}" alt="sizechart" />
+                                                  </div>
+                                                </div>
+                                            </div> 
+                                        </div>                   
 
                                     </div>
                                     <div class="product-price">
@@ -151,7 +149,7 @@
                                         @endif		
                                         <!--discount_price-->
                                         <span class="price @if(!empty($result['detail']['product_data'][0]->discount_price)) line-through @else change_price @endif" >
-                                            {{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->products_price+0}}
+                                            {{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->products_price+$result['attributes_price']}}
                                         </span>                                    
                                     </div>
             
@@ -225,28 +223,6 @@
                                             </div>   
                                         </div>
                                     </form>	
-                                    <div class="social-media-icons">
-
- 
-
-    <h4>SHARE</h4>
-
-            <ul class="share-list">
-
-              <a href="#"><i class="fa fa-google-plus-square fa-2x"></i></a>
-
-              <a href="#"><i class="fa fa-twitter-square fa-2x"></i></a>
-
-              <a href="#"><i class="fa fa-youtube-square fa-2x"></i></a>
-
-              <a href="#"><i class="fa fa-rss-square fa-2x"></i></a>               
-
-            </ul>
-
- 
-
-</div>
-							
                                 </div>	
                             </div>
                             

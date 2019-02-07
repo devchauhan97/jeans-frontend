@@ -71,7 +71,8 @@ class Coupon extends Model
 
 			    //if cart items are special product
 				if($coupons->exclude_sale_items == 1) {
-					if($cart->specials){
+
+					if($cart->specials) {
 						$exclude_sale_items[] = $cart->products_id;;
 						//price check is remaining if already an other coupon is applied and stored in session
 						$price_of_sales_product += $cart->specials->specials_new_products_price;
@@ -131,15 +132,18 @@ class Coupon extends Model
 	
 			} elseif($coupons->discount_type == 'percent') {
 				
-				$cart_price = $cart_price - ($coupons->amount/100 * $cart_price) ;
+				$after_cart_price = $cart_price - ($coupons->amount/100 * $cart_price) ;
 				//print 'percentage cart amount: '.$cart_price;
 				if($coupons->free_shipping) {
+
 					$coupon_discount =session('shipping_detail')->shipping_price;
 					$coupon = $coupons;
-				} else if($cart_price > 0) {
+
+				} else if($after_cart_price > 0) {
 					//$total_price = $cart_price-$coupons[0]->amount;
 					$coupon_discount = $coupons->amount/100 * $cart_price;
 					$coupon = $coupons;
+
 				} else {
 					return $response = array('success'=>2, 'message'=>Lang::get("website.Coupon amount is greater than total price"));
 				}
