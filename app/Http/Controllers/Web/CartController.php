@@ -639,7 +639,6 @@ class CartController extends DataController
 					}
 				}	
 			}
-
 						
 		}
 		
@@ -651,7 +650,7 @@ class CartController extends DataController
 	public function updateCart(Request $request)
 	{
 		
-		if(empty(session('customers_id'))) {
+		if( empty(session('customers_id')) ) {
 			$customers_id	=	'';
 		} else {
 			$customers_id	=	session('customers_id');
@@ -659,7 +658,7 @@ class CartController extends DataController
 						
 		$session_id	= Session::getId();
 		
-		foreach($request->cart as $key=>$customers_basket_id) {
+		foreach( $request->cart as $key=>$customers_basket_id ) {
 
 			$product = Basket::select('customers_basket.products_id','products.products_quantity','products_description.products_name')->LeftJoin('products', function ($join) {
 					$join->on('products.products_id', '=', 'customers_basket.products_id');
@@ -669,7 +668,7 @@ class CartController extends DataController
 				 })
 				->where('customers_basket_id', $customers_basket_id)->first();
 			 
-			if($product['products_quantity'] > $request->quantity[$key]) {
+			if( $product['products_quantity'] >= $request->quantity[$key] ) {
 
 				Basket::where('customers_basket_id', '=', $customers_basket_id)->update(
 				[
@@ -679,14 +678,14 @@ class CartController extends DataController
 				]);
 
 			} else {
+
 				$message = $product['products_name'] .' has  quantity exceeded';
 				return redirect()->back()->with('error', $message);
+
 			}
 			
 		}
-		
 		$message = Lang::get("website.Cart has been updated successfully");
-
 		return redirect()->back()->with('message', $message);
 
 	}	

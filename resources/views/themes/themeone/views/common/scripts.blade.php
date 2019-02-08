@@ -1116,10 +1116,14 @@ jQuery(document).on('keyup focusout', '.email-validate', function(e){
 		// If is not undefined
 		if (!isNaN(currentVal)) {
 			@if(!empty($result['detail']['product_data'][0]->products_quantity))				
-			if(currentVal < {{ $result['detail']['product_data'][0]->products_quantity}} ){
-				// Increment
-				jQuery(this).prev('.qty').val(currentVal + 1);					
-			}				
+				if(currentVal < {{ $result['detail']['product_data'][0]->products_quantity}} ){
+					// Increment
+					jQuery(this).prev('.qty').val(currentVal + 1);					
+				}
+				if(currentVal == {{ $result['detail']['product_data'][0]->products_quantity}} ){
+					// Increment
+					notification('Product quantity limit is exceeded than  available limit.');				
+				}				
 			@endif
 
 		} else {

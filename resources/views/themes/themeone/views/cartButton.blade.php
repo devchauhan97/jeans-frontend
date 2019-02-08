@@ -3,7 +3,7 @@
 @foreach($result['commonContent']['cart'] as $cart_data)                
     <?php $qunatity += $cart_data->customers_basket_quantity; ?>                    
 @endforeach
-<a class="cart-icon" onclick="getmodal();"  href="#">
+<a class="cart-icon" onclick="getmodal();">
 <img src="{{asset('images/cart_icon.png')}}" alt="photo icon">
 <span class="cart-number">{{ $qunatity }}</span></a>
 <div class="cart-modall">

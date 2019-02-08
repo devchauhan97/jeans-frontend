@@ -2391,8 +2391,9 @@ body[dir="ltr"] .spaceleft-0 {
 }
 
 .product-detail-area .detail-area .carousel .carousel-indicators {
-  position: static;
-  margin-top: 15px;
+  position: relative;
+  margin-top: 35px;
+
 }
 
 .product-detail-area .detail-area .carousel .carousel-indicators .thumbnail {
@@ -8549,7 +8550,7 @@ input[type="button"].btn-block {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
-          flex-direction: column;
+         /* flex-direction: column;*/
   padding-left: 0;
   margin-bottom: 0;
   list-style: none;
@@ -10717,6 +10718,8 @@ a.close.disabled {
 
 .carousel-indicators .active {
   opacity: 1;
+  width: 50% !important;
+  border:none;
 }
 
 .carousel-caption {

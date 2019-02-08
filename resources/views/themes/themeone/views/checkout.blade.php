@@ -5,7 +5,7 @@
     @else
         <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
- <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}">
+ <!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}"> -->
  <link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}">
 <!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}"> -->
 <!--  <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
@@ -201,6 +201,7 @@
         <div class="order-review">
           <?php 
               $price = 0;
+              $not_available_qty = false;
           ?>
           <form method='POST' id="update_cart_form" action='{{ URL::to('/place_order')}}' >
              <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
@@ -217,7 +218,10 @@
                     
                       @foreach( $result['cart'] as $products)
                       <?php 
-                          $price+= $products->final_price * $products->customers_basket_quantity;         
+                          $price+= $products->final_price * $products->customers_basket_quantity;
+
+                          if($products->customers_basket_quantity > $products->quantity)
+                            $not_available_qty = true;
                       ?>
                       <tbody>
                           <tr>
@@ -244,6 +248,11 @@
                                             @endforeach
                                         </ul>
                                     @endif
+
+                                    @if($products->customers_basket_quantity > $products->quantity)
+                                    <a class="btn btn-sm btn-danger">Quantity not available.</a>
+                                   @endif
+
                                 </div>
                             </td>
                           
@@ -335,11 +344,11 @@
         <div class="modal fade" id="stripeModel"  role="dialog">
           <div class="modal-dialog">
             <div class="modal-content">
+              @if(!$not_available_qty)
               <div class="modal-header">
                 <h4 class="modal-title">Enter your card details</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
               </div>
-
               <div class="modal-body">
                   <div class="cell example example2">
                     <form>
@@ -392,7 +401,13 @@
   
                   </div>
               </div>
-                   
+              @else
+              <div class="modal-body">
+                <div  class="alert alert-warning">
+                  <strong>Warning!</strong>Some Product listed in your cart have not quantity  available.
+                </div>
+              </div>
+              @endif     
             </div>
           </div>
         </div>

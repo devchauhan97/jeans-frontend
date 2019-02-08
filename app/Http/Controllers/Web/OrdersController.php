@@ -84,9 +84,9 @@ class OrdersController extends DataController
 		$myVar = new CartController();
 		$result['cart'] = $myVar->myCart($result);
 				
-		if(count($result['cart'])==0){			
+		if(count($result['cart'])==0) {			
 			return redirect("/");	
-		}else{
+		} else {
 		
 			//apply coupon
 			if(!empty(session('coupon')) and count(session('coupon'))>0){
@@ -594,11 +594,10 @@ class OrdersController extends DataController
 					 'comments'  =>  $comments
 				]);
 				
-				
 			$myVar = new CartController();
 			$cart = $myVar->myCart(array());		 
 			 
-			foreach($cart as $products){
+			foreach( $cart as $products ) {
 			//get produt info	
 
 				$orders_products_id = OrdersProduct::create(
@@ -611,8 +610,11 @@ class OrdersController extends DataController
 						 'products_tax' 	 =>  	$products_tax,
 						 'products_quantity' =>  	$products->customers_basket_quantity,
 					])->orders_products_id;
-				 
-				 
+				/*
+				*Reduce product quantity
+				******/ 
+				Product::where('products_id',$products->products_id)->decrement('products_quantity',$products->customers_basket_quantity);
+
 				if(!empty($products->attributes)){
 					foreach($products->attributes as $attribute){
 						OrdersProductsAttribute::create(

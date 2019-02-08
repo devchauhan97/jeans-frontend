@@ -6,13 +6,13 @@
 @else
     <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 @endif
-<!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}"> -->
-<link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
-<link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}">
+<!-- <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
   
 @endsection
 @section('content')
@@ -247,105 +247,105 @@
                         </div>
                     </div>
 				
-                    <div class="related-product-area">
-                        <div class="heading">
-                                <h2>@lang('website.Related Products') <small class="pull-right"><a href="{{ URL::to('/shop?category_id='.$result['detail']['product_data'][0]->categories_id)}}">@lang('website.View All')</a></small></h2>
-                                <hr>
-                            </div>
-                        <div class="row">
-                            
-                            
-                            <div class="products products-4x">
-                                @foreach($result['simliar_products']['product_data'] as $key=>$products)
-            
-                                @if($result['detail']['product_data'][0]->products_id != $products->products_id)
-                
-                                @if(++$key<=5)
-                
-                                <div class="product">
-                                    <article>
-                                        <div class="thumb"><img class="img-fluid" src="{{getFtpImage($products->products_image)}}" alt="{{$products->products_name}}"></div>
-                                        <?php
-                                            $current_date = date("Y-m-d", strtotime("now"));
-                                            
-                                            $string = substr($products->products_date_added, 0, strpos($products->products_date_added, ' '));
-                                            $date=date_create($string);
-                                            date_add($date,date_interval_create_from_date_string($web_setting[20]->value." days"));
-                                            
-                                            
-                                            $after_date = date_format($date,"Y-m-d");
-                                            
-                                            if($after_date>=$current_date){
-                                                print '<span class="new-tag">New</span>';
-                                            }
-                                            
-                                            if(!empty($products->discount_price)){
-                                                $discount_price = $products->discount_price;	
-                                                $orignal_price = $products->products_price;	
-                                                
-                                                $discounted_price = $orignal_price-$discount_price;
-                                                $discount_percentage = $discounted_price/$orignal_price*100;
-                                                echo "<span class='discount-tag'>".(int)$discount_percentage."%</span>";
-                                            }
-                                        ?>
-                                        
-                                        <span class="tag text-center">
-                                            <?=stripslashes($products->categories_name)?>
-                                        </span>
-                                        
-                                        <h2 class="title text-center">{{$products->products_name}}</h2>
-                                        <!--<p class="like"> <span href="#" products_id = '{{$products->products_id}}' class="fa @if($products->isLiked==1) fa-heart @else fa-heart-o @endif is_liked"></span> <span>{{$products->products_liked}} @lang('website.Likes')</span></p>-->
-                                            
-                                        <div class="price text-center">
-                                            @if(!empty($products->discount_price))
-                                                {{$web_setting[19]->value}}{{$products->discount_price+0}}
-                                                <span>{{$web_setting[19]->value}}{{$products->products_price+0}}</span> 
-                                            @else
-                                                {{$web_setting[19]->value}}{{$products->products_price+0}}
-                                            @endif
-                                        </div>
-                                        
-                                        <!--@if(!in_array($products->products_id,$result['cartArray']))
-                                            <button type="button" class="btn btn-cart cart" products_id="{{$products->products_id}}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
-                                        @else
-                                            <button type="button"  class="btn btn-cart acitve"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
-                                        @endif-->
-                                        
-                                        <div class="product-hover">
-                                            <div class="icons">
-                                                <div class="icon-liked">
-                                                    <span products_id = '{{$products->products_id}}' class="fa @if($products->isLiked==1) fa-heart @else fa-heart-o @endif is_liked"><span class="badge badge-secondary">{{$products->products_liked}}</span></span>
-                                                </div>
-                                                <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="fa fa-eye"></a>
-                                            </div>
-                                            
-                                            <div class="buttons">
-                                            	@if(!in_array($products->products_id,$result['cartArray']))
-                                            
-                                                    <button  class="btn btn-block btn-secondary cart" products_id="{{$products->products_id}}">@lang('website.Add to Cart')</button>
-                                                    
-                                                @else
-                                                    <button  class="btn btn-block btn-secondary active">@lang('website.Added')</button>
-                                                @endif
-                                            </div>
-                                            
-                                         </div>
-                                    </article>
-                                  </div>
-                
-                                @endif		
-                
-                                @endif
-                
-                                @endforeach
-                            </div>
-    
-                        </div>
-                    </div>
                 </div>
-			</div>
-		</div>
-	</div>
+            </div>
+        </div>
+        <div class="related-product-area">
+            <div class="heading">
+                    <h2>@lang('website.Related Products') <small class="pull-right"><a href="{{ URL::to('/shop?category_id='.$result['detail']['product_data'][0]->categories_id)}}">@lang('website.View All')</a></small></h2>
+                    <hr>
+                </div>
+            <div class="row">
+                
+                
+                <div class="products products-4x">
+                    @foreach($result['simliar_products']['product_data'] as $key=>$products)
+
+                    @if($result['detail']['product_data'][0]->products_id != $products->products_id)
+    
+                    @if(++$key<=5)
+    
+                    <div class="product">
+                        <article>
+                            <div class="thumb"><img class="img-fluid" src="{{getFtpImage($products->products_image)}}" alt="{{$products->products_name}}"></div>
+                            <?php
+                                $current_date = date("Y-m-d", strtotime("now"));
+                                
+                                $string = substr($products->products_date_added, 0, strpos($products->products_date_added, ' '));
+                                $date=date_create($string);
+                                date_add($date,date_interval_create_from_date_string($web_setting[20]->value." days"));
+                                
+                                
+                                $after_date = date_format($date,"Y-m-d");
+                                
+                                if($after_date>=$current_date){
+                                    print '<span class="new-tag">New</span>';
+                                }
+                                
+                                if(!empty($products->discount_price)){
+                                    $discount_price = $products->discount_price;	
+                                    $orignal_price = $products->products_price;	
+                                    
+                                    $discounted_price = $orignal_price-$discount_price;
+                                    $discount_percentage = $discounted_price/$orignal_price*100;
+                                    echo "<span class='discount-tag'>".(int)$discount_percentage."%</span>";
+                                }
+                            ?>
+                            
+                            <span class="tag text-center">
+                                <?=stripslashes($products->categories_name)?>
+                            </span>
+                            
+                            <h2 class="title text-center">{{$products->products_name}}</h2>
+                            <!--<p class="like"> <span href="#" products_id = '{{$products->products_id}}' class="fa @if($products->isLiked==1) fa-heart @else fa-heart-o @endif is_liked"></span> <span>{{$products->products_liked}} @lang('website.Likes')</span></p>-->
+                                
+                            <div class="price text-center">
+                                @if(!empty($products->discount_price))
+                                    {{$web_setting[19]->value}}{{$products->discount_price+0}}
+                                    <span>{{$web_setting[19]->value}}{{$products->products_price+0}}</span> 
+                                @else
+                                    {{$web_setting[19]->value}}{{$products->products_price+0}}
+                                @endif
+                            </div>
+                            
+                            <!--@if(!in_array($products->products_id,$result['cartArray']))
+                                <button type="button" class="btn btn-cart cart" products_id="{{$products->products_id}}"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                            @else
+                                <button type="button"  class="btn btn-cart acitve"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                            @endif-->
+                            
+                            <div class="product-hover">
+                                <div class="icons">
+                                    <div class="icon-liked">
+                                        <span products_id = '{{$products->products_id}}' class="fa @if($products->isLiked==1) fa-heart @else fa-heart-o @endif is_liked"><span class="badge badge-secondary">{{$products->products_liked}}</span></span>
+                                    </div>
+                                    <a href="{{ URL::to('/product-detail/'.$products->products_slug)}}" class="fa fa-eye"></a>
+                                </div>
+                                
+                                <div class="buttons">
+                                	@if(!in_array($products->products_id,$result['cartArray']))
+                                
+                                        <button  class="btn btn-block btn-secondary cart" products_id="{{$products->products_id}}">@lang('website.Add to Cart')</button>
+                                        
+                                    @else
+                                        <button  class="btn btn-block btn-secondary active">@lang('website.Added')</button>
+                                    @endif
+                                </div>
+                                
+                             </div>
+                        </article>
+                      </div>
+    
+                    @endif		
+    
+                    @endif
+    
+                    @endforeach
+                </div>
+
+            </div>
+        </div>
+    </div>
 </section>
 
 @endsection

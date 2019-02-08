@@ -215,8 +215,8 @@ class ProductsController extends DataController
 		
 		$products = Product::
 							//with('products_to_categories.category_description')
-							 where('products_slug',$request->slug)
-
+							 where(['products_slug'=>$request->slug,'products_status'=>1])
+							//->where('products_quantity','>',0)
 							->first();
 							 
 		if(!count($products))
@@ -269,7 +269,8 @@ class ProductsController extends DataController
 		$categories->where('products.products_id','=', $products->products_id);
 		$categories->where('products_description.language_id','=',Session::get('language_id'))
 			->where('categories_description.language_id','=',Session::get('language_id'))
-			->where('products_quantity','>','0');
+			//->where('products_quantity','>','0')
+			;
 		
 		$categories->groupBy('products.products_id');
 			
