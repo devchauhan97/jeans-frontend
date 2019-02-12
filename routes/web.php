@@ -42,6 +42,8 @@ Route::post('/language/', array(
 	'uses' => 'WebSettingController@changeLanguage'
 	));
 		
+	Route::get('404', ['as' => '404', 'uses' => 'ErrorController@notFound']);
+	Route::get('500', ['as' => '500', 'uses' => 'ErrorController@fatal']);
 	Route::get('/setStyle', 'DefaultController@setStyle');
 	Route::get('/settheme', 'DefaultController@settheme');
 	Route::get('/page', 'DefaultController@page');

@@ -381,7 +381,8 @@ class ProductsController extends DataController
 		//liked products
 		//$result['liked_products'] = LikedProduct::likedProducts();		
 		
-		return view("product-detail", $title)->with('result', $result); 
+	//	return view("product-detail", $title)->with('result', $result); 
+		return view("product-detail-cloudzoom", $title)->with('result', $result); 
 	}
 	// ******
 	// ******make category wise simliar products

@@ -13,52 +13,91 @@
  <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
- <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+ <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/JavaScript" src="http://www.professorcloud.com/js/cloud-zoom.1.0.2.js"></script> 
-<link rel="stylesheet" type="text/css" href="http://www.professorcloud.com/styles/cloud-zoom.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.6/jquery.fancybox.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.6/jquery.fancybox.js"></script>
+ 
 @endsection
 @section('content')
- 
+ <style type="text/css">
+     
+    /* This is the moving lens square underneath the mouse pointer. */
+.cloud-zoom-lens {
+    border: 4px solid #888;
+    margin:-4px;    /* Set this to minus the border thickness. */
+    background-color:#fff;  
+    cursor:move;        
+}
+
+/* This is for the title text. */
+.cloud-zoom-title {
+    font-family:Arial, Helvetica, sans-serif;
+    position:absolute !important;
+    background-color:#000;
+    color:#fff;
+    padding:3px;
+    width:100%;
+    text-align:center;  
+    font-weight:bold;
+    font-size:10px;
+    top:0px;
+}
+
+/* This is the zoom window. */
+.cloud-zoom-big {
+    border:4px solid #ccc;
+    overflow:hidden;
+    width: 100% !important;
+
+    height:  100% !important;
+}
+
+/* This is the loading message. */
+.cloud-zoom-loading {
+    color:white;    
+    background:#222;
+    padding:3px;
+    border:1px solid #000;
+}
+
+ </style>
 <section class="site-content">
-	<div class="container">
-		<div class="breadcum-area">
-        	<div class="breadcum-inner">
-            	<h3>{{$result['detail']['product_data'][0]->products_name}}</h3>
+    <div class="container">
+        <div class="breadcum-area">
+            <div class="breadcum-inner">
+                <h3>{{$result['detail']['product_data'][0]->products_name}}</h3>
                 <ol class="breadcrumb">
                     
                     <li class="breadcrumb-item"><a href="{{ URL::to('/')}}">@lang('website.Home')</a></li>
                     
                     @if(!empty($result['category_name']) and !empty($result['sub_category_name']))
-                    	<li class="breadcrumb-item"><a href="{{ URL::to('/shop?category='.$result['category_slug'])}}">{{$result['category_name']}}</a></li>
-                    	<li class="breadcrumb-item"><a href="{{ URL::to('/shop?category='.$result['sub_category_slug'])}}">{{$result['sub_category_name']}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ URL::to('/shop?category='.$result['category_slug'])}}">{{$result['category_name']}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ URL::to('/shop?category='.$result['sub_category_slug'])}}">{{$result['sub_category_name']}}</a></li>
                     @elseif(!empty($result['category_name']) and empty($result['sub_category_name']))
-                    	<li class="breadcrumb-item"><a href="{{ URL::to('/shop?category='.$result['category_slug'])}}">{{$result['category_name']}}</a></li>
+                        <li class="breadcrumb-item"><a href="{{ URL::to('/shop?category='.$result['category_slug'])}}">{{$result['category_name']}}</a></li>
                     @endif
                     
                     <li class="breadcrumb-item active">{{$result['detail']['product_data'][0]->products_name}}</li>
                 </ol>
             </div>
-		</div>
+        </div>
 
-		<div class="product-detail-area">
-			<div class="row">
-				<div class="col-12">
-                	<div class="detail-area">
+        <div class="product-detail-area">
+            <div class="row">
+                <div class="col-12">
+                    <div class="detail-area">
                         <div class="row">
                             <div class="col-12 col-lg-5">
-                                <div id=" " class="carousel slide" style="width:50%;">
+                                <div id=" " class="carousel slide">
                                     <!-- main slider carousel items -->
                                        <!-- default image -->
-                                         
+                                    <div id="main-img-contaner"  style="width:50%;">  
                                         <a href="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" class = 'cloud-zoom' id='zoom1'
-            rel="zoomWidth:'100', zoomHeight:'200', adjustY:0, adjustX:10">
+            rel="zoomWidth:'100', zoomHeight:'100', adjustY:0, adjustX:10">
                                             <img class="img-thumbnail" src="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" alt="img-fluid">
                                         </a>
-                                        
-    
-                                        
-                                    
-                                    
+                                    </div> 
                                     <div class="carousel-indicators">                                
                                         <!-- <div class="thumbnail active" data-slide-to="0" data-target="#product-slider">
                                             <a id="carousel-selector-0">
@@ -106,7 +145,7 @@
                                 <div class="product-summary">
                                     <div class="like-box">
                                         <span products_id='{{$result['detail']['product_data'][0]->products_id}}' class="fa @if($result['isLiked']==1) fa-heart @else fa-heart-o @endif is_liked">
-                                        	<span class="badge badge-secondary">{{$result['detail']['product_data'][0]->products_liked}}</span>
+                                            <span class="badge badge-secondary">{{$result['detail']['product_data'][0]->products_liked}}</span>
                                         </span>                                          
                                     </div>                                    
                                     <h3 class="product-title">{{$result['detail']['product_data'][0]->products_name}}</h3> 
@@ -163,7 +202,7 @@
                                             <span class="discount">
                                                     {{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->discount_price+0}} 
                                             </span>
-                                        @endif		
+                                        @endif      
                                         <!--discount_price-->
                                         <span class="price @if(!empty($result['detail']['product_data'][0]->discount_price)) line-through @else change_price @endif" >
                                             {{$web_setting[19]->value}}{{$result['detail']['product_data'][0]->products_price+$result['attributes_price']}}
@@ -176,17 +215,17 @@
                                         <input type="hidden" name="products_id" value="{{$result['detail']['product_data'][0]->products_id}}">
                                         <input type="hidden" name="products_price" id="products_price" value="@if(!empty($result['detail']['product_data'][0]->discount_price)){{$result['detail']['product_data'][0]->discount_price+$result['attributes_price']}}@else{{$result['detail']['product_data'][0]->products_price+$result['attributes_price']}}@endif">
                                         
-                                        <input type="hidden" name="checkout" id="checkout_url" value="@if(!empty(app('request')->input('checkout'))) {{ app('request')->input('checkout') }} @else false @endif" >	
+                                        <input type="hidden" name="checkout" id="checkout_url" value="@if(!empty(app('request')->input('checkout'))) {{ app('request')->input('checkout') }} @else false @endif" >  
                                         
                                         @if(count($result['attributes'])>0)                                            
                                             <div class="form-row">  
                                                 @foreach( $result['attributes'] as $attributes_data )                     
                                                 <input type="hidden" name="option_name[]" value="{{ $attributes_data['option']['name'] }}" >
                                                 <input type="hidden" name="option_id[]" value="{{ $attributes_data['option']['id'] }}" >
-                                                <input type="hidden" name="{{ $attributes_data['option']['name'] }}" id="{{ $attributes_data['option']['name'] }}" value="0" >								
-                                                <div class="form-group col-sm-4">							
-                                                    <label for="{{ $attributes_data['option']['name'] }}" class="col-sm-12 col-form-label">{{ $attributes_data['option']['name'] }}</label>		
-                                                    <div class="col-sm-12">								
+                                                <input type="hidden" name="{{ $attributes_data['option']['name'] }}" id="{{ $attributes_data['option']['name'] }}" value="0" >                              
+                                                <div class="form-group col-sm-4">                           
+                                                    <label for="{{ $attributes_data['option']['name'] }}" class="col-sm-12 col-form-label">{{ $attributes_data['option']['name'] }}</label>     
+                                                    <div class="col-sm-12">                             
                                                         <select name="{{ $attributes_data['option']['id'] }}"  class="form-control {{ $attributes_data['option']['name'] }}">
                                                           <?php
                                                           $name =$attributes_data['option']['name'];
@@ -194,28 +233,28 @@
                                                           <option  selected disabled>Select {{ $name }}</option>
                                                             @foreach( $attributes_data['values'] as $values_data )
 
-                                                            <option value="{{ $values_data['id'] }}" prefix = '{{ $values_data['price_prefix'] }}'  value_price ="{{ $values_data['price']+0 }}" @if(Request()->{$name}  == $values_data['id'] ) selected   @endIf>{{ $values_data['value'] }}</option>								
-                                                            @endforeach								
-                                                        </select>								
-                                                    </div>							
+                                                            <option value="{{ $values_data['id'] }}" prefix = '{{ $values_data['price_prefix'] }}'  value_price ="{{ $values_data['price']+0 }}" @if(Request()->{$name}  == $values_data['id'] ) selected   @endIf>{{ $values_data['value'] }}</option>                             
+                                                            @endforeach                             
+                                                        </select>                               
+                                                    </div>                          
                                                 </div>
-                                                @endforeach							
+                                                @endforeach                         
                                             </div>
-                                        @endif	
+                                        @endif  
                                         
                                         <div class="form-inline product-box">
                                             <div class="form-group Qty">
 
                                                 <label for="quantity" class="col-form-label">@lang('website.Quantity') </label>
                         
-                                                <div class="input-group">						
-                                                    <span class="input-group-btn first qtyminus">						
-                                                    	<button class="btn btn-defualt" type="button">-</button>						
-                                                    </span>						
-                                                    <input type="text" readonly name="quantity" value="1" min="1" max="{{ $result['detail']['product_data'][0]->products_quantity}}" class="form-control qty">						
-                                                    <span class="input-group-btn last qtyplus">						
-                                                    	<button class="btn btn-defualt" type="button">+</button>						
-                                                    </span>						
+                                                <div class="input-group">                       
+                                                    <span class="input-group-btn first qtyminus">                       
+                                                        <button class="btn btn-defualt" type="button">-</button>                        
+                                                    </span>                     
+                                                    <input type="text" readonly name="quantity" value="1" min="1" max="{{ $result['detail']['product_data'][0]->products_quantity}}" class="form-control qty">                      
+                                                    <span class="input-group-btn last qtyplus">                     
+                                                        <button class="btn btn-defualt" type="button">+</button>                        
+                                                    </span>                     
                                                 </div>
                                             </div>
                                             
@@ -229,7 +268,7 @@
                                                 {{$web_setting[19]->value}}
                                                 {{$result['detail']['product_data'][0]->products_price+$result['attributes_price']}}@endif
 
-                                                </span>				
+                                                </span>             
                                             </div>  
                                             <div class="buttons">
                                                 @if($result['detail']['product_data'][0]->products_quantity == 0)
@@ -239,8 +278,8 @@
                                                 @endif 
                                             </div>   
                                         </div>
-                                    </form>	
-                                </div>	
+                                    </form> 
+                                </div>  
                             </div>
                             
                             <div class="col-12">
@@ -256,14 +295,14 @@
                                     <!-- Tab panes -->
                                     <div class="tab-content">
                                         <div class="tab-pane active" id="product_desc" role="tabpanel" aria-labelledby="product-desc-tab">
-                                            <p class="product-description"><?=stripslashes($result['detail']['product_data'][0]->products_description)?></p>	
+                                            <p class="product-description"><?=stripslashes($result['detail']['product_data'][0]->products_description)?></p>    
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-				
+                
                 </div>
             </div>
         </div>
@@ -300,8 +339,8 @@
                                 }
                                 
                                 if(!empty($products->discount_price)){
-                                    $discount_price = $products->discount_price;	
-                                    $orignal_price = $products->products_price;	
+                                    $discount_price = $products->discount_price;    
+                                    $orignal_price = $products->products_price; 
                                     
                                     $discounted_price = $orignal_price-$discount_price;
                                     $discount_percentage = $discounted_price/$orignal_price*100;
@@ -340,7 +379,7 @@
                                 </div>
                                 
                                 <div class="buttons">
-                                	@if(!in_array($products->products_id,$result['cartArray']))
+                                    @if(!in_array($products->products_id,$result['cartArray']))
                                 
                                         <button  class="btn btn-block btn-secondary cart" products_id="{{$products->products_id}}">@lang('website.Add to Cart')</button>
                                         
@@ -353,7 +392,7 @@
                         </article>
                       </div>
     
-                    @endif		
+                    @endif      
     
                     @endif
     
@@ -364,7 +403,31 @@
         </div>
     </div>
 </section>
+<script type="text/javascript">
+    
+    /*$(".img-thumbnail").fancybox({
+        openEffect  : 'none',
+        closeEffect : 'none'
+    });*/
 
+     $(function(){
+        // Bind a click event to a Cloud Zoom instance.
+        $('#main-img-contaner').bind('click',function(){
+            var selected=0
+            $('.cloud-zoom-gallery').each(function(val){
+                var href=$('#zoom1').attr('href')
+                if( $(this).attr('href') == href)
+                    selected =val;
+
+            })
+            
+            $.fancybox.open($('.cloud-zoom-gallery')); 
+
+            $.fancybox.getInstance().jumpTo(selected);
+            return false;
+        });
+    });
+</script>
 @endsection
 
 
