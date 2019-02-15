@@ -131,7 +131,7 @@ jQuery(document).ready(function(e) {
   var elements = stripe.elements({
     fonts: [
       {
-        cssSrc: 'https://fonts.googleapis.com/css?family=Source+Code+Pro',
+        // cssSrc: 'https://fonts.googleapis.com/css?family=Source+Code+Pro',
       },
     ],
     // Stripe's examples are localized to specific languages, but if

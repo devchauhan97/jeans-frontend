@@ -58,7 +58,7 @@ class Product extends Model
 		return $query->where('products_quantity','>','0')
 							->leftJoin('products_description','products_description.products_id','=','products.products_id');
 	}
-	public function defalut_products_attributes(){
+	public function default_products_attributes(){
 		return $this->hasOne(ProductsAttribute::class,'products_id','products_id');
 	}
 }

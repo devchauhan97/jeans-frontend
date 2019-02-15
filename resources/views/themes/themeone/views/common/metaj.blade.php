@@ -8,12 +8,13 @@
   <meta name="description" content="<?=stripslashes($web_setting[75]->value)?>"/>
   <meta name="robots" content="noindex,nofollow">
   <meta name="keywords" content="<?=stripslashes($web_setting[74]->value)?>"/>
-  <!-- <meta name="google-signin-client_id" content="31214299992-7pijldgsl0h1f75s8tbq7subrijq36jo.apps.googleusercontent.com"> -->
-  
-  <link href="{!! asset('css/jquery-ui.min.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+  <meta name="google-signin-client_id" content="31214299992-7pijldgsl0h1f75s8tbq7subrijq36jo.apps.googleusercontent.com">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
   <link rel="shortcut icon" href="{{getFtpImage($web_setting[15]->value)}}" />
   <link rel="stylesheet" type="text/css" href="{!! asset('css/infinite-slider.css') !!}">
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
   <!------- paypal ---------->
  <!--  <script src="https://www.paypalobjects.com/api/checkout.js"></script> -->
   <!---- onesignal ------>

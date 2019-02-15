@@ -32,9 +32,11 @@ use Illuminate\Support\Facades\Mail;
 use App\ProductsAttributesImage;
 use App\ProductsImage;
 use App\LikedProduct;
+use App\Traits\ShopProducts;
+
 class ProductsController extends DataController
 {
-	
+	use ShopProducts;
     /**
      * Create a new controller instance.
      *
@@ -90,14 +92,17 @@ class ProductsController extends DataController
 		
 		//category		
 		if(!empty($request->category) and $request->category!='all') {
-			$category =Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories_slug',$request->category)->where('language_id',Session::get('language_id'))->get();
+
+			$category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories_slug',$request->category)->where('language_id',Session::get('language_id'))->get();
 			
 			$categories_id = $category[0]->categories_id;
 			//for main
 			if($category[0]->parent_id==0) {
+
 				$category_name = $category[0]->categories_name;
 				$sub_category_name = '';
 				$category_slug = '';
+
 			} else {
 			//for sub
 				$main_category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories.categories_id',$category[0]->parent_id)->where('language_id',Session::get('language_id'))->get();
@@ -108,13 +113,13 @@ class ProductsController extends DataController
 			}
 			
 		} else {
+
 			$categories_id = '';
 			$category_name = '';
 			$sub_category_name = '';
 			$category_slug = '';
 		}
-		
-		
+				
 		$result['category_name'] = $category_name;
 		$result['category_slug'] = $category_slug;
 		$result['sub_category_name'] = $sub_category_name;
@@ -125,28 +130,28 @@ class ProductsController extends DataController
 		} else {
 			$search = '';
 		}	
-		
-		
+		 		
 		$filters = array();
-		if(!empty($request->filters_applied) and $request->filters_applied==1) {
+		if( !empty($request->filters_applied) and $request->filters_applied == 1 ) {
+
 			$index = 0;
 			$options = array();
 			$option_values = array();
 			$option = ProductsOption::get(); 
-			if(!empty($request->brand))
-				  {
-				  	 $index2=0;
-				  	 $values=array();				  	
-				  	$brand = Manufacturer::whereIN('manufacturers_name',$request->brand)->get();
-				      foreach ($brand as $value) {
-				      	$brandid[]=$value->manufacturers_id;
-				      }
-				       $brandid=array_unique($brandid);
-				       $result['filter_attribute']['brand'] = $brandid;
-				       $filters['brand'] = implode($brandid,',');
-				    }
-				    	
+			if(!empty($request->brand)) {
 
+				$index2=0;
+				$values=array();				  	
+				$brand = Manufacturer::whereIN('manufacturers_name',$request->brand)->get();
+				foreach ($brand as $value) {
+					$brandid[]=$value->manufacturers_id;
+				}
+				$brandid=array_unique($brandid);
+				$result['filter_attribute']['brand'] = $brandid;
+				$filters['brand'] = implode($brandid,',');
+
+		    }
+				    	
 			foreach($option as $key=>$options_data) {				
 				$option_name = $options_data->products_options_name;				 		
 				if(!empty($request->$option_name)){
@@ -154,8 +159,9 @@ class ProductsController extends DataController
 					$values = array();
 					foreach($request->$option_name as $value)
 					{
-						$value = ProductsOptionsValue::where('products_options_values_name',$value)->get();
-						$option_values[]=$value[0]->products_options_values_id;
+						$products_opt_val = ProductsOptionsValue::where('products_options_values_name',$value)->first(['products_options_values_id']);
+
+						$option_values[]=$products_opt_val->products_options_values_id;
 					}
 					$options[] = $options_data->products_options_id;
 				}					
@@ -174,12 +180,12 @@ class ProductsController extends DataController
 		$data = array('page_number'=>$page_number, 'type'=>$type, 'limit'=>$limit, 'categories_id'=>$categories_id, 'search'=>$search, 'filters'=>$filters, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
 			//dd($data);
 		
-		$products =$this->products($data);
+		$products =$this->listProducts( $data );
 		//dd($products);
 		$result['products'] = $products;
 		
 		$data = array('limit'=>$limit, 'categories_id'=>$categories_id );
-		$filters = $this->filters($data);
+		$filters = $this->shopFilters($data);
 		//dd($data);
 		$result['filters'] = $filters;
 		
@@ -299,7 +305,7 @@ class ProductsController extends DataController
 		// ******
 		// *****list added arttribute to products
 		// ***********
-		$products_attribute = ProductsAttribute::with(['products_option.products_attribute'=> function ($query) use ($products_id) {
+		$products_attribute = ProductsAttribute::with(['products_option.products_attribute'=> function ($query) use ($products_id) {			   $query->with('products_options_values');
 				            $query->where('products_id','=', $products_id);
 				        }])
 						->where('products_id','=', $products_id)
@@ -327,9 +333,9 @@ class ProductsController extends DataController
 
 				foreach ($value->products_option->products_attribute as $key => $row) {
 
-					$p_o_v=ProductsOptionsValue::where('products_options_values_id',$row->options_values_id)->first();
+					//$p_o_v=ProductsOptionsValue::where('products_options_values_id',$row->options_values_id)->first();
 
-					$temp[] =['value'=>$p_o_v->products_options_values_name,'id' => $row->options_values_id,'price'=>$row->options_values_price,'price_prefix'=>$row->price_prefix,'is_default'=>$row->is_default];
+					$temp[] =['value'=>$row->products_options_values->products_options_values_name,'id' => $row->options_values_id,'price'=>$row->options_values_price,'price_prefix'=>$row->price_prefix,'is_default'=>$row->is_default];
 
 					if(in_array($row->options_values_id, $products_attribute_list)) {
 
@@ -382,7 +388,9 @@ class ProductsController extends DataController
 		//$result['liked_products'] = LikedProduct::likedProducts();		
 		
 	//	return view("product-detail", $title)->with('result', $result); 
-		return view("product-detail-cloudzoom", $title)->with('result', $result); 
+		// return view("product-detail-cloudzoom", $title)->with('result', $result); 
+		return view("product-detail-magnifier", $title)->with('result', $result); 
+		
 	}
 	// ******
 	// ******make category wise simliar products
@@ -576,20 +584,23 @@ class ProductsController extends DataController
 	}
 	
 	//filters
-	public function filters($data){
+	public function filters($data)
+	{
 		
 		$categories_id      =   $data['categories_id'];				
 		$currentDate		=	time();		
 				
 		$price = ProductsToCategory::join('products', 'products.products_id', '=', 'products_to_categories.products_id');
-						if(isset($categories_id) and !empty($categories_id)){
-							$price->where('products_to_categories.categories_id','=', $categories_id);
-						}
+
+		if(isset($categories_id) and !empty($categories_id)) {
+			$price->where('products_to_categories.categories_id','=', $categories_id);
+		}
 						
-		$priceContent 	=	$price->max('products_price');			
-		if(!empty($priceContent) and count($priceContent)>0){
+		$priceContent = $price->max('products_price');
+
+		if(!empty($priceContent) and count($priceContent)>0) {
 			$maxPrice = round($priceContent+1);	
-		}else{
+		} else {
 			$maxPrice = '';
 		}
 		
@@ -604,72 +615,80 @@ class ProductsController extends DataController
 			->select('products_to_categories.*', 'products.*','products_description.*','manufacturers.*','manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price')
 			->where('products_description.language_id','=', Session::get('language_id'));
 			
-			if(isset($categories_id) and !empty($categories_id)){
-				$product->where('products_to_categories.categories_id','=', $categories_id);
-			}
+		if(isset($categories_id) and !empty($categories_id)) {
+			$product->where('products_to_categories.categories_id','=', $categories_id);
+		}
 			
 		$products = $product->get();
 		  //dd($products);
 		$index = 0;
 		$optionsIdArray = array();
 		$valueIdArray = array();
-		foreach($products as $products_data){
+
+		foreach($products as $products_data) {
+
 			$option_name = ProductsAttribute::where('products_id', '=', $products_data->products_id)->get();
-			foreach($option_name as $option_data){
+
+			foreach($option_name as $option_data) {
 				
-				if(!in_array($option_data->options_id, $optionsIdArray)){
+				if(!in_array($option_data->options_id, $optionsIdArray)) {
 					$optionsIdArray[] = $option_data->options_id;
 				}
 				
-				if(!in_array($option_data->options_values_id, $valueIdArray)){
+				if(!in_array($option_data->options_values_id, $valueIdArray)) {
 					$valueIdArray[] = $option_data->options_values_id;
 				}
 			}
 		}
 
-		
-		if(!empty($optionsIdArray)){
+		if( !empty($optionsIdArray) ) {
 			
 			$index3 = 0;
 			$result = array();
 			//for brand
-		$brandArry=array();
-		$pridArry=array();
-		foreach ($products as $brand) {
-			if($brand->manufacturers_id!=0 && $brand->manufacturers_id!=''){
-				$brandArry[]= $brand->manufacturers_id;		   
-						       
-			    }
-				}
-				$brandArry=array_unique($brandArry);
-		        $brand=Manufacturer::Select('manufacturers_id','manufacturers_name')->whereIn('manufacturers_id',$brandArry)->get();
-	        //dd($brand);
+			$brandArry=array();
+			$pridArry=array();
+			foreach ($products as $brand) {
 
-			foreach($optionsIdArray as $optionsIdArray){
+				if($brand->manufacturers_id!=0 && $brand->manufacturers_id!='') {
+					$brandArry[]= $brand->manufacturers_id;		   
+							       
+			    }
+
+			}
+			$brandArry=array_unique($brandArry);
+	        $brand=Manufacturer::Select('manufacturers_id','manufacturers_name')->whereIn('manufacturers_id',$brandArry)->get();
+		        //dd($brand);
+
+			foreach($optionsIdArray as $optionsIdArray) {
+
 				$option_name = ProductsOption::where('language_id', Session::get('language_id'))->where('products_options_id', $optionsIdArray)->get();
-				if(count($option_name)>0){
-					$attribute_opt_val = DB::table('products_options_values_to_products_options')->where('products_options_id', $optionsIdArray)->get();			
+				if(count($option_name)>0) {
+
+					$attribute_opt_val = DB::table('products_options_values_to_products_options')->where('products_options_id', $optionsIdArray)->get();
+
 					if(count($attribute_opt_val)>0){
-					$temp = array();
-					$temp_name['name'] = $option_name[0]->products_options_name;
-					$attr[$index3]['option'] = $temp_name;
-					
-					foreach($attribute_opt_val as $attribute_opt_val_data){
-					
-						$attribute_value = DB::table('products_options_values')->where('products_options_values_id', $attribute_opt_val_data->products_options_values_id )->get();
+
+						$temp = array();
+						$temp_name['name'] = $option_name[0]->products_options_name;
+						$attr[$index3]['option'] = $temp_name;
 						
-						foreach($attribute_value as $attribute_value_data){
+						foreach($attribute_opt_val as $attribute_opt_val_data){
+						
+							$attribute_value = DB::table('products_options_values')->where('products_options_values_id', $attribute_opt_val_data->products_options_values_id )->get();
 							
-							if(in_array($attribute_value_data->products_options_values_id,$valueIdArray)){
-								$temp_value['value'] = $attribute_value_data->products_options_values_name;
-								$temp_value['value_id'] = $attribute_value_data->products_options_values_id;
+							foreach($attribute_value as $attribute_value_data){
 								
-								array_push($temp, $temp_value);
+								if(in_array($attribute_value_data->products_options_values_id,$valueIdArray)){
+									$temp_value['value'] = $attribute_value_data->products_options_values_name;
+									$temp_value['value_id'] = $attribute_value_data->products_options_values_id;
+									
+									array_push($temp, $temp_value);
+								}
 							}
+								$attr[$index3]['values'] = $temp;
 						}
-							$attr[$index3]['values'] = $temp;
-					}
-					$index3++;
+						$index3++;
 					}
 					$response = array('success'=>'1', 'attr_data'=>$attr,'brand'=>$brand ,'message'=> Lang::get('website.Returned all filters successfully'), 'maxPrice'=>$maxPrice);
 				}
@@ -681,6 +700,6 @@ class ProductsController extends DataController
 		}
 		//dd($response);
 		return($response);
-		}
+	}
 	
 }

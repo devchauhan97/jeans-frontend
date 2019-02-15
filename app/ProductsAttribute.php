@@ -18,12 +18,17 @@ class ProductsAttribute extends Model
 	{
 		return $this->hasOne(ProductsOption::class,'products_options_id','options_id');
 	} 
-	public function defalut_products_option()
+	public function default_products_option()
 	{
 		return $this->hasOne(ProductsOption::class,'products_options_id','options_id');
 	}
 
-	public function defalut_products_options_values()
+	public function default_products_options_values()
+	{
+		return $this->hasOne(ProductsOptionsValue::class,'products_options_values_id','options_values_id');
+	}
+
+	public function products_options_values()
 	{
 		return $this->hasOne(ProductsOptionsValue::class,'products_options_values_id','options_values_id');
 	}

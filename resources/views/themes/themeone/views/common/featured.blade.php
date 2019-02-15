@@ -14,9 +14,9 @@
                     </a>
                      <?php
                         $parm='?';
-                        if($products->defalut_products_attributes){
-                            $parm.= $products->defalut_products_attributes->defalut_products_option->products_options_name;
-                            $parm.= '='.$products->defalut_products_attributes->defalut_products_options_values->products_options_values_id;
+                        if($products->default_products_attributes){
+                            $parm.= $products->default_products_attributes->default_products_option->products_options_name;
+                            $parm.= '='.$products->default_products_attributes->default_products_options_values->products_options_values_id;
                         }else{
                             $parm='';
                         }

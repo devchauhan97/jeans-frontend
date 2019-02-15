@@ -76,8 +76,8 @@ class DefaultController extends DataController
 		/*get top featured product*/
 		//$result['featured'] =$this->getFeaturedProduct();
 		
-		$pr = Product::with(['defalut_products_attributes'=> function ($join)  {  
-					$join->where('is_default', '=', '1')->with(['defalut_products_option','defalut_products_options_values']);
+		$pr = Product::with(['default_products_attributes'=> function ($join)  {  
+					$join->where('is_default', '=', '1')->with(['default_products_option','default_products_options_values']);
 				}])->select('products.*','products_description.products_name','specials.specials_new_products_price as discount_price')
 				->join('products_description','products_description.products_id','=','products.products_id')
 				->LeftJoin('specials', function ($join)  {  

@@ -7,61 +7,17 @@
     <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
 @endif
 <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}">
-<link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}"> 
 <!-- <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
  <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="{!! asset('js/cloud-zoom.js') !!}"></script> 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.6/jquery.fancybox.css" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.6/jquery.fancybox.js"></script>
+<script src="{!! asset('glass/glass.js') !!}"></script> 
+<link rel="stylesheet" href="{!! asset('glass/glass.css') !!}"/>
  
 @endsection
 @section('content')
- <style type="text/css">
-     
-    /* This is the moving lens square underneath the mouse pointer. */
-.cloud-zoom-lens {
-    border: 4px solid #888;
-    margin:-4px;    /* Set this to minus the border thickness. */
-    background-color:#fff;  
-    cursor:move;        
-}
-
-/* This is for the title text. */
-.cloud-zoom-title {
-    font-family:Arial, Helvetica, sans-serif;
-    position:absolute !important;
-    background-color:#000;
-    color:#fff;
-    padding:3px;
-    width:100%;
-    text-align:center;  
-    font-weight:bold;
-    font-size:10px;
-    top:0px;
-}
-
-/* This is the zoom window. */
-.cloud-zoom-big {
-    border:4px solid #ccc;
-    overflow:hidden;
-    width: 100% !important;
-
-    height:  100% !important;
-}
-
-/* This is the loading message. */
-.cloud-zoom-loading {
-    color:white;    
-    background:#222;
-    padding:3px;
-    border:1px solid #000;
-}
-
- </style>
 <section class="site-content">
     <div class="container">
         <div class="breadcum-area">
@@ -90,53 +46,15 @@
                         <div class="row">
                             <div class="col-12 col-lg-5">
                                 <div id=" " class="carousel slide">
-                                    <!-- main slider carousel items -->
-                                       <!-- default image -->
-                                    <div id="main-img-contaner"  style="width:50%;">  
-                                        <a href="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" class = 'cloud-zoom' id='zoom1'
-            rel="zoomWidth:'100', zoomHeight:'100', adjustY:0, adjustX:10">
-                                            <img class="img-thumbnail" src="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" alt="img-fluid">
-                                        </a>
-                                    </div> 
-                                    <div class="carousel-indicators">                                
-                                        <!-- <div class="thumbnail active" data-slide-to="0" data-target="#product-slider">
-                                            <a id="carousel-selector-0">
-                                                <img class="img-thumbnail " src="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" alt="img-fluid">
-                                            </a>
-                                        </div> -->
-                                                    
-                                        <!-- @foreach( $result['product_images'] as $key=>$images )
-                                            <div class="thumbnail" data-slide-to="{{++$key}}" data-target="#product-slider">
-                                                <a id="carousel-selector-1">
-                                                    <img class="img-thumbnail " src="{{getFtpImage($images->image) }}" alt="img-fluid">
-                                                </a>
-                                            </div>
-                                        @endforeach -->
-                                        <div class="thumbnail" >
-                                            <a href="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" class='cloud-zoom-gallery' title='Thumbnail 3'
-                                            rel="useZoom: 'zoom1', smallImage: '{{getFtpImage($result["detail"]["product_data"][0]->products_image) }}' ">
-                                            <img src="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" alt = "Thumbnail 3"/>
-                                            </a>
-                                        </div>
 
+                                     <ul id="glasscase" class="gc-start">
+                                        <li><img src="{{getFtpImage($result['detail']['product_data'][0]->products_image) }}" alt="Text" data-gc-caption="" /></li>
                                         @foreach( $result['product_images'] as $key=>$images ) 
-                                        <div class="thumbnail" >
-                                            <a href='{{getFtpImage($images->image) }}' class='cloud-zoom-gallery' title='Thumbnail 3'
-                                            rel="useZoom: 'zoom1', smallImage: '{{getFtpImage($images->image) }}' ">
-                                            <img src="{{getFtpImage($images->image) }}" alt = "Thumbnail 3"/>
-                                            </a>
-                                        </div>
+                                        <li>
+                                            <img src="{{getFtpImage($images->image) }}" alt="Text" />
+                                        </li>
                                         @endforeach
-
-                                    </div>
-                                    <!-- <a class="carousel-control-prev" href="#product-slider" role="button" data-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">@lang('website.Previous')</span>
-                                    </a>
-                                    <a class="carousel-control-next" href="#product-slider" role="button" data-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="sr-only">@lang('website.Next')</span>
-                                    </a> -->
+                                    </ul>
 
                                 </div>
                             </div>
@@ -404,29 +322,10 @@
     </div>
 </section>
 <script type="text/javascript">
-    
-    /*$(".img-thumbnail").fancybox({
-        openEffect  : 'none',
-        closeEffect : 'none'
-    });*/
-
-     $(function(){
-        // Bind a click event to a Cloud Zoom instance.
-        $('#main-img-contaner').bind('click',function(){
-            var selected=0
-            $('.cloud-zoom-gallery').each(function(val){
-                var href=$('#zoom1').attr('href')
-                if( $(this).attr('href') == href)
-                    selected =val;
-
-            })
-            
-            $.fancybox.open($('.cloud-zoom-gallery')); 
-
-            $.fancybox.getInstance().jumpTo(selected);
-            return false;
+     $(document).ready( function () {
+            //If your <ul> has the id "glasscase"
+            $('#glasscase').glassCase({ 'thumbsPosition': 'bottom', 'widthDisplay' : 560});
         });
-    });
 </script>
 @endsection
 

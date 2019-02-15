@@ -5,12 +5,15 @@
     @else
         <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
     @endif
+    <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}">
+<link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}"> 
  <!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}"> -->
- <link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}">
+ <!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}"> -->
 <!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}"> -->
 <!--  <link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
- <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+<!--  <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
+ <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/> -->
+ 
 @endsection
 @section('content')
 <section class="site-content">

@@ -18,4 +18,9 @@ class ProductsOption extends Model
 		return $this->hasMany(ProductsAttribute::class,'options_id','products_options_id');
 	} 
 
+	public function products_options_values_to_products_options(){
+
+		return $this->hasMany(ProductsOptionsValuesToProductsOption::class,'products_options_id');
+	} 
+
 }

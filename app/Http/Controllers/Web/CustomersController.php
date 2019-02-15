@@ -55,7 +55,7 @@ use App\Http\Requests\CustomerPasswordUpdateRequest;
 use App\Http\Requests\CustomerLoginRequest;
 use App\Events\CustomerRegisterMail;
 use Event;
-
+use App\Http\Requests\UpdateProfileRequest;
 class CustomersController extends DataController
 {
 	
@@ -171,7 +171,7 @@ class CustomersController extends DataController
 		return view("profile", $title)->with('result', $result); 
 	}
 	
-	public function updateProfile(Request $request) {
+	public function updateProfile(UpdateProfileRequest $request) {
 		
 		$customers_id								=	auth()->guard('customer')->user()->customers_id; 
 		//$customers_info_date_account_last_modified 	=   date('y-m-d h:i:s');
@@ -291,9 +291,9 @@ class CustomersController extends DataController
 		
 		$img = file_get_contents($user->getAvatar());
 		$dir="user_profile/";
-		if (!file_exists($dir) and !is_dir($dir)) {
-			mkdir($dir);
-		} 
+		// if (!file_exists($dir) and !is_dir($dir)) {
+		// 	mkdir($dir);
+		// } 
 
 		$uploadfile = $dir."pic_".time().".jpg";
 		$temp_upload_path = $uploadfile;

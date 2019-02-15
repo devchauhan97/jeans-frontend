@@ -70,11 +70,20 @@ function getFtpImage($imagepath)
     return $image;
 }
 
-
 function removeOldCache($session_id)
 {
-
     Cache::forget('basket_cart'.$session_id);
-
-
 }
+
+function makeQueryParameter($arr=[])
+{   
+    $query_param = '';
+    foreach ( $arr as $key => $value ) {
+        if( $query_param )
+            $query_param .= '&';
+        $query_param .= $key.'='.$value;
+    }
+    return $query_param ;
+}
+
+
