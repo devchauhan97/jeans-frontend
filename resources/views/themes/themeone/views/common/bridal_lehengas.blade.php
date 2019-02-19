@@ -1,8 +1,8 @@
 <section class="featured-product padding-50 light-grey">
     <div class="wrapper">
-        <h2 class="text-center">Top seller</h2>
+        <h2 class="text-center">bridal lehengas</h2>
         <div class="row">
-        @foreach($result['top_sellers'] as $key=>$products) 
+        @foreach($result['bridal_lehengas'] as $key=>$products) 
         @if($key<=3)
             <div class="col-md-3 col-sm-6 col-3">
                 

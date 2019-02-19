@@ -3264,7 +3264,9 @@ body[dir="ltr"] .spaceleft-0 {
 .filters .card .card-body .list li {
   list-style: none;
 }
-
+.form-check-label input[type="checkbox"]{
+  margin: 4px -15px ;
+}
 .filters .card .button {
   border-top: 1px solid #ced4da;
   text-align: right;

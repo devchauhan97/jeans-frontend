@@ -229,8 +229,9 @@ trait ShopProducts
 		
 		$categories->groupBy('products.products_id');
 		//count
-		$total_record = $categories->toSql();
+		//$total_record = $categories->toSql();
 		//dd($total_record);
+		$total_record = $categories->paginate($skip/$take)->total();
 		$products  = $categories->skip( $skip )->take( $take )->get();
 	     //$products  = $categories->skip($skip)->take($take)->toSql();
 		 //dd($products);
@@ -319,9 +320,9 @@ trait ShopProducts
 				$index++;
 			}
 			//dd($result);
-			$responseData = array('success'=>'1', 'product_data'=>$result,  'message'=>Lang::get('website.Returned all products'), 'total_record'=>count($total_record));
+			$responseData = array('success'=>'1', 'product_data'=>$result,  'message'=>Lang::get('website.Returned all products'), 'total_record'=>$total_record);
 		} else {
-				$responseData = array('success'=>'0', 'product_data'=>$result,  'message'=>Lang::get('website.Empty record'), 'total_record'=>count($total_record));
+				$responseData = array('success'=>'0', 'product_data'=>$result,  'message'=>Lang::get('website.Empty record'), 'total_record'=>$total_record);
 		}	
 
 		return($responseData);
@@ -457,5 +458,369 @@ trait ShopProducts
 		//dd($response);
 		return($response);
 	}
+	public function loadMoreProducts($request)
+	{
+		$result['commonContent'] = $this->commonContent();
+		//min_price
+		if(!empty($request->min_price)){
+			$min_price = $request->min_price;
+		} else {
+			$min_price = '';
+		}
+		
+		//max_price
+		if(!empty($request->max_price)){
+			$max_price = $request->max_price;
+		} else {
+			$max_price = '';
+		}	
+				
+		if(!empty($request->limit)){
+			$limit = $request->limit;
+		} else {
+			$limit = 15;
+		}
+		
+		if(!empty($request->type)){
+			$type = $request->type;
+		} else {
+			$type = '';
+		}
+		
+		//if(!empty($request->category_id)){
+		if(!empty($request->category) and $request->category!='all') {
+			$category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories_slug',$request->category)->where('language_id',Session::get('language_id'))->get();
+			
+			$categories_id = $category[0]->categories_id;
+		} else {
+			$categories_id = '';
+		}
+		
+		//search value
+		if(!empty($request->search)) {
+			$search = $request->search;
+		} else {
+			$search = '';
+		}
+		
+		//min_price
+		if(!empty($request->min_price)) {
+			$min_price = $request->min_price;
+		} else {
+			$min_price = '';
+		}
+		
+		//max_price
+		if(!empty($request->max_price)){
+			$max_price = $request->max_price;
+		}else{
+			$max_price = '';
+		}	
+		
+		if(!empty($request->filters_applied) and $request->filters_applied==1){
+			$filters['options_count'] = count($request->options_value);
+			$filters['options'] = $request->options;
+			$filters['option_value'] = $request->options_value;
+		}else{
+			$filters = array();
+		}	
+						
+		// /$myVar = new DataController();
+		$data = array('page_number'=>$request->page_number, 'type'=>$type, 'limit'=>$limit, 'categories_id'=>$categories_id, 'search'=>$search, 'filters'=>$filters, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
+		$products = $this->listMoreproducts($data);
+		$result['products'] = $products;	
+			
+		$cart = '';
+		//$myVar = new CartController();
+		$result['cartArray'] =  $result['commonContent']['cart']->pluck('products_id')->toArray();
+		$result['limit'] = $limit;
+		return view("filterproducts")->with('result', $result);			
+		
+	}
+
+	public function listMoreProducts( $data )
+    {
+		//dd($data);
+
+		if(empty($data['page_number']) or $data['page_number'] == 0 ) {
+			$skip								=   $data['page_number'].'0';
+		} else {
+			$skip								=   $data['limit']*$data['page_number'];
+		}		
+		
+		$min_price	 							=   $data['min_price'];	
+		$max_price	 							=   $data['max_price'];	
+		$take									=   $data['limit'];
+		$currentDate 							=   time();	
+		$type									=	$data['type'];
+		
+		if($type=="atoz") {
+			$sortby								=	"products_name";
+			$order								=	"ASC";
+		}elseif($type=="ztoa"){
+			$sortby								=	"products_name";
+			$order								=	"DESC";
+		}elseif($type=="hightolow"){
+			$sortby								=	"products_price";
+			$order								=	"DESC";
+		}elseif($type=="lowtohigh"){
+			$sortby								=	"products_price";
+			$order								=	"ASC";
+		}elseif($type=="topseller"){
+			$sortby								=	"products_ordered";
+			$order								=	"DESC";
+		}elseif($type=="mostliked"){
+			$sortby								=	"products_liked";
+			$order								=	"DESC";
+			
+		}elseif($type == "special" || $type == "deals"){ 
+			$sortby = "specials.products_id";
+			$order = "desc";
+		}else{
+			$sortby = "products.products_id";
+			$order = "desc";
+		}	
+		
+		$filterProducts = array();
+		$eliminateRecord = array();
+		$products_attribute_list=[];
+		$categories = ProductsToCategory::LeftJoin('products', 'products.products_id', '=', 'products_to_categories.products_id')
+				->LeftJoin('categories_description','categories_description.categories_id','=','products_to_categories.categories_id')
+				->leftJoin('manufacturers','manufacturers.manufacturers_id','=','products.manufacturers_id')
+				->leftJoin('manufacturers_info','manufacturers.manufacturers_id','=','manufacturers_info.manufacturers_id')
+				->leftJoin('products_description','products_description.products_id','=','products.products_id');
+			  //dd($data['filters']);
+		if(!empty($data['filters']) and empty($data['search'])){			
+			$categories->leftJoin('products_attributes','products_attributes.products_id','=','products.products_id');
+		}
+			
+		if(!empty($data['search'])){
+			$categories->leftJoin('products_attributes','products_attributes.products_id','=','products.products_id')
+				->leftJoin('products_options','products_options.products_options_id','=','products_attributes.options_id')
+				->leftJoin('products_options_values','products_options_values.products_options_values_id','=','products_attributes.options_values_id');
+		}
+		//wishlist customer id
+		if($type == "wishlist"){
+			$categories->LeftJoin('liked_products', 'liked_products.liked_products_id', '=', 'products.products_id');
+		}
+		//parameter special
+		elseif($type == "special") {
+			$categories->LeftJoin('specials', 'specials.products_id', '=', 'products_to_categories.products_id')
+				->select('products.*', 'products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'specials.specials_new_products_price as discount_price', 'categories_description.*');
+		} else{
+			$categories->LeftJoin('specials', function ($join) use ($currentDate) {  
+				$join->on('specials.products_id', '=', 'products_to_categories.products_id')->where('status', '=', '1')->where('expires_date', '>', $currentDate);
+			})->select('products.*','products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'products_to_categories.categories_id', 'categories_description.*');
+		}
+			
+			
+		if($type == "special"){ //deals special products
+			$categories->where('specials.status','=', '1')->where('expires_date','>',  $currentDate);
+		}
+		
+		//get single category products
+		if(!empty($data['categories_id'])){
+			$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
+		}
+		
+		//get single products
+		if(!empty($data['products_id']) && $data['products_id']!=""){
+			$categories->where('products.products_id','=', $data['products_id']);
+		}
+		
+		
+		//for min and maximum price
+		if(!empty($max_price)){
+			$categories->whereBetween('products.products_price', [$min_price, $max_price]);
+		}
+			
+		if(!empty($data['search'])) {
+				
+			$searchValue = $data['search'];
+			$categories->where('products_options.products_options_name', 'LIKE', '%'.$searchValue.'%');
+							
+			if(!empty($data['categories_id'])){
+				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
+			}
+			
+			if(!empty($data['filters'])){			
+				$categories->whereIn('products_attributes.options_id', [$data['filters']['options']])
+					->whereIn('products_attributes.options_values_id', [$data['filters']['option_value']])
+					->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count']);					
+			}				
+				
+			$categories->orWhere('products_options_values.products_options_values_name', 'LIKE', '%'.$searchValue.'%');				
+			if(!empty($data['categories_id'])){
+				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
+			}
+			
+			if(!empty($data['filters'])){			
+				$categories->whereIn('products_attributes.options_id', [$data['filters']['options']])
+					->whereIn('products_attributes.options_values_id', [$data['filters']['option_value']])
+					->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count']);					
+			}	
+			
+			$categories->orWhere('products_name', 'LIKE', '%'.$searchValue.'%');				
+			if(empty($data['search']) and !empty($data['categories_id'])){
+				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
+			}
+			
+			if(!empty($data['filters'])){			
+				$categories->whereIn('products_attributes.options_id', [$data['filters']['options']])
+					->whereIn('products_attributes.options_values_id', [$data['filters']['option_value']])
+					->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count']);					
+			}	
+			
+			$categories->orWhere('products_model', 'LIKE', '%'.$searchValue.'%');
+			
+			if(!empty($data['categories_id'])){
+				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
+			}
+			
+			if(!empty($data['filters'])) {	
+
+				$products_attribute_list = explode(',',$data['filters']['option_value']);			
+				$categories->whereIn('products_attributes.options_id', explode(',',$data['filters']['options']))	           
+				->whereIn('products_attributes.options_values_id', explode(',',$data['filters']['option_value']))	
+					// ->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count'])
+					;	
+									
+			}					
+     	}
+						
+		if( !empty($data['filters']) ) {	
+			$products_attribute_list = explode(',',$data['filters']['option_value']);		
+			$categories->whereIn('products_attributes.options_id', explode(',',$data['filters']['options']))	           
+				->whereIn('products_attributes.options_values_id', explode(',',$data['filters']['option_value']))			
+				// ->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count'])
+				;
+				
+             
+		}
+		//echo "<pre>";
+		//print_r($data['filters']);
+		if(!empty($data['filters']['brand'])){
+
+			$categories->whereIn('products.manufacturers_id',[$data['filters']['brand']]);		
+			//dd($dd);
+			$data['filters']['brand'];
+			//die;
+							
+		}
+
+		//wishlist customer id
+		if( $type == "wishlist") {
+			$categories->where('liked_customers_id', '=', session('customers_id'));
+		}
+		
+		//wishlist customer id
+		if( $type == "is_feature") {
+			$categories->where('products.is_feature', '=', 1);
+		}
+			
+		$categories->where('products_description.language_id','=',Session::get('language_id'))
+			->where('categories_description.language_id','=',Session::get('language_id'))
+			->where('products_quantity','>','0')
+			->orderBy($sortby, $order);
+		
+		$categories->groupBy('products.products_id');
+		//count
+		$total_record = $categories->toSql();
+		//dd($total_record);
+		$products  = $categories->skip( $skip )->take( $take )->get();
+	     //$products  = $categories->skip($skip)->take($take)->toSql();
+		 //dd($products);
+		$result = array();
+		$result2 = array();
+			
+		//check if record exist
+		if( count( $products ) >0 ) {
+			$index = 0;	
+			foreach ( $products as $products_data ) {
+
+				$products_id = $products_data->products_id;
+				
+				//multiple images
+				// $products_images = ProductsImage::select('image')->where('products_id','=', $products_id)->orderBy('sort_order', 'ASC')->get();		
+				// $products_data->images =  $products_images;
+
+				array_push($result,$products_data);	
+
+				$options = array();
+				$attr = array();
+			
+			//like product
+				if( !empty( session('customers_id') ) ) {
+					$liked_customers_id						=	session('customers_id');	
+					$categories = LikedProduct::where('liked_products_id', '=', $products_id)->where('liked_customers_id', '=', $liked_customers_id)->get();
+					
+					if( count($categories)>0 ) {
+						$result[$index]->isLiked = '1';
+					} else {
+						$result[$index]->isLiked = '0';
+					}
+				} else {
+					$result[$index]->isLiked = '0';						
+				} 
+
+				$products_attribute = ProductsAttribute::with(['products_option.products_attribute'=> function ($query) use ($products_id) {
+							$query->with('products_options_values');
+				            $query->where('products_id','=', $products_id);
+				        //    $query->where('is_default','=',1);
+				        }])
+						->where('products_id','=', $products_id)
+						->groupBy('options_id')
+						->get();
+				 
+				$attributes = [];
+				$attributes_price=0;
+				$option_fillter_seleted=[];
+				foreach ( $products_attribute as $key => $value) {
+
+					$temp=array();
+					if(count($value->products_option)) {
+
+						foreach ($value->products_option->products_attribute as $key => $row) {
+
+							$filter_selected = false;
+
+							if( count($products_attribute_list) == 0 && $row->is_default == 1 ) {
+
+								$option_fillter_seleted[$value->products_option->products_options_name]=$row->options_values_id;
+
+							} else if( in_array($row->options_values_id, $products_attribute_list) ) {
+
+								// if($row->price_prefix == '+')
+								// 	$attributes_price += $row->options_values_price;
+								// else
+								// 	$attributes_price -= $products_option_value->options_values_price;
+								$filter_selected = true;
+
+								$option_fillter_seleted[$value->products_option->products_options_name]=$row->options_values_id;
+							}
+							
+							$temp[] =['value'=>$row->products_options_values->products_options_values_name,'id' => $row->options_values_id,'price'=>$row->options_values_price,'price_prefix'=>$row->price_prefix,'is_default'=>$row->is_default,'filter_selected' =>$filter_selected];
+						}
+						$attributes[]=['option'=>['name' => $value->products_option->products_options_name,'id' => $value->options_id],'values'=>$temp];
+					}
+				}
+
+				$param = count($option_fillter_seleted) ? '?'. makeQueryParameter($option_fillter_seleted) :'' ;
+
+				$result[$index]->products_slug=$products_data->products_slug.$param;
+
+				$result[$index]->attributes_price=$attributes_price;
+				
+				$result[$index]->attributes =$attributes;
+				$index++;
+			}
+			//dd($result);
+			$responseData = array('success'=>'1', 'product_data'=>$result,  'message'=>Lang::get('website.Returned all products'), 'total_record'=>count($total_record));
+		} else {
+				$responseData = array('success'=>'0', 'product_data'=>$result,  'message'=>Lang::get('website.Empty record'), 'total_record'=>count($total_record));
+		}	
+
+		return($responseData);
 	
+	}
  }

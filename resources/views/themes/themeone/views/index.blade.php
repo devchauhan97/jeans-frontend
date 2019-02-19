@@ -8,8 +8,9 @@
 <!-- col-4-trending -->
 @include('common.carouselj')
  
-<!-- banner section -->
+
 <!-- featured-product -->
+
 @include('common.featured')
 <section class="col-4-trending padding-50">
 	<div class="wrapper">
@@ -73,7 +74,7 @@
 		</div>
 	</div>
 </section>
-
+@include('common.blogs')
 @endsection
 @section('customjs')
 

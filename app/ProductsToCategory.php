@@ -17,25 +17,35 @@ class ProductsToCategory extends Model
 	//use user id of admin
 	protected $primaryKey = 'products_id';
 
-	public function category() {
+	public function category() 
+	{
 	    return $this->hasOne(Category::class, 'categories_id');
 	}
-		
-	public function category_description(){ 
+	
+	public function products()
+	{
+	    return $this->hasMany(Product::class, 'products_id');
+	}
+
+	public function category_description()
+	{ 
 
 		return $this->hasMany(CategoryDescription::class,'categories_id','categories_id')->where('language_id',1);
 	}
 
-	public function other_images(){ 
+	public function other_images()
+	{ 
 
 		return $this->hasMany(ProductsImage::class,'products_id')->orderBy('sort_order', 'ASC');
 	}
-	public function products_attributes_images(){ 
+	public function products_attributes_images()
+	{ 
 
 		return $this->hasMany(ProductsAttributesImage::class,'products_id');
 	}
 
-	public static function simliar_products($categories_id) {
+	public static function simliar_products($categories_id) 
+	{
 
 		$categories = self::LeftJoin('products', 'products.products_id', '=', 'products_to_categories.products_id')
 				->LeftJoin('categories_description','categories_description.categories_id','=','products_to_categories.categories_id')

@@ -34,13 +34,12 @@ Theme::set($routeSetting[48]->value);
 
 Route::group(['namespace' => 'Web'], function () {	
 	
-//language route
-Route::post('/language-chooser', 'WebSettingController@changeLanguage');
-Route::post('/language/', array(
-	//'before' => 'csrf',
-	'as' => 'language-chooser',
-	'uses' => 'WebSettingController@changeLanguage'
-	));
+	//language route
+	Route::post('/language-chooser', 'WebSettingController@changeLanguage');
+	Route::post('/language/', array( //'before' => 'csrf',
+		'as' => 'language-chooser',
+		'uses' => 'WebSettingController@changeLanguage'
+		));
 		
 	Route::get('404', ['as' => '404', 'uses' => 'ErrorController@notFound']);
 	Route::get('500', ['as' => '500', 'uses' => 'ErrorController@fatal']);
@@ -55,6 +54,8 @@ Route::post('/language/', array(
 	Route::get('/contact-us', 'ContactController@contactUs');
 	Route::post('/contact', 'ContactController@processContactUs');
 	
+	Route::get('/blog', 'BlogController@index');
+	Route::get('/blog/{blogs_id}', 'BlogController@getDetail');
 	//news section
 	// Route::get('/news', 'NewsController@news');
 	// Route::get('/news-detail/{slug}', 'NewsController@newsDetail');
@@ -74,6 +75,8 @@ Route::post('/language/', array(
 	Route::post('/shop', 'ProductsController@shop');
 	Route::get('/product-detail/{slug}', 'ProductsController@productDetail');
 	Route::post('/filterProducts', 'ProductsController@filterProducts');
+	//Route::post('/filterProducts', 'ProductsController@moreProducts');
+
 	/*
 	|--------------------------------------------------------------------------
 	| Cart Controller Routes
@@ -178,6 +181,7 @@ Route::post('/language/', array(
 		Route::get('/stripe', 'StripeController@payWithStripe');
 		Route::post('/strip/order', 'StripeController@postPaymentWithStripe');
 	});
+	
 });
 
 Route::get('/cache', 'CacheController@index');

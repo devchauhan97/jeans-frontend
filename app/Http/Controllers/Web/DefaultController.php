@@ -36,7 +36,10 @@ use App\Order;
 use App\Product;
 use App\ProductsToCategory;
 use Cache;
+use App\Category;
 use App\PageSection;
+use App\Blog;
+use App\BlogDescription;
 class DefaultController extends DataController
 {
 	
@@ -53,80 +56,55 @@ class DefaultController extends DataController
      */
 	
 	//setStyle
-	public function setStyle(Request $request){	
-	 //echo "ok0";die;	
-		session(['homeStyle' => $request->style]);		
+	public function setStyle(Request $request)
+	{	
+	  	session(['homeStyle' => $request->style]);		
 		return redirect('/');
 	}
 	
 	//
-	public function settheme(Request $request){		
+	public function settheme(Request $request)
+	{		
 		session(['theme' => $request->theme]);		
 		return redirect('/');
 	}
-	
 	//index 
 	public function index(Request $request)
 	{
-		
 		$title = array('pageTitle' => Lang::get("website.Home"));
-		$result = array();	
+		$result = [];	
 		$result['commonContent'] = $this->commonContent();
-		//dd($result['commonContent']);
-		/*get top featured product*/
-		//$result['featured'] =$this->getFeaturedProduct();
-		
-		$pr = Product::with(['default_products_attributes'=> function ($join)  {  
-					$join->where('is_default', '=', '1')->with(['default_products_option','default_products_options_values']);
-				}])->select('products.*','products_description.products_name','specials.specials_new_products_price as discount_price')
-				->join('products_description','products_description.products_id','=','products.products_id')
-				->LeftJoin('specials', function ($join)  {  
-					$join->on('specials.products_id', '=', 'products.products_id')
-					->where('specials.status', '=', '1')
-					->where('specials.expires_date', '>', time());
-				})
-				->where('products_quantity','>','0')
-				->where('products.products_status', '=', 1)
-				->where('products_description.language_id','=',Session::get('language_id'))
-				;
-		
-		$featured   =	clone $pr;
-		$top_seller =	clone $pr;
-		$top_deals  =	clone $pr;
- 	    
-		$result['featured'] =  	$featured->where('products.is_feature', '=', 1)
-									->groupBy('products.products_id')
-									->limit(4)
-									->get();
-								 
+
+		$result['slides'] =  SlidersImage::homeSilder()->get();
+
+		// $result['cat_slides'] =  Category::homeCatSilder()->get();
+
+		// $result['occasion_slides'] =  Category::homeOccasionSilder(1)->get();
+ 
+	 //    $result['bridal_lehengas'] = Category::homeCatProduct(1)->get();
+	    //dd($result['bridal_lehengas'] );
+		$result['featured'] = Product::homeProduct('featured')->get();
 		//dd($result['featured']);							
 		/*get top seller product*/
-		$result['top_seller'] = $top_seller->where('products.is_feature', '!=', 1)
-											->orderBy('products.products_ordered', 'DESC')
-											->groupBy('products.products_id')
-											->limit(4)
-											->get();
-								 
+		$result['top_sellers'] = Product::homeProduct('top_sellers')->get();
 		//special products
-		$result['special'] = 	$top_deals->where('products.is_feature', '!=', 1)
-												->orderBy('specials.products_id', 'DESC')
-												->groupBy('products.products_id')
-												->limit(4)
-												->get();
+		$result['special'] = Product::homeProduct('top_deals')->get();
 					 			
 		//current time
-		$currentDate = Carbon::now()->toDateTimeString();
-		$chave = 'slides_'.Carbon::now()->toDateString();
+		// $currentDate = Carbon::now()->toDateTimeString();
+		// $chave = 'slides_'.Carbon::now()->toDateString();
 		
-	    $result['slides'] =  SlidersImage::homeSilder()->select('sliders_id as id', 'sliders_title as title', 'sliders_url as url', 'sliders_image as image', 'type', 'sliders_title as title')
-								    ->get();
-							 
+	    
+ 
+		$result['page_section_top'] = PageSection::pageSectionTop()
+													->get();
+		$result['page_section_center'] = PageSection::pageSectionCenter()
+													->get();
+		$result['page_section_bottom'] = PageSection::pageSectionBottom()
+													->get();
 
-	 
-		$result['page_section_top'] = PageSection::pageSectionTop()->get();
-		//dd($result['page_section_top']);
-		$result['page_section_center'] = PageSection::pageSectionCenter()->get();
-		$result['page_section_bottom'] = PageSection::pageSectionBottom()->get();
+		$result['blogs'] = Blog::blogDescriptions()->get();
+		 
 		//cart array
 		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();
 

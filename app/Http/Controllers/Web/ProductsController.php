@@ -94,17 +94,21 @@ class ProductsController extends DataController
 		if(!empty($request->category) and $request->category!='all') {
 
 			$category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories_slug',$request->category)->where('language_id',Session::get('language_id'))->get();
+
+			if(count($category) == 0) {
+				return redirect('/404')->withErrors('Category Does not exits.');
+			}
 			
 			$categories_id = $category[0]->categories_id;
 			//for main
-			if($category[0]->parent_id==0) {
+			if( $category[0]->parent_id == 0 ) {
 
 				$category_name = $category[0]->categories_name;
 				$sub_category_name = '';
 				$category_slug = '';
 
 			} else {
-			//for sub
+				//for sub
 				$main_category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories.categories_id',$category[0]->parent_id)->where('language_id',Session::get('language_id'))->get();
 				
 				$category_slug = $main_category[0]->categories_slug;
@@ -502,7 +506,11 @@ class ProductsController extends DataController
 		}
 		return ['product_data'=>$result];
 	}
-	
+	public function moreProducts(Request $request)
+	{
+		return $this->loadMoreProducts($request);
+
+	}
 	public function filterProducts(Request $request)
 	{
 		$result['commonContent'] = $this->commonContent();
@@ -579,6 +587,7 @@ class ProductsController extends DataController
 		//$myVar = new CartController();
 		$result['cartArray'] =  $result['commonContent']['cart']->pluck('products_id')->toArray();
 		$result['limit'] = $limit;
+		
 		return view("filterproducts")->with('result', $result);			
 		
 	}

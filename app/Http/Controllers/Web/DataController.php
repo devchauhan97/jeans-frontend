@@ -509,9 +509,9 @@ class DataController extends Controller
 		$categories->groupBy('products.products_id');
 			
 		//count
-		$total_record = $categories->toSql();
+		//$total_record = $categories->toSql();
 		//dd($total_record);
-
+		$total_record = $categories->paginate($skip/$take)->total();
 		$products  = $categories->skip($skip)->take($take)->get();
 	     //$products  = $categories->skip($skip)->take($take)->toSql();
 		 //dd($products);
@@ -588,9 +588,9 @@ class DataController extends Controller
 				$index++;
 			}
 			
-			$responseData = array('success'=>'1', 'product_data'=>$result,  'message'=>Lang::get('website.Returned all products'), 'total_record'=>count($total_record));
+			$responseData = array('success'=>'1', 'product_data'=>$result,  'message'=>Lang::get('website.Returned all products'), 'total_record'=>$total_record);
 		}else{
-				$responseData = array('success'=>'0', 'product_data'=>$result,  'message'=>Lang::get('website.Empty record'), 'total_record'=>count($total_record));
+				$responseData = array('success'=>'0', 'product_data'=>$result,  'message'=>Lang::get('website.Empty record'), 'total_record'=>$total_record);
 		}		
 		return($responseData);
 	

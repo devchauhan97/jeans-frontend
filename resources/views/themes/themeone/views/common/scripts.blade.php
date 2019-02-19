@@ -761,6 +761,7 @@ jQuery(document).on('click', '#load_products', function(e){
 				jQuery('#listing-products').append(res);
 				var record_limit = jQuery('#record_limit').val();
 				var showing_record = page_number*record_limit;
+				// alert('page_number ='+page_number+'record_limit = '+record_limit +' total_record ='+total_record+'showing_record='+showing_record)
 				if(total_record<=showing_record){
 					jQuery('.showing_record').html(total_record);					
 					jQuery('#load_products').hide();
