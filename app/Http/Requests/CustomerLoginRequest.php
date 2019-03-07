@@ -24,8 +24,8 @@ class CustomerLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'log_email'    => 'required|email',
-            'log_password' => 'required',
+            'email'    => 'required|email',
+            'password' => 'required',
         ];
     }
     // public function withValidator($validator)

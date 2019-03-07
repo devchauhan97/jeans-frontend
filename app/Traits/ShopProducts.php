@@ -38,6 +38,7 @@ use App\ProductsOption;
 use App\ProductsOptionsValue;
 use App\LikedProduct;
 use App\ProductsOptionsValuesToProductsOption;
+
 trait ShopProducts
 {	
 
@@ -64,12 +65,26 @@ trait ShopProducts
 		}elseif($type=="ztoa"){
 			$sortby								=	"products_name";
 			$order								=	"DESC";
-		}elseif($type=="hightolow"){
-			$sortby								=	"products_price";
+		}elseif($type=="hightolow") {
+
+			if(!empty($data['filters']['filter_type'])) {
+				$sortby								=	"specials_new_products_price";
+			} else {
+				$sortby								=	"products_price";
+			}
+
 			$order								=	"DESC";
-		}elseif($type=="lowtohigh"){
-			$sortby								=	"products_price";
+
+		}elseif($type=="lowtohigh") {
+
+			if(!empty($data['filters']['filter_type'])) {
+				$sortby								=	"specials_new_products_price";
+			} else {
+				$sortby								=	"products_price";
+			}
+
 			$order								=	"ASC";
+
 		}elseif($type=="topseller"){
 			$sortby								=	"products_ordered";
 			$order								=	"DESC";
@@ -80,7 +95,7 @@ trait ShopProducts
 		}elseif($type == "special" || $type == "deals"){ 
 			$sortby = "specials.products_id";
 			$order = "desc";
-		}else{
+		} else {
 			$sortby = "products.products_id";
 			$order = "desc";
 		}	
@@ -88,121 +103,131 @@ trait ShopProducts
 		$filterProducts = array();
 		$eliminateRecord = array();
 		$products_attribute_list=[];
+
 		$categories = ProductsToCategory::LeftJoin('products', 'products.products_id', '=', 'products_to_categories.products_id')
 				->LeftJoin('categories_description','categories_description.categories_id','=','products_to_categories.categories_id')
 				->leftJoin('manufacturers','manufacturers.manufacturers_id','=','products.manufacturers_id')
 				->leftJoin('manufacturers_info','manufacturers.manufacturers_id','=','manufacturers_info.manufacturers_id')
-				->leftJoin('products_description','products_description.products_id','=','products.products_id');
-			  //dd($data['filters']);
-		if(!empty($data['filters']) and empty($data['search'])){			
+				->leftJoin('products_description','products_description.products_id','=','products.products_id')
+				->leftJoin('liked_products', function ($join)   {  
+						$join->on('liked_products.liked_products_id', 'products.products_id')
+						->where('liked_customers_id',session('customers_id'));
+				})
+				;
+
+	    //dd($data['filters']);
+		if(!empty($data['filters']) and empty($data['search'])){	
+
 			$categories->leftJoin('products_attributes','products_attributes.products_id','=','products.products_id');
+
 		}
 			
-		if(!empty($data['search'])){
+		if(!empty($data['search'])) {
+
 			$categories->leftJoin('products_attributes','products_attributes.products_id','=','products.products_id')
 				->leftJoin('products_options','products_options.products_options_id','=','products_attributes.options_id')
 				->leftJoin('products_options_values','products_options_values.products_options_values_id','=','products_attributes.options_values_id');
+
 		}
 		//wishlist customer id
-		if($type == "wishlist"){
+		if($type == "wishlist") {
+
 			$categories->LeftJoin('liked_products', 'liked_products.liked_products_id', '=', 'products.products_id');
-		}
-		//parameter special
+
+		}//parameter special
 		elseif($type == "special") {
+
 			$categories->LeftJoin('specials', 'specials.products_id', '=', 'products_to_categories.products_id')
-				->select('products.*', 'products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'specials.specials_new_products_price as discount_price', 'categories_description.*');
+				->select('products.*', 'products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'specials.specials_new_products_price as discount_price', 'categories_description.*','liked_products.liked_customers_id');
 		} else{
+
 			$categories->LeftJoin('specials', function ($join) use ($currentDate) {  
 				$join->on('specials.products_id', '=', 'products_to_categories.products_id')->where('status', '=', '1')->where('expires_date', '>', $currentDate);
-			})->select('products.*','products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'products_to_categories.categories_id', 'categories_description.*');
+			})->select('products.*','products_description.*', 'manufacturers.*', 'manufacturers_info.manufacturers_url', 'specials.specials_new_products_price as discount_price', 'products_to_categories.categories_id', 'categories_description.*','liked_products.liked_customers_id');
 		}
 			
-			
 		if($type == "special"){ //deals special products
+
 			$categories->where('specials.status','=', '1')->where('expires_date','>',  $currentDate);
+
 		}
 		
 		//get single category products
-		if(!empty($data['categories_id'])){
+		if( !empty($data['categories_id']) ){
+
 			$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
+
 		}
 		
 		//get single products
 		if(!empty($data['products_id']) && $data['products_id']!=""){
+
 			$categories->where('products.products_id','=', $data['products_id']);
+
 		}
-		
 		
 		//for min and maximum price
 		if(!empty($max_price)){
-			$categories->whereBetween('products.products_price', [$min_price, $max_price]);
+			if(!empty($data['filters']['filter_type'])) {
+
+				$categories->whereBetween('specials.specials_new_products_price', [$min_price, $max_price]);
+
+			} else {
+
+				$categories->whereBetween('products.products_price', [$min_price, $max_price]);
+			}
+
 		}
 			
 		if(!empty($data['search'])) {
 				
 			$searchValue = $data['search'];
 			$categories->where('products_options.products_options_name', 'LIKE', '%'.$searchValue.'%');
-							
-			if(!empty($data['categories_id'])){
-				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
-			}
-			
-			if(!empty($data['filters'])){			
-				$categories->whereIn('products_attributes.options_id', [$data['filters']['options']])
-					->whereIn('products_attributes.options_values_id', [$data['filters']['option_value']])
-					->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count']);					
-			}				
 				
-			$categories->orWhere('products_options_values.products_options_values_name', 'LIKE', '%'.$searchValue.'%');				
-			if(!empty($data['categories_id'])){
-				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
-			}
-			
-			if(!empty($data['filters'])){			
-				$categories->whereIn('products_attributes.options_id', [$data['filters']['options']])
-					->whereIn('products_attributes.options_values_id', [$data['filters']['option_value']])
-					->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count']);					
-			}	
+			$categories->orWhere('products_options_values.products_options_values_name', 'LIKE', '%'.$searchValue.'%');		
 			
 			$categories->orWhere('products_name', 'LIKE', '%'.$searchValue.'%');				
-			if(empty($data['search']) and !empty($data['categories_id'])){
-				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
-			}
-			
-			if(!empty($data['filters'])){			
-				$categories->whereIn('products_attributes.options_id', [$data['filters']['options']])
-					->whereIn('products_attributes.options_values_id', [$data['filters']['option_value']])
-					->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count']);					
-			}	
-			
+			 
 			$categories->orWhere('products_model', 'LIKE', '%'.$searchValue.'%');
-			
-			if(!empty($data['categories_id'])){
-				$categories->where('products_to_categories.categories_id','=', $data['categories_id']);
-			}
-			
-			if(!empty($data['filters'])) {	
-
-				$products_attribute_list = explode(',',$data['filters']['option_value']);			
-				$categories->whereIn('products_attributes.options_id', explode(',',$data['filters']['options']))	           
-				->whereIn('products_attributes.options_values_id', explode(',',$data['filters']['option_value']))	
-					// ->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count'])
-					;	
-									
-			}					
+			 				
      	}
 						
-		if( !empty($data['filters']) ) {	
-			$products_attribute_list = explode(',',$data['filters']['option_value']);		
+		if( !empty($data['filters']['options']) ) {	
+
+			$products_attribute_list = explode(',',$data['filters']['option_value']);	
+
 			$categories->whereIn('products_attributes.options_id', explode(',',$data['filters']['options']))	           
-				->whereIn('products_attributes.options_values_id', explode(',',$data['filters']['option_value']))			
-				// ->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count'])
+				->whereIn('products_attributes.options_values_id', explode(',',$data['filters']['option_value']))
 				;
 				
              
 		}
 		//echo "<pre>";
 		//print_r($data['filters']);
+
+		/*if(!empty($data['filters']['filter_categories']) ) {
+
+			$filter_categories = $data['filters']['filter_categories'];
+			//dd($filter_categories);
+			$categories->whereIn('products_to_categories.categories_id',$data['filters']['filter_categories']);
+
+
+							
+		}
+		if(!empty($data['filters']['filter_occasion_category'])) {
+ 		
+			$categories->whereIn('products_to_categories.categories_id',$data['filters']['filter_occasion_category']);	 	 
+							
+		}
+*/
+			
+		if(!empty($data['filters']['filter_product_tags'])) {
+			
+			$filter_product_tags =implode('|', $data['filters']['filter_product_tags']);
+			 
+			$categories->whereRaw('CONCAT(",", `products_tags_id`, ",") REGEXP ",('.$filter_product_tags.'),"'); 
+							
+		}
 		if(!empty($data['filters']['brand'])){
 
 			$categories->whereIn('products.manufacturers_id',[$data['filters']['brand']]);		
@@ -212,6 +237,11 @@ trait ShopProducts
 							
 		}
 
+		if(!empty($data['filters']['filter_type'])){ //deals special products
+ 
+			$categories->where('specials.status','=', '1')->where('expires_date','>',  $currentDate);
+
+		}
 		//wishlist customer id
 		if( $type == "wishlist") {
 			$categories->where('liked_customers_id', '=', session('customers_id'));
@@ -229,12 +259,14 @@ trait ShopProducts
 		
 		$categories->groupBy('products.products_id');
 		//count
-		//$total_record = $categories->toSql();
-		//dd($total_record);
-		$total_record = $categories->paginate($skip/$take)->total();
+		// $total_record = $categories->toSql();
+		// dd($total_record);
+
 		$products  = $categories->skip( $skip )->take( $take )->get();
-	     //$products  = $categories->skip($skip)->take($take)->toSql();
-		 //dd($products);
+		//dd($products);
+		$total_record = $categories->paginate($skip/$take)->total();
+	    //$products  = $categories->skip($skip)->take($take)->toSql();
+		 
 		$result = array();
 		$result2 = array();
 			
@@ -255,18 +287,18 @@ trait ShopProducts
 				$attr = array();
 			
 			//like product
-				if( !empty( session('customers_id') ) ) {
-					$liked_customers_id						=	session('customers_id');	
-					$categories = LikedProduct::where('liked_products_id', '=', $products_id)->where('liked_customers_id', '=', $liked_customers_id)->get();
+				// if( !empty( session('customers_id') ) ) {
+				// 	$liked_customers_id						=	session('customers_id');	
+				// 	$categories = LikedProduct::where('liked_products_id', '=', $products_id)->where('liked_customers_id', '=', $liked_customers_id)->get();
 					
-					if( count($categories)>0 ) {
-						$result[$index]->isLiked = '1';
-					} else {
-						$result[$index]->isLiked = '0';
-					}
-				} else {
-					$result[$index]->isLiked = '0';						
-				} 
+				// 	if( count($categories)>0 ) {
+				// 		$result[$index]->isLiked = '1';
+				// 	} else {
+				// 		$result[$index]->isLiked = '0';
+				// 	}
+				// } else {
+				// 	$result[$index]->isLiked = '0';						
+				// } 
 
 				$products_attribute = ProductsAttribute::with(['products_option.products_attribute'=> function ($query) use ($products_id) {
 							$query->with('products_options_values');
@@ -341,8 +373,15 @@ trait ShopProducts
 		if(isset($categories_id) and !empty($categories_id)) {
 			$price->where('products_to_categories.categories_id','=', $categories_id);
 		}
-						
-		$priceContent = $price->max('products_price');
+		
+		if(isset($data['filter_type']) and !empty($data['filter_type'])) {
+			
+			$priceContent = $price->LeftJoin('specials', 'specials.products_id', '=', 'products_to_categories.products_id')->max('specials_new_products_price');
+		} else {
+
+			$priceContent = $price->max('products_price');
+		}
+
 
 		if(!empty($priceContent) and count($priceContent)>0) {
 			$maxPrice = round($priceContent+1);	

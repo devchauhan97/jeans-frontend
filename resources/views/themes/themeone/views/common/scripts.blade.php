@@ -1717,11 +1717,7 @@ jQuery(document).on('submit', '.form-validate', function(e){
 			jQuery(this).next(".error-content").attr('hidden', true);
 		}
 	});
-
-
-
 	//
-
 	jQuery(this).find(".email-validate").each(function() {
 
 		var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;

@@ -22,7 +22,7 @@ class Category extends Model
 
 	public function sub_categories() 
 	{
-	    return $this->hasMany(self::class, 'parent_id','categories_id');//->where('categories_status',1);
+	    return $this->hasMany(self::class, 'parent_id','categories_id'); 
 	}
 
 	public function categories_description() 
@@ -39,22 +39,21 @@ class Category extends Model
 	{
 	    return $this->hasMany(ProductsToCategory::class, 'categories_id');
 	}
-	public function scopehomeCatSilder() 
+	public function scopehomeCategorySilder() 
 	{
 		return self::where('categories_status','=',1)->join('categories_description','categories_description.categories_id','categories.categories_id');
 	}
 
 	public static function  homeOccasionSilder($catId)
 	{
-		return self:: join('categories_description','categories_description.categories_id','categories.categories_id')
-					//->where('categories_status','=',1)
+		return self::join('categories_description','categories_description.categories_id','categories.categories_id')
 					->where('categories.parent_id','=',$catId);
 	}
 
-	public static function  homeCatProduct($catId)
+	public static function  homeCategoryProducts($catId)
 	{
 		 
-		return self::join('products_to_categories','products_to_categories.categories_id','categories.categories_id')
+		$result = self::join('products_to_categories','products_to_categories.categories_id','categories.categories_id')
 					->join('products','products.products_id','products_to_categories.products_id') 
 					->join('products_description','products_description.products_id','=','products.products_id') 
 					->LeftJoin('specials', function ($join)  {  
@@ -62,12 +61,20 @@ class Category extends Model
 							->where('specials.status', '=', '1')
 							->where('specials.expires_date', '>', time());
 						})
-					->select('products.*','categories.*','products_description.products_name','specials.specials_new_products_price as discount_price')
+					->leftJoin('liked_products', function ($join)   {  
+						$join->on('liked_products.liked_products_id', 'products.products_id')
+						->where('liked_customers_id',session('customers_id'));
+					})
+					->select('products.*','categories.*','products_description.products_name','specials.specials_new_products_price as discount_price','liked_customers_id')
+					 
 					->where('products_quantity','>','0')
 					->where('products.products_status', '=', 1)
 					->where('products_description.language_id','=',1) 
 					->where('categories.categories_id','=',$catId)
-					->groupBy('products.products_id')->limit(4);			
+					->groupBy('products.products_id')
+					;		
+
+		return $result->limit(4);	
 	}
 
 }

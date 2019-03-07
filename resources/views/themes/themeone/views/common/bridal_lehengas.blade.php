@@ -5,7 +5,16 @@
         @foreach($result['bridal_lehengas'] as $key=>$products) 
         @if($key<=3)
             <div class="col-md-3 col-sm-6 col-3">
-                
+                <?php    $current_date = date("Y-m-d", strtotime("now"));
+                    $string = substr($products->products_date_added, 0, strpos($products->products_date_added, ' '));
+                    $date=date_create($string);
+                    date_add($date,date_interval_create_from_date_string($web_setting[20]->value." days"));
+                    $after_date = date_format($date,"Y-m-d"); 
+
+                    if($after_date>=$current_date){
+                        print '<span class="new-tag">New</span>';
+                    }
+                ?>
                 <div class="bg-grey text-center">
                 <img src="{{getFtpImage($products->products_image)}}" alt="{{$products->products_name}}" width="300"> 
                 <div class="wish-middle">

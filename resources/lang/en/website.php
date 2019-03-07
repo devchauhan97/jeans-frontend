@@ -28,17 +28,25 @@ return [
 	'bannerLabel4'=>'Safe Payment',
 		
 	'bannerLabel4Text'=>'Protect online payment',
-		
+	
+	'Delivery Charges' =>'Delivery Charges',
+
 	'TopSales'=>'Top Sales',
 		
 	'Special'=>'Special',
-		
+
+	'Payment' =>'Payment',	
+	
 	'MostLiked'=>'Most Liked',
 		
 	'New'=>'New',
 		
 	'Likes'=>'Likes',
-		
+	
+	'Cart'	=>'Cart',
+	
+	'Free Express Shipping'=>'Free Express Shipping',
+
 	'Welcome to our Store'=>'Welcome to our Store',
 		
 	'Orders'=>'Orders',
@@ -163,7 +171,7 @@ return [
 	'The coupon cannot be used in conjunction with other coupons'=>'The coupon cannot be used in conjunction with other coupons.',
 
 	//'Coupon can not be apllied to empty cart'=>'Coupon can not be apllied to empty cart.',
-
+	'Coupon expiry not exist'=>'Coupon expiry not exist',
 		
 	'cartEmptyText'=>'You have no items in your shopping cart.<br>Click <a href="shop">here</a> to continue shopping.',
 		
@@ -222,9 +230,19 @@ return [
 	'Email Address'=>'Email Address',
 		
 	'Please enter your valid email address'=>'Please enter your valid email address.',
+
+	'Please enter your valid phone no'	=>'Please enter your valid phone no.',
+	
+	'Please enter your valid mobile no'	=>'Please enter your valid mobile no.',
+
+	'Please select country' =>'Please select country.',
 		
 	'Gender'=>'Gender',
-		
+	
+	'Phone No' =>'Phone No',
+	
+	'Delivery Instructions'=>'Delivery Instructions',
+
 	'Please select your gender'=>'Please select your gender.',
 		
 	'Picture'=>'Picture',
@@ -274,7 +292,9 @@ return [
 	'Ut quis dolor accumsan, viverra neque nec, blandit leo'=>'Ut quis dolor accumsan, viverra neque nec, blandit leo.',
 		
 	'Checkout'=>'Checkout',
-		
+	
+	'Select Exiting Address'=>'Select Exiting Address',
+
 	'Shopping cart'=>'Shopping cart',
 		
 	'Billing Address'=>'Billing Address',
@@ -441,7 +461,11 @@ return [
 	'Price: Low To High'=>'Price: Low To High',
 		
 	'Top Seller'=>'Top Seller',
-		
+	
+	'Best Sellers'=>'Best Sellers',
+	
+	'New Arrivals' =>'New Arrivals',
+
 	'Special Products'=>'Special Products',
 		
 	'Most Liked'=>'Most Liked',

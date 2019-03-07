@@ -40,9 +40,12 @@ use App\Category;
 use App\PageSection;
 use App\Blog;
 use App\BlogDescription;
+use App\Traits\HomeProduct;
+use App\SpotLightProduct;
+use App\ProductTag;
 class DefaultController extends DataController
 {
-	
+	use HomeProduct;
     /**
      * Create a new controller instance.
      *
@@ -77,32 +80,50 @@ class DefaultController extends DataController
 
 		$result['slides'] =  SlidersImage::homeSilder()->get();
 
-		// $result['cat_slides'] =  Category::homeCatSilder()->get();
-
-		// $result['occasion_slides'] =  Category::homeOccasionSilder(1)->get();
+		//**********
+ 		// *******Occasion slides
+		$result['category_slides'] =  Category::homeCategorySilder()->get();
+		//**********
+ 		// *******Occasion slides
+		$result['occasion_tags_slides'] =  ProductTag::homeOccasionTags();
  
-	 //    $result['bridal_lehengas'] = Category::homeCatProduct(1)->get();
+ 		//**********
+ 		// *******Bridal Lehengas 
+	    $result['bridal_lehengas'] = Category::homeCategoryProducts(1)->get();
 	    //dd($result['bridal_lehengas'] );
-		$result['featured'] = Product::homeProduct('featured')->get();
+
+	    $result['categories_slug'] = $result['bridal_lehengas'][0]->categories_slug;
+	    //dd($result['bridal_lehengas'] );
+		//$result['featured'] = Product::homeProduct('featured')->get(); 
 		//dd($result['featured']);							
 		/*get top seller product*/
-		$result['top_sellers'] = Product::homeProduct('top_sellers')->get();
+		$result['top_sellers'] = Product::homeProduct('top_sellers')->get();//shop the look
 		//special products
-		$result['special'] = Product::homeProduct('top_deals')->get();
-					 			
+		 //dd($result['top_sellers'] );
+		$result['spot_light_product'] = SpotLightProduct::homeProductSpotLight()->get();
+		//dd($result['spot_light_product']);
+		$result['new_arrival'] =Product::orderBy('products_id', 'desc')
+										->first(['products_image','products_id']);
+		 
+		// $detail = $this->productSpotLight();
+		// $result['detail']['product_data'] = $detail['product_data'];		
+		// $result['attributes_price'] = $detail['attributes_price'];			 	
+		// $result['attributes'] = $detail['attributes'];
+		// $result['isLiked'] = $detail['isLiked'];
+				 	 			
 		//current time
 		// $currentDate = Carbon::now()->toDateTimeString();
 		// $chave = 'slides_'.Carbon::now()->toDateString();
 		
 	    
  
-		$result['page_section_top'] = PageSection::pageSectionTop()
+		/*$result['page_section_top'] = PageSection::pageSectionTop()
 													->get();
 		$result['page_section_center'] = PageSection::pageSectionCenter()
-													->get();
+													->get();*/
 		$result['page_section_bottom'] = PageSection::pageSectionBottom()
 													->get();
-
+ 
 		$result['blogs'] = Blog::blogDescriptions()->get();
 		 
 		//cart array

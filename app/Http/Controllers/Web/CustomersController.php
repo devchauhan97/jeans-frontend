@@ -56,6 +56,8 @@ use App\Http\Requests\CustomerLoginRequest;
 use App\Events\CustomerRegisterMail;
 use Event;
 use App\Http\Requests\UpdateProfileRequest;
+use App\ProductRecentlyView;
+use App\AddressBook;
 class CustomersController extends DataController
 {
 	
@@ -81,7 +83,8 @@ class CustomersController extends DataController
 
 			$title = array('pageTitle' => Lang::get("website.Sign Up"));
 			$result = array();						
-			$result['commonContent'] = $this->commonContent();		
+			$result['commonContent'] = $this->commonContent();	
+			$result['countries'] =  DB::table('countries')->get();	
 			return view("signup", $title)->with('result', $result);   
 		} 			
 	}
@@ -101,29 +104,66 @@ class CustomersController extends DataController
 	}
 	//login LoginRequest
 	public function customerLogin(CustomerLoginRequest $request) {
+
 		$old_session = Session::getId();
 
 	 	$result = array();		
 		//check authentication of email and password
-		$customerInfo = array("email" => $request->log_email, "password" => $request->log_password);
+		$customerInfo = array("email" => $request->email, "password" => $request->password);
 		
-		if(auth()->guard('customer')->attempt($customerInfo)) {
+
+		$remember = $request->remember ? true : false;
+
+		if(auth()->guard('customer')->attempt($customerInfo,true)) {
 
 			$customer = auth()->guard('customer')->user();
 			/**
 			*update session cart
 			**/
 			$this->makeSessionCart($customer,$old_session);
-			$result['customers'] = DB::table('customers')->where('customers_id', $customer->customers_id)->get();					
-			return redirect()->intended('/')->with('result', $result);
+
+			$this->makeRecentlyViewProducts($customer,$old_session);
+
+
+			$result['customers'] = DB::table('customers')->where('customers_id', $customer->customers_id)->get();
+
+			if( request()->ajax() ) { 
+ 				
+     			return response()->json([ url()->previous() ], 200); 
+
+		    } else {
+
+ 				return redirect()->intended()->with('result', $result);
+
+		    }				
 
  		} else {
 
- 			return redirect('login')->with('loginError',Lang::get("website.Email or password is incorrect"));
+ 			if( request()->ajax() ) { 
+
+     			return response()->json([Lang::get("website.Email or password is incorrect")], 423); 
+
+		    } else {
+
+ 				return redirect('login')->with('loginError',Lang::get("website.Email or password is incorrect"));
+		    }
  			
  		}
 	}
-	
+	public function makeRecentlyViewProducts($customer,$old_session) {
+
+		//set session				
+		session(['customers_id' => $customer->customers_id]);
+		
+		ProductRecentlyView::
+				where('session_id','=', $old_session)->update([
+					'customers_id'	=>	$customer->customers_id,
+					'session_id'	=>	Session::getId()
+				]);
+
+		 
+	}
+
 	public function makeSessionCart($customer,$old_session) {
 
 		//set session				
@@ -398,7 +438,7 @@ class CustomersController extends DataController
 				$customer = auth()->guard('customer')->user();
 				//set session				
 				$this->makeSessionCart($customer,$old_session);
-						
+				$this->makeRecentlyViewProducts($customer,$old_session);
 				// $result['customers'] = Customer::where('customers_id', $customer->customers_id)->get();					
 				return redirect()->intended('/')->with('result', $user_data);
 		}

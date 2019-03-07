@@ -346,12 +346,26 @@ class DataController extends Controller
 		}elseif($type=="ztoa"){
 			$sortby								=	"products_name";
 			$order								=	"DESC";
-		}elseif($type=="hightolow"){
-			$sortby								=	"products_price";
+		}elseif($type=="hightolow") {
+			
+			if(!empty($data['filters']['filter_type'])) {
+				$sortby								=	"specials_new_products_price";
+			} else {
+				$sortby								=	"products_price";
+			}
+
 			$order								=	"DESC";
-		}elseif($type=="lowtohigh"){
-			$sortby								=	"products_price";
+
+		}elseif($type=="lowtohigh") {
+
+			if(!empty($data['filters']['filter_type'])) {
+				$sortby								=	"specials_new_products_price";
+			} else {
+				$sortby								=	"products_price";
+			}
+
 			$order								=	"ASC";
+			
 		}elseif($type=="topseller"){
 			$sortby								=	"products_ordered";
 			$order								=	"DESC";
@@ -417,7 +431,14 @@ class DataController extends Controller
 		
 		//for min and maximum price
 		if(!empty($max_price)){
-			$categories->whereBetween('products.products_price', [$min_price, $max_price]);
+			if(!empty($data['filters']['filter_type'])) {
+
+				$categories->whereBetween('specials.specials_new_products_price', [$min_price, $max_price]);
+				
+			} else {
+
+				$categories->whereBetween('products.products_price', [$min_price, $max_price]);
+			}
 		}
 			
 		if(!empty($data['search'])) {
@@ -471,33 +492,56 @@ class DataController extends Controller
 			}					
      	}
 						
-		if(!empty($data['filters'])){			
+		/*if(!empty($data['filters'])){
+
 			$categories->whereIn('products_attributes.options_id', [$data['filters']['options']])	           
 				->whereIn('products_attributes.options_values_id', [$data['filters']['option_value']])			
 				->where(DB::raw('(select count(*) from `products_attributes` where `products_attributes`.`products_id` = `products`.`products_id` and `products_attributes`.`options_id` in ('.$data['filters']['options'].') and `products_attributes`.`options_values_id` in ('.$data['filters']['option_value'].'))'),'>=',$data['filters']['options_count']);
 				
              
-		}
-		//echo "<pre>";
-		//print_r($data['filters']);
-		if(!empty($data['filters']['brand'])){
+		}*/
+		if( !empty($data['filters']['options']) ) {	
 
-		$categories->whereIn('products.manufacturers_id',[$data['filters']['brand']]);			
-      //dd($dd);
-		 $data['filters']['brand'];
-		//die;
+			$products_attribute_list = explode(',',$data['filters']['option_value']);	
+
+			$categories->whereIn('products_attributes.options_id', explode(',',$data['filters']['options']))	           
+				->whereIn('products_attributes.options_values_id', explode(',',$data['filters']['option_value']))
+				;
+				
+             
+		} 
+		if(!empty($data['filters']['filter_product_tags'])) {
+			
+			$filter_product_tags =implode('|', $data['filters']['filter_product_tags']);
+			 
+			$categories->whereRaw('CONCAT(",", `products_tags_id`, ",") REGEXP ",('.$filter_product_tags.'),"'); 
 							
 		}
 
+		if(!empty($data['filters']['brand'])) {
+
+			$categories->whereIn('products.manufacturers_id',[$data['filters']['brand']]);			
+       					
+		}
+
+		if(!empty($data['filters']['filter_type'])) { //deals special products
+ 
+			$categories->where('specials.status','=', '1')->where('expires_date','>',  $currentDate);
+
+		}
 		
 		//wishlist customer id
 		if($type == "wishlist") {
+
 			$categories->where('liked_customers_id', '=', session('customers_id'));
+
 		}
 		
 		//wishlist customer id
 		if($type == "is_feature") {
+
 			$categories->where('products.is_feature', '=', 1);
+
 		}
 					
 			

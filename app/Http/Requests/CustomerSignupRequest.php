@@ -25,6 +25,10 @@ class CustomerSignupRequest extends FormRequest
     {
         return [
             'first_name'    => 'required',              
+            'last_name'    => 'required',              
+            'city'    => 'required',              
+            'country'    => 'required',              
+            'mobile_no'    => 'required',              
             'gender'        => 'required',              
             'email'         => 'required | email|unique:customers',
             'password'      => 'required|min:8|regex:/^.+@.+$/i',

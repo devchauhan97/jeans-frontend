@@ -24,7 +24,7 @@
 /********* setting themes dynamically *********/
 // default setting
 $routeSetting = DB::table('settings')->get();
-Theme::set($routeSetting[48]->value);
+Theme::set('libaas');
 
 // Route::get('welcome/{locale}', function ($locale) {
 //     App::setLocale($locale);
@@ -161,6 +161,7 @@ Route::group(['namespace' => 'Web'], function () {
 		Route::post('/updatepassword', 'CustomersController@updatePassword');		
 		
 		Route::get('/shipping/address', 'ShippingAddressController@shippingAddress');
+		Route::get('/exiting/address/{address_id}', 'ShippingAddressController@selectExitingAddress');
 		Route::post('add/address', 'ShippingAddressController@addAddress');
 
 		Route::post('/default/address', 'ShippingAddressController@myDefaultAddress');		
@@ -180,6 +181,10 @@ Route::group(['namespace' => 'Web'], function () {
 		Route::get('/view/order/{id}', 'OrdersController@viewOrder');
 		Route::get('/stripe', 'StripeController@payWithStripe');
 		Route::post('/strip/order', 'StripeController@postPaymentWithStripe');
+		Route::get('/payment', 'PaymentController@payment')->name('payment');
+		Route::post('/new-card-payment', 'PaymentController@newCardPayment')->name('newCardPayment');
+		Route::post('/saved-card-payment', 'PaymentController@savedCardPayment')->name('savedCardPayment');
+
 	});
 	
 });

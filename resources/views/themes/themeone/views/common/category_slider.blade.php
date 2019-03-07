@@ -2,12 +2,26 @@
     <div class="wrapper">
       
         <div class="row">
+
+
+        <div class="col-md-3 col-sm-6 col-3">
+            
+            <div class="bg-grey text-center">
+            <img src="{{getFtpImage($result['new_arrival']->products_image)}}" alt="New Arrival" width="300"> 
+                       
+            </div>
+            <a href="#">
+                <span class="product-title">New Arrival</span>
+                 
+            </a>
+        </div>
+
         @foreach($result['cat_slides'] as $key=>$cat) 
        
             <div class="col-md-3 col-sm-6 col-3">
                 
                 <div class="bg-grey text-center">
-                <img src="{{getFtpImage($cat->categories_image)}}" alt="{{$cat->categories_name}}" width="300"> 
+                    <img src="{{getFtpImage($cat->categories_image)}}" alt="{{$cat->categories_name}}" width="300"> 
                            
                 </div>
                 <a href="{{ URL::to('/shop?category='.$cat->categories_slug)}}" class="featured-content text-center">

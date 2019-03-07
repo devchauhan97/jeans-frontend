@@ -16,6 +16,7 @@ return [
     'paths' => [
         resource_path('views'),
         resource_path('views\themes\themeone\views'),
+        resource_path('views\themes\libaas\views'),
     ],
 
     /*

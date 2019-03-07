@@ -59,7 +59,7 @@ function getFtpImage($imagepath)
     if(env('APP_ENV') == 'local')
         $image ='http://'.$host.'/images/'.$imagepath;
     else 
-      $image ='http://'.$host.'/'.$imagepath;
+      $image ='https://www.'.$host.'/'.$imagepath;
 
     /*if(Storage::disk('ftp')->exists('/images/'.$imagepath)){
         //$image = Storage::disk('ftp')->get($imagepath);

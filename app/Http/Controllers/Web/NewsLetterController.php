@@ -24,9 +24,9 @@ class NewsLetterController extends Controller
 				/*Get user ip address details with geoplugin.net*/
 				$details = unserialize(file_get_contents("http://ip-api.com/php/{$ip_address}"));
 				
-				$city = $details['city']; 
-				$state = $details['region']; 
-				$country = $details['country'];
+				$city = @$details['city']; 
+				$state = @$details['region']; 
+				$country = @$details['country'];
 
 				$new_letter = //Newsletter::create(
 					['email' => $request->email,'company_name' => 'jeans','page_url' => env('APP_URL'),'city'=>$city,'ip'=>$ip_address,'date_added'=>Carbon::now(),'subscribe'=> 1 ]

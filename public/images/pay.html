@@ -1,0 +1,899 @@
+<!-- banner -->
+<!-- banner -->
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+<link rel="stylesheet" href="https://www.woozy.ca/tipsytimeweb/public/css/easy-autocomplete.min.css">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://www.woozy.ca/tipsytimeweb/public/css/owl.carousel.min.css">
+<link rel="stylesheet" href="https://www.woozy.ca/tipsytimeweb/public/css/owl.theme.green.min.css">
+<link rel="stylesheet" href="https://www.woozy.ca/tipsytimeweb/public/css/custom.css?v=1.0.1">
+<link rel="canonical" href="https://www.woozy.ca/tipsytimeweb" />
+<link rel="shortcut icon" href="https://www.woozy.ca/tipsytimeweb/public/img/favicon-32x32.png" />
+<title>Tipsytime - Online Liquor Store | We deliver Wine, Beer, Liquor to your door</title>
+<meta name="description" content="Tipsy Time is a Calgary based online liquor store, which was entrenched with the sole objective to serve the finest quality, wine, spirit, beer, and other alcoholic beverages to its customers. You just need to place the order and it will be delivered right at your doorsteps in no time." />
+<meta property="og:locale" content="en" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Tipsytime - Online Liquor Store | We deliver Wine, Beer, Liquor to your door " />
+<meta property="og:description" content="Tipsy Time is a Calgary based online liquor store, which was entrenched with the sole objective to serve the finest quality, wine, spirit, beer, and other alcoholic beverages to its customers. You just need to place the order and it will be delivered right at your doorsteps in no time." />
+<meta property="og:url" content="https://www.tipsytime.ca/" />
+<meta property="og:site_name" content="https://www.tipsytime.ca" />
+<meta property="og:image" content="https://www.tipsytime.ca/assets/images/tipsytime.jpg" />
+<meta property="og:image:secure_url" content="https://www.tipsytime.ca/assets/images/tipsytime.jpg" />
+<meta property="og:image:width" content="800" />
+<meta property="og:image:height" content="620" />
+<meta property="og:image:alt" content="Tipsy Time Online Liquor Store" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:description" content="Tipsy Time is a Calgary based online liquor store, which was entrenched with the sole objective to serve the finest quality, wine, spirit, beer, and other alcoholic beverages to its customers. You just need to place the order and it will be delivered right at your doorsteps in no time." />
+<meta name="twitter:title" content="Tipsytime - Online Liquor Store | We deliver Wine, Beer, Liquor to your door " />
+<meta property="article:author" content="https://www.tipsytime.ca/" />
+<meta property="article:publisher" content="https://www.tipsytime.ca/" />
+<style>
+.orderDetail {
+	font-family: 'Arial, Helvetica', sans-serif;
+	margin: 50px 0 0 0;
+	width: 100%;
+	background: #c4c3c1;
+	border-radius: 4px;
+	padding: 15px 0 1px;;
+}
+.orderDetail p {
+	font-size: 16.41px;
+	color: #000;
+	padding-left: 15px;
+}
+.orderDetail p span {
+	font-weight: 600;
+}
+.row {
+	margin-left: -15px;
+	margin-right: -15px
+}
+.line {
+	width: 100%;
+	height: 1px;
+	background: #000;
+	clear: both;
+	float: left;
+	margin: 18px 0;
+}
+.heading {
+	font-family: 'Arial, Helvetica', sans-serif;
+	margin: 48px 0 25px 0;
+	font-size: 21.88px;
+	text-align: left;
+	font-weight: 600;
+}
+.formgroup {
+	font-family: 'Arial, Helvetica', sans-serif;
+	width: 100%;
+	background: #f5f5f1;
+	padding: 9px 0;
+	border-radius: 4px;
+	border: #deded9 solid 1px;
+	box-sizing: border-box;
+}
+.formgroup img {
+	padding-right: 5px;
+	padding-left: 5px;
+	position: relative;
+	top: -1.5px;
+}
+.formgroup label {
+	color: #8e979b;
+	font-size: 15.5px;
+}
+input {
+	padding-left: 12px;
+}
+.formgroup a {
+	color: #8e979b;
+	text-decoration: none;
+}
+.app-payment {
+	width: 576px;
+	max-width: 100%;
+	margin: auto;
+	border: solid red 0px;
+}
+.marginTop {
+	margin-top: -6px!important
+}
+.app-box .radio {
+	margin-top: 5px;
+}
+.shadow {
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.app-box {
+	width: calc(100% - 16px);
+	border-radius: 20px;
+	border: solid #000 1px;
+	margin: 8px;
+	font-size: 16px;
+	padding: 14px 0px 5px;
+	box-sizing: border-box;
+	box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+.formgroup {
+	margin-bottom: 15px;
+	max-width: 100%;
+	padding-left: 15px;
+}		
+.text-center {
+	text-align: center;
+}
+.btn-pay {
+	font-size: 41px;
+	border-radius: 15px;
+	background: #000;
+	padding: 4px 70px;
+	color: #fff;
+	margin: auto;
+	cursor: pointer;
+	box-shadow: 0 2px #999;
+}
+.btn-pay:hover, .btn-pay:focus {	
+	box-shadow: 0 2px #999;
+}	
+	
+.plus {
+	font-size: 35.5px;
+	color: #000;
+	font-weight: 600;
+	font-family: 'Arial, Helvetica', sans-serif;
+}
+.newcard {
+	font-family: 'Arial, Helvetica', sans-serif;
+	width: 100%;
+	background: #f5f5f1;
+	padding: 9px 40px 30px 25px;
+	border-radius: 4px;
+	border: #deded9 solid 1px;
+	box-sizing: border-box;
+	margin-bottom: 50px;
+}
+.newcard p {
+	color: #555555;
+	font-size: 18px;
+	margin: 20px 0;
+	font-weight: 600;
+}
+.newcard [type='text'] ,.newcard [type='number']{
+	width: 100%;
+	border: #70706d solid 1px;
+	border-radius: 4px;
+	min-height: 50px;
+	margin-bottom: 10px;
+	font-size: 16px;
+}
+.bold {
+	font-size: 16px;
+	font-weight: 600;
+	color: #606161;
+}
+.newcard [type="checkbox"] {
+	margin: 10px 10px 10px 0px;
+}
+.newcard [type="checkbox"]:not(:checked),  .newcard [type="checkbox"]:checked {
+	position: absolute;
+	left: -9999px;
+}
+.newcard [type="checkbox"]:not(:checked) + label,  .newcard [type="checkbox"]:checked + label {
+	position: relative;
+	padding-left: 25px;
+	cursor: pointer;
+}
+/* checkbox aspect */
+.newcard [type="checkbox"]:not(:checked) + label:before,  .newcard [type="checkbox"]:checked + label:before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 2px;
+	width: 17px;
+	height: 17px;
+	border: 2px solid #000;
+	background: #f8f8f8;
+	border-radius: 0px;
+}
+.newcard [type="checkbox"]:not(:checked) + label:after,  .newcard [type="checkbox"]:checked + label:after {
+	content: '✔';
+	position: absolute;
+	top: -14px;
+	left: 0px;
+	font-size: 25px;
+	color: #000;
+	line-height: 1.75;
+	-webkit-transition: all .2s;
+	-moz-transition: all .2s;
+	-ms-transition: all .2s;
+	transition: all .2s;
+	font-weight: 400;
+}
+.newcard [type="checkbox"]:not(:checked) + label:after {
+	opacity: 0;
+	-webkit-transform: scale(0);
+	-moz-transform: scale(0);
+	-ms-transform: scale(0);
+	transform: scale(0);
+}
+.newcard [type="checkbox"]:checked + label:after {
+	opacity: 1;
+	-webkit-transform: scale(1);
+	-moz-transform: scale(1);
+	-ms-transform: scale(1);
+	transform: scale(1);
+}
+.newcard [type="checkbox"]:disabled:not(:checked) + label:before,  [type="checkbox"]:disabled:checked + label:before {
+	box-shadow: none;
+	border-color: #bbb;
+	background-color: #ddd;
+}
+.newcard [type="checkbox"]:disabled:checked + label:after {
+	color: #999;
+}
+.newcard [type="checkbox"]:disabled + label {
+	color: #aaa;
+}
+.newcard [type="checkbox"]:checked:focus + label:before,  [type="checkbox"]:not(:checked):focus + label:before {
+	border: 2px solid #000;
+}
+	
+.newcard input[type=number]::-webkit-inner-spin-button, 
+.newcard input[type=number]::-webkit-outer-spin-button { 
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	margin: 0; 
+}
+.newcard input[type='number'] {
+	-moz-appearance:textfield;
+}
+ .header{
+		width: 100%;
+		background: #f5f5f1;
+		padding: 18px 0;
+		border-radius: 4px;
+		border: #deded9 solid 1px;
+		box-sizing: border-box;
+		margin-bottom: 10px;
+		color: #8e979b;
+		padding-left: 7px;
+		cursor: pointer;	
+		font-size: 16px;			
+	}
+.header img{
+	position: relative;
+	top:-2px;
+	padding-right: 10px;
+}
+.containerone .content {
+	display: none;   
+}
+</style>
+<style type="text/css">
+      #namanyay-search-btn {
+        right: 25px;
+        top: 0px;
+      }
+      .easy-autocomplete-container li:nth-child(even) {
+        background-color: lightgrey;
+      }
+    </style>
+</head>
+<body id="payment-page">
+<div class="loader-content" style="display: none;">
+  <div class="loader-overlay">
+    <div class="overlay-content"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/ajax-loader1.gif" alt="Loading..."/> </div>
+  </div>
+</div>
+<section class="wrapper">
+  <header class="site-header">
+    <div class="top-bar">
+      <div class="container relative"> <a title="logo" href="https://www.woozy.ca/tipsytimeweb" class="desktop-logo"><img src="https://www.woozy.ca/tipsytimeweb/public/img/logo.png" alt="logo"></a>
+        <div class="top-aside-right"> <strong class="tegline"><a title="Drive with Tipsy Time" href="https://www.tipsytime.ca/driver.php" target="_blank">Drive with Tipsy Time</a> | <a href="https://www.tipsytime.ca/liquor-store-partner.php" target="_blank" title="Liquor Store Partner">Liquor Store Partner</a></strong>
+          <div class="big-search res-hide">
+            <form id="products_seach" action="https://www.woozy.ca/tipsytimeweb/products" method="get" class="">
+              <div class="input-group">
+                <input id="namanyay-search-box" name="q" type="text" placeholder="Search" value="" autocomplete="off" required="required">
+                <div class="input-group-btn">
+                  <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <ul class="right-bar login-right-bar">
+            <li class="hide-img"><a href="#" title="Search"><img alt="Search" src="https://www.woozy.ca/tipsytimeweb/public/img/search-icon.png"></a></li>
+            <li>
+              <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"> <i class="fa fa-user" aria-hidden="true"></i> <span class="caret"></span></button>
+                <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                  <li role="presentation"><a class="active" role="menuitem" tabindex="-1" href="#" title="jeetender.sharma100@gmail.com">jeetender.sharma100@gmail.com</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.woozy.ca/tipsytimeweb/profile" title="Profile">Profile</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.woozy.ca/tipsytimeweb/order-history" title="Order History">Order History</a></li>
+                  <li role="presentation"><a role="menuitem" tabindex="-1" href="https://www.woozy.ca/tipsytimeweb/change-password" title="Change Password">Change Password</a></li>
+                  <li role="presentation"> <a title="Result" role="menuitem" tabindex="-1" href="https://www.woozy.ca/tipsytimeweb/customer/logout"
+                                  onclick="event.preventDefault();
+                                  document.getElementById('logout-form1').submit();"> Logout </a>
+                    <form id="logout-form1" action="https://www.woozy.ca/tipsytimeweb/customer/logout" method="POST" style="display: none;">
+                      <input type="hidden" name="_token" value="ny6ZxYXwe3e9pWXrzXkPk6842xQJiB38h8UBglA4">
+                    </form>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li>
+              <ul class="icon-btn">
+                <li class="visible-xs"><a href="tel:04033518181"><img src="https://www.woozy.ca/tipsytimeweb/public/img/phone-icon.png"></a></li>
+                <li> <a href="https://www.woozy.ca/tipsytimeweb/wishlist"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/wishlist-icon1.png" alt="wishlist"> <span class="fav-counter"> 15 </span> </a> </li>
+                <li> <a href="https://www.woozy.ca/tipsytimeweb/view-cart" title="View cart" id="cart"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/cart-icon.png" alt="Cart icon"> <span class="cart-counter">1</span> </a> </li>
+              </ul>
+            </li>
+            <!-- <li><a href="#"><img src="https://www.woozy.ca/tipsytimeweb/public/img/whatsup-icon.png"></a></li> -->
+          </ul>
+        </div>
+        <div class="shopping-cart">
+          <div class="shopping-cart-header"> Recently Added Item(s)
+            <div class="pull-right btn-close-top" onclick="$('.shopping-cart').hide()"><i class="fa fa-times" aria-hidden="true"></i></div>
+          </div>
+          <!--end shopping-cart-header -->
+          <ul class="shopping-cart-items list-unstyled" id="cart-items-popup-content">
+          </ul>
+          <div class="row">
+            <div class="col-xs-7">
+              <div class="text-left cart-price"> <strong> Total: </strong> <span class="fsize cart-total-amt"></span> </div>
+            </div>
+            <div class="col-xs-5"> <a href="https://www.woozy.ca/tipsytimeweb/shipping-address" class="btn pull-right"><span>Checkout</span></a> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-bar">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light navbar-cu navigation">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" onclick="myFunction(this)">
+          <div class="bar1"></div>
+          <div class="bar2"></div>
+          <div class="bar3"></div>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto navbar-nav-cu">
+              <li class="nav-item dropdown"> <a title="Beer" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/17/beer')" style="padding: 0 16px;">Beer</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <div class="submenu-box">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <ul>
+                          <li><a title="Lager" href="https://www.woozy.ca/tipsytimeweb/category/17/beer?scat=41">Lager</a></li>
+                          <li><a title="Ale" href="https://www.woozy.ca/tipsytimeweb/category/17/beer?scat=54">Ale</a></li>
+                          <li><a title="Pilsner" href="https://www.woozy.ca/tipsytimeweb/category/17/beer?scat=55">Pilsner</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-6"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/cat/cate-bear.png" alt="Pilsner"> </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"> <a title="Wine" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/39/wine')" style="padding: 0 16px;">Wine</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <div class="submenu-box">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <ul>
+                          <li><a title="White Wine" href="https://www.woozy.ca/tipsytimeweb/category/39/wine?scat=45">White Wine</a></li>
+                          <li><a title="Champagne" href="https://www.woozy.ca/tipsytimeweb/category/39/wine?scat=50">Champagne</a></li>
+                          <li><a title="Red Wine" href="https://www.woozy.ca/tipsytimeweb/category/39/wine?scat=51">Red Wine</a></li>
+                          <li><a title="Rose" href="https://www.woozy.ca/tipsytimeweb/category/39/wine?scat=52">Rose</a></li>
+                          <li><a title="Sparkling" href="https://www.woozy.ca/tipsytimeweb/category/39/wine?scat=53">Sparkling</a></li>
+                          <li><a title="Fortified Wine" href="https://www.woozy.ca/tipsytimeweb/category/39/wine?scat=71">Fortified Wine</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-6"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/cat/cate-wine.png" alt="Fortified Wine"> </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"> <a title="Whisky" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/30/whisky')" style="padding: 0 16px;">Whisky</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <div class="submenu-box">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <ul>
+                          <li><a title="Scotch" href="https://www.woozy.ca/tipsytimeweb/category/30/whisky?scat=42">Scotch</a></li>
+                          <li><a title="Irish" href="https://www.woozy.ca/tipsytimeweb/category/30/whisky?scat=57">Irish</a></li>
+                          <li><a title="Canadian" href="https://www.woozy.ca/tipsytimeweb/category/30/whisky?scat=58">Canadian</a></li>
+                          <li><a title="Others" href="https://www.woozy.ca/tipsytimeweb/category/30/whisky?scat=59">Others</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-6"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/cat/cate-wisky.png" alt="Others"> </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"> <a title="Cooler" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/32/cooler')" style="padding: 0 16px;">Cooler</a> </li>
+              <li class="nav-item dropdown"> <a title="Cider" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/34/cider')" style="padding: 0 16px;">Cider</a> </li>
+              <li class="nav-item dropdown"> <a title="Rum" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/35/rum')" style="padding: 0 16px;">Rum</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <div class="submenu-box">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <ul>
+                          <li><a title="Dark Rum" href="https://www.woozy.ca/tipsytimeweb/category/35/rum?scat=46">Dark Rum</a></li>
+                          <li><a title="Flavoured Rum" href="https://www.woozy.ca/tipsytimeweb/category/35/rum?scat=60">Flavoured Rum</a></li>
+                          <li><a title="Light/Amber Rum" href="https://www.woozy.ca/tipsytimeweb/category/35/rum?scat=61">Light/Amber Rum</a></li>
+                          <li><a title="White Rum" href="https://www.woozy.ca/tipsytimeweb/category/35/rum?scat=62">White Rum</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-6"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/cat/cate-rum.png" alt="White Rum"> </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"> <a title="Vodka" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/36/vodka')" style="padding: 0 16px;">Vodka</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <div class="submenu-box">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <ul>
+                          <li><a title="Flavoured Vodka" href="https://www.woozy.ca/tipsytimeweb/category/36/vodka?scat=47">Flavoured Vodka</a></li>
+                          <li><a title="Regular Vodka" href="https://www.woozy.ca/tipsytimeweb/category/36/vodka?scat=63">Regular Vodka</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-6"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/cat/cate-vodka.png" alt="Regular Vodka"> </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+              <li class="nav-item dropdown"> <a title="Gin" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/37/gin')" style="padding: 0 16px;">Gin</a> </li>
+              <li class="nav-item dropdown"> <a title="Cognac/Brandy" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/74/cognacbrandy')" style="padding: 0 16px;">Cognac/Brandy</a> </li>
+              <li class="nav-item dropdown"> <a title="Tequila" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/72/tequila')" style="padding: 0 16px;">Tequila</a> </li>
+              <li class="nav-item dropdown"> <a title="Others" class="nav-link dropdown-toggle" data-toggle="dropdown" onClick="location.assign('https://www.woozy.ca/tipsytimeweb/category/38/others')" style="padding: 0 16px;">Others</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <div class="submenu-box">
+                    <div class="row">
+                      <div class="col-sm-6">
+                        <ul>
+                          <li><a title="More" href="https://www.woozy.ca/tipsytimeweb/category/38/others?scat=49">More</a></li>
+                          <li><a title="Liquor" href="https://www.woozy.ca/tipsytimeweb/category/38/others?scat=67">Liquor</a></li>
+                          <li><a title="Sake" href="https://www.woozy.ca/tipsytimeweb/category/38/others?scat=69">Sake</a></li>
+                        </ul>
+                      </div>
+                      <div class="col-sm-6"> <img src="https://www.woozy.ca/tipsytimeweb/public/img/cat/cate-other.png" alt="Sake"> </div>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+  <section class="site-content ptb-70">
+    <div class="container">
+      <div class="row">
+        <div class="clearfix"></div>
+        <br>
+        
+         <div class="col-sm-10 col-md-6 col-md-offset-3 col-sm-offset-1">
+            <div class="orderDetail">
+		    	<p><span>Order ID:</span> #201902241003554 </p>
+		    	<p><span>Grand Total:</span> $29.15 </p>
+		    </div>
+		  
+	    
+		    <div class="row">
+		    	<div class="line"></div>
+		    </div>
+		    
+		    
+		    
+	
+	    
+		    <div class="heading">Select Credit Cards </div>	    
+		    
+		    <form action="https://www.woozy.ca/tipsytimeweb/saved-card-payment" method="POST" id="paymentForm0" class="paymentForm1">
+		         <input type="hidden" name="card_id" value="4">
+                 <input type="hidden" name="order_id" value="3585" >
+					<div class="formgroup">
+						<div class="radio">
+							<label>
+								<input type="radio" name="pan" class="cardnumber pad-15" value="5454***5454" id="0" checked onclick="check_r(0)"><span ><img src="payment-visa.png"> </span>4242 **** **** 42424 
+							</label>
+						</div>
+					</div>                
+			</form>
+     
+     
+     		<form action="https://www.woozy.ca/tipsytimeweb/saved-card-payment" method="POST" id="paymentForm1" class="paymentForm1">
+		        <input type="hidden" name="card_id" value="10">
+                <input type="hidden" name="order_id" value="3585" >
+					<div class="formgroup">
+						<div class="radio">
+							<label>
+								<input type="radio" name="pan" class="cardnumber pad-15" value="5454***5454" id="1" checked onclick="check_r(1)"><span ><img src="payment-visa.png"> </span>4242 **** **** 42424 
+							</label>
+						</div>
+					</div>                
+			</form> 
+         
+           
+             <div class="containerone">
+				<div class="header"><img src="plus.png" /> Use Another Card</div>
+				<div class="content">
+					<div class="newcard">
+						<p> Use New Card</p>
+						<form>
+							<input type="text" class="avsinfo"  name="avs_street_number" id="avs_street_number" value="" placeholder="Street Number" required>
+							<input type="text" class="avsinfo" name="avs_street_name" id="avs_street_name" value="" placeholder="Street Name" required>
+							<input type="text" class="avsinfo" name="avs_zipcode" value="" id="avs_zipcode" placeholder="Postal Code" required>   		 			
+							<input type="number"  name="pan" id="pan" value="" required="required" placeholder="Card Number">
+							<input type="text" name="expiry_date" id="expiry_date" value="" required="required" placeholder="Expiry Date (MM/YY)">
+							<input type="number"  name="cvd_value" id="cvd_value" value="" required="required" placeholder="CVD" maxlength="3">
+							<br>
+							<input type="checkbox" id="cardAccptance"  name="cardAccptance" value="Yes">
+							<label for="cardAccptance" class="bold"> Save Card for Future Use</label>   
+						</form>		 			
+					</div>
+				</div>
+			</div> 
+ 
+    		 		
+    		 		
+		<div class="text-center">
+			<button type="submit" class="btn-pay">Pay</button>
+		</div>
+    		 		
+    </div>     
+       <div class="clearfix"></div>
+        
+<!--        <div class="app-payment"> </div>        -->
+ 
+<!--
+        <div class="app-payment">
+          <div class="app-box">
+            <form action="https://www.woozy.ca/tipsytimeweb/new-card-payment" method="POST" id="paymentForm" class="paymentForm">
+              <input type="hidden" name="order_id" value="3585" >
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="cardAccptance" id="cardAccptance" value="Yes" checked="checked">
+                    Add to Vault </label>
+                </div>
+              </div>
+              <div class="form-group avsinfo">
+                <input type="text" class="form-control" name="avs_street_number" id="avs_street_number" value="" placeholder="Street Number" required>
+              </div>
+              <div class="form-group avsinfo">
+                <input type="text" class="form-control" name="avs_street_name" id="avs_street_name" value="" placeholder="Street Name" required>
+              </div>
+              <div class="form-group avsinfo">
+                <input type="text" class="form-control" name="avs_zipcode" value="" id="avs_zipcode" placeholder="Postal Code" required>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="pan" id="pan" value="" required="required" placeholder="Card Number" required>
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="expiry_date" id="expiry_date" value="" required="required" placeholder="Expiry Date" required maxlength="4" minlength="4">
+              </div>
+              <div class="form-group">
+                <input type="number" class="form-control" name="cvd_value" id="cvd_value" value="" required="required" placeholder="CVD" required maxlength="3" minlength="3">
+              </div>
+              <div class="form-group">
+                <button type="submit" class="btn-payment">Proceed Securely</button>
+              </div>
+            </form>
+          </div>
+        </div>
+-->
+        
+		
+        
+      </div>
+    </div>
+  </section>
+  <div class="spacer-20"></div>
+  <footer class="footer">
+    <div class="site-footer">
+      <div class="container">
+        <div class="email-subscriber">
+          <div class="spacer-40"></div>
+          <div class="row">
+            <div class="col-md-offset-1 col-md-10 col-sm-offset-1 col-sm-10 col-xs-offset-1 col-xs-10">
+              <div class="row">
+                <div class="col-md-4 col-sm-5">
+                  <h2>SIGN UP FOR EXCLUSIVE OFFERS</h2>
+                </div>
+                <div class="col-md-8 col-sm-7">
+                  <form action="https://www.woozy.ca/tipsytimeweb/mail/mymail.php" method="post" id="newsletter_form" enctype="multipart/form-data">
+                    <div class="input-group">
+                      <input type="text" name="email" id="email" value="" class="form-control" placeholder="Email" required="required">
+                      <span class="input-group-btn">
+                      <button type="submit" name="submit" value="submit" class="btn btn-default">SUBSCRIBE</button>
+                      </span> </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="spacer-40"></div>
+        </div>
+      </div>
+      <div class="footer-top">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4">
+              <h2>Tipsy Time Limited</h2>
+              <div class="bgunderline"></div>
+              <div class="spacer-30"></div>
+              <p> <span class="location-icon"></span> <strong> Corporate Office<br>
+                <a title="#201 628 12 Ave SW Calgary AB T2R 0H6" target="_blank" href="https://goo.gl/maps/doRLFW83iny"><span>#201 628 12 Ave SW Calgary AB T2R 0H6</span></a> </strong> </p>
+              <p> <span class="location-icon"></span> <strong> Liquor Store<br>
+                <a title="#317 5303 68 Avenue SE Calgary, AB T2C 4Z2" target="_blank" href="https://goo.gl/maps/LXZ9y9F3GRp"><span>#317 5303 68 Avenue SE Calgary, AB T2C 4Z2</span></a> </strong> </p>
+              <p> <span class="phone-icon content-none"></span> <a title="403-351-8181" href="tel:04033518181"><b>403-351-8181</b></a> </p>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+              <h2>Quick Links</h2>
+              <div class="bgunderline"></div>
+              <div class="spacer-30"></div>
+              <ul class="widgets-nav ul-two-col">
+                <li><a title="Home" href="https://www.woozy.ca/tipsytimeweb">Home</a></li>
+                <li><a title="Driver" href="https://www.tipsytime.ca/driver.php" target="_blank">Driver</a></li>
+                <li><a title="Liquor Store Partner" href="https://www.tipsytime.ca/liquor-store-partner.php" target="_blank">Liquor Store Partner</a></li>
+                <li><a title="Privacy policy" href="https://www.woozy.ca/tipsytimeweb/privacy-policy">Privacy policy</a></li>
+                <li><a title="Terms Of Uses" href="https://www.woozy.ca/tipsytimeweb/terms-and-conditions">Terms Of Uses</a></li>
+                <li><a title="Sitemap" href="https://www.woozy.ca/tipsytimeweb/sitemap">Sitemap</a></li>
+                <li><a title="FAQ" href="https://www.woozy.ca/tipsytimeweb/faq">FAQ</a></li>
+              </ul>
+            </div>
+            <div class="col-md-3 col-md-offset-1">
+              <h2>Connect</h2>
+              <div class="bgunderline"></div>
+              <div class="spacer-30"></div>
+              <ul class="widgets-nav">
+                <li><a title="Liquor Store Partner login" href="https://tipsytime.ca/crm/liquor-store-partner/" target="_blank">Liquor Store Partner login </a></li>
+                <li><a title="Delivery Driver login" href="https://tipsytime.ca/crm/delivery-driver/" target="_blank">Delivery Driver login</a></li>
+              </ul>
+              <h2>Follow Us</h2>
+              <div class="bgunderline"></div>
+              <div class="spacer-20"></div>
+              <div class="widgets-social">
+                <ul class="widgets-social-in">
+                  <li><a title="facebook" href="https://www.facebook.com/tipsytimeltd/" target="_blank"><i class="fa fa-facebook-f"></i></a></li>
+                  <li><a title="Instagram" href="https://www.instagram.com/tipsytimeltd/" target="_blank"><i class="fa fa-instagram"></i></a></li>
+                  <li><a title="Youtube" href="https://www.youtube.com/channel/UCmiPMouV4fTJh5doK83SjSQ" target="_blank"><i class="fa fa-youtube"></i></a></li>
+                  <li><a title="Pinterest" href="https://in.pinterest.com/tipsytimeltd/" target="_blank"><i class="fa fa-pinterest-p"></i></a></li>
+                  <li><a title="Twitter" href="https://twitter.com/TipsyTimeltd" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                  <li><a title="Linkedin" href="https://www.linkedin.com/company/tipsytime" target="_blank"><i class="fa fa-linkedin"></i></a></li>
+                </ul>
+              </div>
+              <div class="clear"></div>
+              <div class="spacer-20"></div>
+              <a title="Payment Icon" class="payment-icon" href="#"><img src="https://www.woozy.ca/tipsytimeweb/public/img/payment-icon.png" alt="Payment Icon"></a> </div>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="container relative">
+          <div class="row">
+            <div class="col-lg-offset-2 col-md-offset-3 col-lg-5 col-md-5 text-left">
+              <p> © 2019 Tipsy Time Limited. All Rights Reserved. <br>
+                Designed, 
+                Developed & Marketed by <a title="Server Center" class="copyright" href="https://www.servercenter.ca/" target="_blank">Server Center</a> </p>
+            </div>
+            <div class="col-lg-5 col-md-4"> </div>
+          </div>
+          <a title="footer-logo" class="footer-logo" href="#"><img src="https://www.woozy.ca/tipsytimeweb/public/img/footer-logo.png" alt="footer-logo"></a> </div>
+      </div>
+    </div>
+  </footer>
+</section>
+<div class="alert alert-success text-center alert-custom"></div>
+<div class="alert alert-danger text-center alert-custom"></div>
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/jquery.min.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/moment.min.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/moment-timezone-with-data.min.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/bootstrap.min.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/bootstrap-datetimepicker.js" type="text/javascript"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/jquery.validate.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/additional-methods.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/jquery.easy-autocomplete.min.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/jquery-ui.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/jquery.ui.touch-punch.min.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/owl.carousel.min.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/main.js?v=1.0.1"></script> 
+<script type="text/javascript">
+        var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+        (function(){
+        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+        s1.async=true;
+        s1.src='https://embed.tawk.to/5b97965dc666d426648aa655/default';
+        s1.charset='UTF-8';
+        s1.setAttribute('crossorigin','*');
+        s0.parentNode.insertBefore(s1,s0);
+        })();
+    </script> 
+<script>
+    var base_url = "https://www.woozy.ca/tipsytimeweb";
+    var segment1 = "payment";
+    var currency = "$"; 
+    var img_base_url = "https://www.tipsytime.ca/crm/";
+
+    // Cart global variables
+    var cart_items = [];
+    var cart_obj = {total_qty: 0, total_amt: 0, cur_item_subtot: 0, cur_item_qty: 0};
+    // End cart global variables
+
+    /*var default_date = moment.tz("America/Edmonton").format();*/
+    var current_date_time = new Date();
+    var todayDate = new Date().getDate();
+
+    $( function() {
+      var options = {
+
+        url: function(phrase) {
+          return "https://www.woozy.ca/tipsytimeweb/products-autocomplete/" + $("#namanyay-search-box").val();
+        },
+
+        getValue: function(element) {
+          return element.products_name;
+        },
+
+        ajaxSettings: {
+          dataType: "json",
+          method: "POST",
+          data: {
+            dataType: "json"
+          }
+        },
+
+        preparePostData: function(data) {
+          data.phrase = $("#namanyay-search-box").val();
+          return data;
+        },
+
+        list: {
+          onClickEvent: function() {
+            var product_url = $("#namanyay-search-box").getSelectedItemData().product_url;
+            location.assign(product_url);
+            //console.log("Click !" + selectedItemValue);
+          } 
+        },
+
+        template: {
+          type: "custom",
+          method: function(value, item) {
+            return "<img src='" + item.products_image + "' height='50' width='30' /> <span class='text1'>" + item.products_name + "</span><br><span class='text2'>" + item.text + "</span>";
+          }
+        },
+
+        requestDelay: 400
+      };
+
+      $("#namanyay-search-box").easyAutocomplete(options);
+
+      
+    });
+
+  </script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/init.js"></script> 
+<script src="https://www.woozy.ca/tipsytimeweb/public/js/cart.js?v=1.0.1"></script> 
+<script>
+$(document).ready(function(){
+    $("#paymentForm").validate();
+    $('#paymentForm').submit(function(){
+        if($(this).valid()) {
+            $('.btn-payment').prop('disabled', true).text("Please wait...");
+        }
+        else {
+            $('.btn-payment').prop('disabled', false).text("Proceed Securely");
+        }
+    });
+    $('.paymentForm1').submit(function(){
+        $('.btn-payment').prop('disabled', true).text("Please wait...");
+    });
+});
+
+//$('.avsinfo').hide();   
+$('#cardAccptance').click(function(){
+    if($(this).prop("checked") == true){                
+        $('.avsinfo').show();
+        $('.avsinfo input').attr('required', true);
+    }
+    else if($(this).prop("checked") == false){
+        //alert("Checkbox is unchecked.");
+        $('.avsinfo').hide();
+        $('.avsinfo input').attr('required', false);
+    }
+    $("#paymentForm").validate();
+});
+
+
+
+function check_r(obj) {
+    $('.cardnumber').prop('checked', false);;
+    $('#' + obj).prop('checked', true);
+    $('.proc_btn').hide();
+    $('#bt' + obj).show();
+}
+</script> 
+<script type="text/javascript">
+$(document).ready(function () {
+    $('ul.navbar-nav-cu li.dropdown').hover(function() {
+      $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+    }, function() {
+      $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+    });
+
+        
+});
+
+$.validator.addMethod("email",function(value,element)
+{
+    return this.optional(element)||/^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value);
+},'Please enter a valid email address.');
+
+$(document).ready(function(){
+    $("#newsletter_form").validate({
+        rules:{
+            email:{
+                email:true,
+                required:true,
+                onkeyup:false,
+                remote:{
+                    url:'https://www.woozy.ca/tipsytimeweb/ajaxEmailSubs.php',
+                    type:"post",
+                    data:{
+                        emailBottom:function(){
+                            return $("#email").val();
+                        }
+                    }
+                }
+            },
+        },
+        messages:{
+            email:{
+                required:"Please enter valid email address",
+                remote:"Email already exists"
+            }
+        },
+        highlight:function(element){
+            $(element).parent().addClass('error')
+        },
+        unhighlight:function(element){
+            $(element).parent().removeClass('error')
+        },
+        errorElement:"span",errorClass:"help-inline",
+    });
+});
+
+</script>
+<script>	
+		$(".header").click(function () {
+			$header = $(this);   
+			$content = $header.next();    
+			$content.slideToggle(500, function () {       
+				$header.text(function () {  
+					/*		
+					return $content.is(":visible") ? cplus  : cminus;*/
+					if($content.is(":visible")==true){
+						$(this).html('<img src="minus.png" /> Use Another Card');
+					}else{
+						
+						$(this).html('<img src="plus.png" /> Use Another Card');
+						
+					}
+				});
+			});
+		});
+	
+	
+	</script>
+</body>
+</html>

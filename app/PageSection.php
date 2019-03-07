@@ -24,8 +24,13 @@ class PageSection extends Model
 
     public function scopepageSectionBottom(){
 
-    	return $this->where(['position'=>'bottom','status' => '1'])
-								   ->where('expires_date', '>', time());
+    	return $this->leftJoin('categories','categories.categories_slug','page_sections.sections_url')
+                ->leftJoin('categories_description','categories_description.categories_id','categories.categories_id')
+                    ->leftJoin('products','products.products_slug','page_sections.sections_url')
+                    ->leftJoin('products_description','products_description.products_id','products.products_id')
+                    ->select('page_sections.*','products_description.products_name','categories_description.categories_name','products_description.products_name')
+                    ->where(['position'=>'bottom','status' => '1'])
+            	    ->where('expires_date', '>', time());
     }
 
 }

@@ -179,13 +179,10 @@
                                             <div class="price-box">
                                                 <span>@lang('website.Total Price')&nbsp;:</span>
                                                 <span class="total_price">
-                                                @if(!empty($result['detail']['product_data'][0]->discount_price))
-                                                    {{$web_setting[19]->value}}
-                                                    {{$result['detail']['product_data'][0]->discount_price+$result['attributes_price']}}
+                                                  @if(!empty($result['detail']['product_data'][0]->discount_price))
+                                                    {{$web_setting[19]->value}}{{number_format($result['detail']['product_data'][0]->discount_price+$result['attributes_price'],2)}}
                                                 @else
-                                                {{$web_setting[19]->value}}
-                                                {{$result['detail']['product_data'][0]->products_price+$result['attributes_price']}}@endif
-
+                                                {{$web_setting[19]->value}}{{number_format($result['detail']['product_data'][0]->products_price+$result['attributes_price'],2)}}@endif
                                                 </span>             
                                             </div>  
                                             <div class="buttons">

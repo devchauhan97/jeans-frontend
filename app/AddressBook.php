@@ -10,7 +10,7 @@ class AddressBook extends Model
     protected $guarded = ['address_book_id'];
     protected $primaryKey = 'address_book_id';
 
-     public static function getShippingAddress($address_id = null)
+    public static function getShippingAddress($address_id = null)
 	{	
 		$addresses = self::
 					 leftJoin('countries', 'countries.countries_id', '=' ,'address_book.entry_country_id')
@@ -27,6 +27,7 @@ class AddressBook extends Model
 							'address_book.entry_postcode as postcode',
 							'address_book.entry_city as city',
 							'address_book.entry_state as state',
+							'address_book.entry_phone_no as phone_no',
 							
 							'countries.countries_id as countries_id',
 							'countries.countries_name as country_name',
@@ -35,8 +36,10 @@ class AddressBook extends Model
 							'zones.zone_code as zone_code',
 							'zones.zone_name as zone_name',
 							'customers.customers_default_address_id as default_address'
-							)
-					->where('address_book.customers_id', auth()->guard('customer')->user()->customers_id);
+							);
+		if( auth()->check()) {
+			$addresses->where('address_book.customers_id', auth()->guard('customer')->user()->customers_id);
+		}
 		
 		if(!empty($address_id)){
 			$addresses->where('address_book_id', '=', $address_id);

@@ -33,7 +33,7 @@ use App\ProductsAttributesImage;
 use App\ProductsImage;
 use App\LikedProduct;
 use App\Traits\ShopProducts;
-
+use App\ProductRecentlyView;
 class ProductsController extends DataController
 {
 	use ShopProducts;
@@ -98,7 +98,7 @@ class ProductsController extends DataController
 			if(count($category) == 0) {
 				return redirect('/404')->withErrors('Category Does not exits.');
 			}
-			
+			 	
 			$categories_id = $category[0]->categories_id;
 			//for main
 			if( $category[0]->parent_id == 0 ) {
@@ -106,7 +106,7 @@ class ProductsController extends DataController
 				$category_name = $category[0]->categories_name;
 				$sub_category_name = '';
 				$category_slug = '';
-
+				$selected_category=$category[0]->categories_id;
 			} else {
 				//for sub
 				$main_category = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories.categories_id',$category[0]->parent_id)->where('language_id',Session::get('language_id'))->get();
@@ -114,7 +114,16 @@ class ProductsController extends DataController
 				$category_slug = $main_category[0]->categories_slug;
 				$category_name = $main_category[0]->categories_name;
 				$sub_category_name = $category[0]->categories_name;
+
+				$selected_category=$category[0]->parent_id;
 			}
+
+			// foreach($result['commonContent']['categories'] as $categories_data) {
+
+	  //           foreach($categories_data->sub_categories as $sub_categories_data)   {
+
+	  //            }
+   //           }
 			
 		} else {
 
@@ -122,12 +131,16 @@ class ProductsController extends DataController
 			$category_name = '';
 			$sub_category_name = '';
 			$category_slug = '';
+			$selected_category='';
 		}
-				
+		
+		$result['occasion_list'] = Category::leftJoin('categories_description','categories_description.categories_id','=','categories.categories_id')->where('categories.parent_id',1)->where('language_id',Session::get('language_id'))->get();
+
 		$result['category_name'] = $category_name;
 		$result['category_slug'] = $category_slug;
 		$result['sub_category_name'] = $sub_category_name;
-		 
+		$result['selected_category'] = $selected_category;
+		
 		//search value
 		if(!empty($request->search)) {
 			$search = $request->search;
@@ -177,8 +190,20 @@ class ProductsController extends DataController
 			$result['filter_attribute']['options'] = $options;
 			$result['filter_attribute']['option_values'] = $option_values;
 
+			// $result['filter_occasion_category'] = $request->occasion_category;
+			// $result['filter_categories'] = $request->cat;
+			// $filters['filter_occasion_category'] = $request->occasion_category;
+			// $filters['filter_categories'] = $request->cat;
+
+			$result['filter_product_tags'] = $request->product_tags;
+			$filters['filter_product_tags'] = $request->product_tags;
+			$filters['filter_type'] = $request->filter_type;
+
+
 			
 		}
+
+ 
 		//print_r($filters);
 		//$myVar = new DataController();	
 		$data = array('page_number'=>$page_number, 'type'=>$type, 'limit'=>$limit, 'categories_id'=>$categories_id, 'search'=>$search, 'filters'=>$filters, 'limit'=>$limit, 'min_price'=>$min_price, 'max_price'=>$max_price );
@@ -188,7 +213,7 @@ class ProductsController extends DataController
 		//dd($products);
 		$result['products'] = $products;
 		
-		$data = array('limit'=>$limit, 'categories_id'=>$categories_id );
+		$data = array('limit'=>$limit, 'categories_id'=>$categories_id ,'filter_type'=>$request->filter_type);
 		$filters = $this->shopFilters($data);
 		//dd($data);
 		$result['filters'] = $filters;
@@ -202,9 +227,10 @@ class ProductsController extends DataController
 		}else{
 			$result['limit'] = $limit;
 		}
-		
+		//dd($result);
 		//liked products
 		$result['liked_products'] = $this->likedProducts();		
+		//return view("old-shopj", $title)->with('result', $result); 
 		return view("shopj", $title)->with('result', $result); 
 		
 	}
@@ -296,7 +322,7 @@ class ProductsController extends DataController
 		//multiple images
 		$products_images =  $products_data->other_images;
 
-		//array_push($detail,$products_data);
+ 		//array_push($detail,$products_data);
  	
 		// ******
 		// *****like product
@@ -381,17 +407,27 @@ class ProductsController extends DataController
 		$result['product_images'] 	= $products_images;
 		$result['attributes_price']	= $attributes_price;
 		$result['detail']['product_data'][] =$products_data; 
-		// ******
-		// ******Get simliar products******
-		$result['simliar_products'] = $this->simliar_products($products_data['categories_id']);
-		
 		//$myVar = new CartController();
 		$result['cartArray'] = $result['commonContent']['cart']->pluck('products_id')->toArray();
-		//dd($result['commonContent']);
-		//liked products
-		//$result['liked_products'] = LikedProduct::likedProducts();		
 		
-	//	return view("product-detail", $title)->with('result', $result); 
+		// ******
+		// ******Get simliar products******
+		$result['simliar_products'] = $this->simliar_products( $products_data['categories_id'] );
+		
+		// ******
+		// ******Most Liked products********
+		$result['most_liked_products'] = LikedProduct::mostlikedProducts();	
+		
+		// ******
+		// ******Add To Recent view products list******
+		ProductRecentlyView::addToRecentlyViewedProducts( $products_id );
+
+		// ******
+		// ******Get Recent view products******
+		$result['recently_viewed'] = ProductRecentlyView::recentlyViewedProducts();
+
+		//dd($result['simliar_products']);
+		return view("product-detail", $title)->with('result', $result); 
 		// return view("product-detail-cloudzoom", $title)->with('result', $result); 
 		return view("product-detail-magnifier", $title)->with('result', $result); 
 		
@@ -506,35 +542,37 @@ class ProductsController extends DataController
 		}
 		return ['product_data'=>$result];
 	}
+	
 	public function moreProducts(Request $request)
 	{
 		return $this->loadMoreProducts($request);
 
 	}
+
 	public function filterProducts(Request $request)
 	{
 		$result['commonContent'] = $this->commonContent();
 		//min_price
-		if(!empty($request->min_price)){
+		if(!empty($request->min_price)) {
 			$min_price = $request->min_price;
 		} else {
 			$min_price = '';
 		}
 		
 		//max_price
-		if(!empty($request->max_price)){
+		if(!empty($request->max_price)) {
 			$max_price = $request->max_price;
 		} else {
 			$max_price = '';
 		}	
 				
-		if(!empty($request->limit)){
+		if(!empty($request->limit)) {
 			$limit = $request->limit;
 		} else {
 			$limit = 15;
 		}
 		
-		if(!empty($request->type)){
+		if(!empty($request->type)) {
 			$type = $request->type;
 		} else {
 			$type = '';
@@ -564,18 +602,26 @@ class ProductsController extends DataController
 		}
 		
 		//max_price
-		if(!empty($request->max_price)){
+		if(!empty($request->max_price)) {
 			$max_price = $request->max_price;
-		}else{
+		} else {
 			$max_price = '';
 		}	
 		
-		if(!empty($request->filters_applied) and $request->filters_applied==1){
+		if(!empty($request->filters_applied) and $request->filters_applied==1) {
+
 			$filters['options_count'] = count($request->options_value);
 			$filters['options'] = $request->options;
 			$filters['option_value'] = $request->options_value;
-		}else{
+
+			$result['filter_product_tags'] = $request->product_tags;
+			$filters['filter_product_tags'] = $request->product_tags;
+			$filters['filter_type'] = $request->filter_type;
+
+		} else{
+
 			$filters = array();
+
 		}	
 						
 		// /$myVar = new DataController();

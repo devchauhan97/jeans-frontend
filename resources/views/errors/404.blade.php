@@ -1,14 +1,9 @@
 @extends('layouts')
-@section('customcss')
-<link rel="stylesheet" type="text/css" href="{!! asset('css/bootstrap.min.css') !!}">
-<link rel="stylesheet" type="text/css" href="{!! asset('css/style.min.css') !!}">
-<!-- <link rel="stylesheet" type="text/css" href="{!! asset('css/responsivej.min.css') !!}"> -->
-@endsection
+ 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="error-template">
+ <section class="content main-container" id="site-content">
+        <div class="ptb-40">
+            <div class="container">
                 <h1>
                     Oops!</h1>
                 <h2>
@@ -25,9 +20,7 @@
             </div>
         </div>
     </div>
-</div>
-
-
+</section>
 @endsection
 @section('customjs')
 

@@ -31,6 +31,7 @@ use Lang;
 //email
 use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\AddAddressRequest;
+
 class ShippingAddressController extends DataController
 {
 	
@@ -153,6 +154,42 @@ class ShippingAddressController extends DataController
 					
 	}
 	
+	//get all customer addresses url 
+	public function selectExitingAddress($address_id = null)
+	{	
+		$addresses = DB::table('address_book')
+					->leftJoin('countries', 'countries.countries_id', '=' ,'address_book.entry_country_id')
+					->leftJoin('zones', 'zones.zone_id', '=' ,'address_book.entry_zone_id')
+					->leftJoin('customers', 'customers.customers_default_address_id', '=' , 'address_book.address_book_id')
+					->select(
+							'address_book.address_book_id as address_id',
+							'address_book.entry_gender as gender',
+							'address_book.entry_company as company',
+							'address_book.entry_firstname as firstname',
+							'address_book.entry_lastname as lastname',
+							'address_book.entry_street_address as street',
+							'address_book.entry_suburb as suburb',
+							'address_book.entry_postcode as postcode',
+							'address_book.entry_city as city',
+							'address_book.entry_state as state',
+							
+							'countries.countries_id as countries_id',
+							'countries.countries_name as country_name',
+							
+							'zones.zone_id as zone_id',
+							'zones.zone_code as zone_code',
+							'zones.zone_name as zone_name',
+							'customers.customers_default_address_id as default_address'
+							)
+					->where('address_book.customers_id', auth()->guard('customer')->user()->customers_id) 
+					->where('address_book_id', '=', $address_id)->first();
+		 
+		$state=$this->zones($addresses->countries_id);
+		$result = json_encode(['address'=>$addresses,'state'=>$state]);
+		
+		return $result;
+					
+	}
 	public function addAddress(AddAddressRequest $request)
 	{
  
@@ -168,7 +205,7 @@ class ShippingAddressController extends DataController
 		$entry_country_id             			=   $request->entry_country_id;
 		$entry_zone_id             				=   $request->entry_zone_id;
 		// $entry_gender							=   $request->entry_gender;
-		// $entry_company							=   $request->entry_company;
+		$entry_company							=   $request->entry_company;
 
 		$customers_default_address_id			=   $request->customers_default_address_id;
 							

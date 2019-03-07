@@ -67,7 +67,8 @@ class OrdersController extends DataController
      */
 	
 	//test stripe
-	public function stripeForm(Request $request){
+	public function stripeForm(Request $request) {
+
 		$title = array('pageTitle' => Lang::get('website.Checkout'));
 		$result = array();
 		$result['commonContent'] = $this->commonContent();
@@ -110,6 +111,7 @@ class OrdersController extends DataController
 						
 			//shipping address
 			//$myVar = new ShippingAddressController();
+			$result['address'] = AddressBook::getShippingAddress();
 			if(!empty(auth()->guard('customer')->user()->customers_default_address_id)){
 				$address_id = auth()->guard('customer')->user()->customers_default_address_id;
 				//$address = $myVar->getShippingAddress($address_id);
@@ -123,7 +125,7 @@ class OrdersController extends DataController
 				}
 			}
 			
-			if(count(session('shipping_address'))==0){
+			if( count(session('shipping_address')) ==0 ) {
 				session(['shipping_address' => $address]);
 			}	
 						
@@ -170,7 +172,7 @@ class OrdersController extends DataController
 			// $token = $this->generateBraintreeTokenWeb();
 			// session(['braintree_token' => $token]);
 			$result['curr_year']=date('Y');
-			$this->applyShippingCost(); 
+			//$this->applyShippingCost(); 
 			return view("checkout", $title)->with('result', $result); 
 		}
 		
@@ -207,8 +209,9 @@ class OrdersController extends DataController
 			 $billing_data['billing_city'] = $value;
 		  }else if($key=='postcode'){
 			 $billing_data['billing_zip'] = $value;
+		  } else if($key=='phone_no'){
+			 $billing_data['phone_no'] = $value;
 		  }
-		  
 		}
 		
 		if(empty(session('billing_address')) or session('billing_address')->same_billing_address==1) {
@@ -250,7 +253,9 @@ class OrdersController extends DataController
 		
 		return redirect()->back();		
 	}
-	function applyShippingCost(){
+
+	public function applyShippingCost() 
+	{
 
 		/* Applay flate rate force fully*/
 		$shipping_method = ShippingMethod::where(['methods_type_link'=> 'flateRate'])->first();
@@ -694,7 +699,7 @@ class OrdersController extends DataController
 			//change status of cart products
 			Basket::where('customers_id',session('customers_id'))->update(['is_order'=>'1']);			
 			return redirect('orders')->with('success', Lang::get("website.Payment has been processed successfully"));
-		}else if($payment_status == "failed"){
+		}else if($payment_status == "failed") {
 			return redirect()->back()->with('error', Lang::get("website.Error while placing order"));		
 		}	
 		
