@@ -46,6 +46,8 @@ Route::group(['namespace' => 'Web'], function () {
 	Route::get('/setStyle', 'DefaultController@setStyle');
 	Route::get('/settheme', 'DefaultController@settheme');
 	Route::get('/page', 'DefaultController@page');
+	Route::get('/privacy-policy', 'DefaultController@privacyPolicy');
+	Route::get('/term-services', 'DefaultController@termServices');
 	Route::post('/subscribeNotification/', 'CustomersController@subscribeNotification');
 	
 	Route::get('/', 'DefaultController@index');
@@ -54,7 +56,7 @@ Route::group(['namespace' => 'Web'], function () {
 	Route::get('/contact-us', 'ContactController@contactUs');
 	Route::post('/contact', 'ContactController@processContactUs');
 	
-	Route::get('/blog', 'BlogController@index');
+	Route::get('/blogs', 'BlogController@index');
 	Route::get('/blog/{blogs_id}', 'BlogController@getDetail');
 	//news section
 	// Route::get('/news', 'NewsController@news');
@@ -159,9 +161,9 @@ Route::group(['namespace' => 'Web'], function () {
 		Route::get('/profile', 'CustomersController@profile');
 		Route::post('/updateprofile', 'CustomersController@updateProfile');
 		Route::post('/updatepassword', 'CustomersController@updatePassword');		
-		
+		Route::get('/changepassword', 'CustomersController@changePassword');	
 		Route::get('/shipping/address', 'ShippingAddressController@shippingAddress');
-		Route::get('/exiting/address/{address_id}', 'ShippingAddressController@selectExitingAddress');
+		Route::get('/exiting/address', 'ShippingAddressController@selectExitingAddress');
 		Route::post('add/address', 'ShippingAddressController@addAddress');
 
 		Route::post('/default/address', 'ShippingAddressController@myDefaultAddress');		
@@ -176,14 +178,22 @@ Route::group(['namespace' => 'Web'], function () {
 		Route::post('/paymentComponent', 'OrdersController@paymentComponent');	
 		Route::post('/place_order', 'OrdersController@place_order');	
 		Route::get('/orders', 'OrdersController@orders');	
-		Route::post('/myorders', 'OrdersController@myorders');	
+		
+		Route::get('/myorder', 'OrdersController@myOrder');	
+
 		Route::get('/stripeForm', 'OrdersController@stripeForm');	
 		Route::get('/view/order/{id}', 'OrdersController@viewOrder');
 		Route::get('/stripe', 'StripeController@payWithStripe');
 		Route::post('/strip/order', 'StripeController@postPaymentWithStripe');
-		Route::get('/payment', 'PaymentController@payment')->name('payment');
+
+		Route::post('/checkout/order/payment', 'PaymentController@checkoutOrderPayment');
+		Route::get('/payment', 'PaymentController@payment');
+
 		Route::post('/new-card-payment', 'PaymentController@newCardPayment')->name('newCardPayment');
 		Route::post('/saved-card-payment', 'PaymentController@savedCardPayment')->name('savedCardPayment');
+
+		Route::get('/payment-success/{orders_id}', 'PaymentController@paymentSuccess');
+		Route::get('/payment-failure/{orders_id}', 'PaymentController@paymentFailure');
 
 	});
 	

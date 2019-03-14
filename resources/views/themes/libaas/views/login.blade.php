@@ -10,7 +10,7 @@
 		<div class="container">
 			<div class="row">
 				<div class="offset-md-3 col-md-6">
-					<div class="login-page">
+					<div class="login-page" id="desktop-signin-page">
 						<div class="left">
 							<img class="width-100 img-fluid" style="object-fit: cover" src="{{ asset('images/login-img.jpg') }}">
 						</div>

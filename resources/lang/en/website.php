@@ -90,7 +90,9 @@ return [
 	'About Us'=>'About Us',
 		
 	'Contact Us'=>'Contact Us',
-		
+
+	'Add New Address'=>'Add New Address',
+	
 	'Terms & Condtions'=>'Terms & Condtions',
 		
 	'Wishlist'=>'Wishlist',
@@ -232,6 +234,7 @@ return [
 	'Please enter your valid email address'=>'Please enter your valid email address.',
 
 	'Please enter your valid phone no'	=>'Please enter your valid phone no.',
+	'Please enter phone no'	=>'Please enter phone no.',
 	
 	'Please enter your valid mobile no'	=>'Please enter your valid mobile no.',
 

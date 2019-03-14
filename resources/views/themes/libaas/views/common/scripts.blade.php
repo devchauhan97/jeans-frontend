@@ -1,4 +1,3 @@
-<!-- scripts -->
 <!-- <script src="{!! asset('js/app.js') !!}"></script> -->
 
 <!-- owl carousel -->
@@ -923,63 +922,6 @@ jQuery(document).on('click', '.update-single-Cart', function(e){
 	});
 });
 
-//focus form field
-
-jQuery(document).on('keyup focusout change', '.field-validate', function(e){
-	if(this.value == '') {		
-		jQuery(this).closest(".form-group").addClass('has-error');
-		jQuery(this).next(".error-content").removeAttr('hidden');
-	}else{
-		jQuery(this).closest(".form-group").removeClass('has-error');
-		jQuery(this).next(".error-content").attr('hidden', true);
-	}
-});
-
-
-
-//focus form field
-jQuery(document).on('keyup', '.number-validate', function(e){
-	if(this.value == '' || isNaN(this.value)) {
-		jQuery(this).closest(".form-group").addClass('has-error');
-		jQuery(this).next(".error-content").removeAttr('hidden');
-	}else{
-		jQuery(this).closest(".form-group").removeClass('has-error');
-		jQuery(this).next(".error-content").attr('hidden', true);
-	}
-});
-
-//match password
-jQuery(document).on('keyup focusout', '.password', function(e){
-	var regex = "^\\s+$";
-	if(this.value.match(regex)) {			
-		jQuery(this).closest(".form-group").addClass('has-error');
-		jQuery(this).next(".error-content").removeAttr('hidden');
-	}else{
-		jQuery(this).closest(".form-group").removeClass('has-error');
-		jQuery(this).next(".error-content").attr('hidden', true);
-	}
-});
-
-
-
-jQuery(document).on('keyup focusout', '.email-validate', function(e){
-
-	var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-
-	if(this.value != '' && validEmail.test(this.value)) {
-		jQuery(this).closest(".form-group").removeClass('has-error');
-		jQuery(this).next(".error-content").attr('hidden', true);
-	}else{
-		jQuery(this).closest(".form-group").addClass('has-error');
-		jQuery(this).next(".error-content").removeAttr('hidden');
-		error = "has error";
-	}
-
-});
-
-
-	
-
 	//sorting grid/list
 	jQuery(document).on('click','#list',function(){		
 		if (!jQuery(this).hasClass('active')) {
@@ -1606,11 +1548,11 @@ jQuery(document).on('submit', '.form-validate', function(e){
 			jQuery(this).closest(".form-group").removeClass('has-error');
 
 			jQuery(this).next(".error-content").attr('hidden', true);
-
-
+			 
 
 		}else{
 
+			jQuery(this).next(".error-content").html('Please enter your valid email address');
 			jQuery(this).closest(".form-group").addClass('has-error');
 
 			jQuery(this).next(".error-content").removeAttr('hidden');
@@ -1642,4 +1584,73 @@ jQuery(document).on('submit', '.form-validate', function(e){
 
 	}
 });
+
+//focus form field
+
+jQuery(document).on('keyup focusout change', '.field-validate', function(e){
+	if(this.value == '') {		
+		jQuery(this).closest(".form-group").addClass('has-error');
+		jQuery(this).next(".error-content").removeAttr('hidden');
+	}else{
+		jQuery(this).closest(".form-group").removeClass('has-error');
+		jQuery(this).next(".error-content").attr('hidden', true);
+	}
+});
+
+
+
+//focus form field
+jQuery(document).on('keyup', '.number-validate', function(e){
+	if(this.value == '' || isNaN(this.value)) {
+		jQuery(this).closest(".form-group").addClass('has-error');
+		jQuery(this).next(".error-content").removeAttr('hidden');
+	}else{
+		jQuery(this).closest(".form-group").removeClass('has-error');
+		jQuery(this).next(".error-content").attr('hidden', true);
+	}
+});
+
+//match password
+jQuery(document).on('keyup focusout', '.password', function(e){
+	var regex = "^\\s+$";
+	if(this.value.match(regex)) {			
+		jQuery(this).closest(".form-group").addClass('has-error');
+		jQuery(this).next(".error-content").removeAttr('hidden');
+	}else{
+		jQuery(this).closest(".form-group").removeClass('has-error');
+		jQuery(this).next(".error-content").attr('hidden', true);
+	}
+});
+
+
+
+jQuery(document).on('keyup focusout', '.email-validate', function(e){
+
+	var validEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+	if(this.value != '' && validEmail.test(this.value)) {
+		jQuery(this).closest(".form-group").removeClass('has-error');
+		jQuery(this).next(".error-content").attr('hidden', true);
+		 
+	}else{
+		jQuery(this).next(".error-content").html('Please enter your valid email address.');
+ 		jQuery(this).closest(".form-group").addClass('has-error');
+		jQuery(this).next(".error-content").removeAttr('hidden');
+		error = "has error";
+	}
+
+});
+
+jQuery('[name=mobile_no]').keydown(function (e) {
+    var key = e.charCode || e.keyCode || 0;
+    $text = jQuery(this);
+    if (key !== 8 && key !== 9) {
+        if ($text.val().length === 3) {
+            $text.val($text.val() + '-');
+        }
+        if ($text.val().length === 7) {
+            $text.val($text.val() + '-');
+        }
+    }
+    return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+})
 </script>

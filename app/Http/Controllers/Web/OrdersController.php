@@ -51,6 +51,7 @@ use App\Events\SendProductOrderMail;
 use Event;
 use App\AddressBook;
 use App\Traits\StripePayment;
+
 class OrdersController extends DataController 
 {
 	use StripePayment;
@@ -84,9 +85,9 @@ class OrdersController extends DataController
 		//cart data
 		$myVar = new CartController();
 		$result['cart'] = $myVar->myCart($result);
-				
+		//dd(session('step'));		
 		if(count($result['cart'])==0) {			
-			return redirect("/");	
+			return redirect()->route('404')->withErrors('Does not found cart items.');
 		} else {
 		
 			//apply coupon
@@ -96,7 +97,7 @@ class OrdersController extends DataController
 				$response = array();	
 				if(!empty($session_coupon_data)){		
 					foreach($session_coupon_data as $key=>$session_coupon){	
-							$response = $myVar->common_apply_coupon($session_coupon->code);
+						$response = $myVar->common_apply_coupon($session_coupon->code);
 					}
 				}	
 				
@@ -112,6 +113,7 @@ class OrdersController extends DataController
 			//shipping address
 			//$myVar = new ShippingAddressController();
 			$result['address'] = AddressBook::getShippingAddress();
+			
 			if(!empty(auth()->guard('customer')->user()->customers_default_address_id)){
 				$address_id = auth()->guard('customer')->user()->customers_default_address_id;
 				//$address = $myVar->getShippingAddress($address_id);
@@ -125,7 +127,7 @@ class OrdersController extends DataController
 				}
 			}
 			
-			if( count(session('shipping_address')) ==0 ) {
+			if( count(session('shipping_address')) == 0 ) {
 				session(['shipping_address' => $address]);
 			}	
 						
@@ -812,6 +814,60 @@ class OrdersController extends DataController
 	}
 	
 	
+	//viewMyOrder
+	public function myOrder(Request $request)
+	{
+		
+		$title = array('pageTitle' => Lang::get("website.My Orders"));
+		$result = array();			
+		
+		$result['commonContent'] = $this->commonContent();
+		
+		$orders_products = OrdersProduct::join('orders','orders.orders_id','orders_products.orders_id')
+							->leftjoin('products','products.products_id','orders_products.products_id')
+							->select('orders_products.*','orders.*','products.products_image')
+							->where('orders.customers_id',session('customers_id'))
+							->orderBy('orders.orders_id','desc')
+							->get();
+
+		//dd($orders_products);					
+		//orders		
+		// $orders = Order::orderBy('date_purchased','DESC')->where('customers_id','=', session('customers_id'))->get();	
+		
+		// $index = 0;
+		// $total_price = array();
+		
+		// foreach($orders as $orders_data) {
+
+		// 	$orders_products = OrdersProduct::select('final_price', DB::raw('SUM(final_price) as total_price'))
+		// 		->where('orders_id', '=' ,$orders_data->orders_id)
+		// 		->get();
+				
+		// 	$orders[$index]->total_price = $orders_products[0]->total_price;		
+			
+		// 	$orders_status_history =OrdersStatusHistory::LeftJoin('orders_status', 'orders_status.orders_status_id', '=', 'orders_status_history.orders_status_id')
+		// 		->select('orders_status.orders_status_name', 'orders_status.orders_status_id')
+		// 		->where('orders_id', '=', $orders_data->orders_id)->orderby('orders_status_history.orders_status_history_id', 'DESC')->limit(1)->get();
+				
+		// 	if(!empty($orders_status_history[0]->orders_status_id)) {
+
+		// 		$orders[$index]->orders_status_id = $orders_status_history[0]->orders_status_id;
+
+		// 	} else {
+
+		// 	 	$orders[$index]->orders_status_id =0;
+				
+		// 	}
+
+		// 	$orders[$index]->orders_status = $orders_status_history[0]->orders_status_name;
+		// 	$index++;
+		
+		// }
+				//dd($orders);
+		$result['orders'] = $orders_products;
+		return view("my-orders", $title)->with('result', $result); 
+		 
+	}
 	
 	//calculate tax
 	public function calculateTax($tax_zone_id)

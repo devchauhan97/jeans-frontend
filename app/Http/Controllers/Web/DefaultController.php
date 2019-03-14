@@ -152,6 +152,20 @@ class DefaultController extends DataController
 		
 		}
 	}
- 
-	 
+ 	
+ 	public function privacyPolicy() {
+
+ 		$title = array('pageTitle' => 'privacy policy');
+		$result['commonContent'] = $this->commonContent();
+		 		
+		return view("privacy-policy", $title)->with('result', $result);
+ 	}
+ 	
+	public function termServices(){ 
+
+ 		$title = array('pageTitle' => 'term services');
+		$result['commonContent'] = $this->commonContent();
+		 	
+		return view("term-services", $title)->with('result', $result);
+ 	}
 }

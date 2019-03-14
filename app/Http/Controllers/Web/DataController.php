@@ -217,6 +217,10 @@ class DataController extends Controller
 			$result['totalWishList']=0;
 		}
 		
+		if(!auth()->guard('customer')->check()) {
+			 	
+			$result['countries'] =  DB::table('countries')->get();
+		}
 		//recent product
 		//$data = array('page_number'=>0, 'type'=>'', 'limit'=>5, 'categories_id'=>'', 'search'=>'', 'min_price'=>'', 'max_price'=>'' );			
 		// $products = $this->products($data);

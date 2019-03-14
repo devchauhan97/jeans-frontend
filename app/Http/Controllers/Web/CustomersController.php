@@ -58,6 +58,7 @@ use Event;
 use App\Http\Requests\UpdateProfileRequest;
 use App\ProductRecentlyView;
 use App\AddressBook;
+
 class CustomersController extends DataController
 {
 	
@@ -88,6 +89,15 @@ class CustomersController extends DataController
 			return view("signup", $title)->with('result', $result);   
 		} 			
 	}
+	public function changePassword() {	
+ 
+		$title = array('pageTitle' => Lang::get("website.Sign Up"));
+		$result = array();						
+		$result['commonContent'] = $this->commonContent();	
+		//$result['countries'] =  DB::table('countries')->get();	
+		return view("change-password", $title)->with('result', $result); 			
+	}
+	
 	//login 
 	public function login(Request $request) {
 
@@ -114,7 +124,7 @@ class CustomersController extends DataController
 
 		$remember = $request->remember ? true : false;
 
-		if(auth()->guard('customer')->attempt($customerInfo,true)) {
+		if(auth()->guard('customer')->attempt($customerInfo,$remember)) {
 
 			$customer = auth()->guard('customer')->user();
 			/**
@@ -226,7 +236,7 @@ class CustomersController extends DataController
 
 			storeImage($customers_picture);
 
-		}	else{
+		}	else {
 
 			$customers_picture = $request->customers_old_picture;
 
@@ -647,7 +657,10 @@ class CustomersController extends DataController
 					'customers_firstname' 	=> $request->first_name,
 					'customers_lastname' 	=> $request->last_name,
 					'email' 				=> $request->email,
-					'password' 				=> Hash::make($password),				
+					'password' 				=> Hash::make($password),	
+					'customers_telephone' 	=> $request->mobile_no,	
+					'country_id' 			=> $request->country,	
+
 				];
 
 		if($request->hasFile('picture') and in_array($request->picture->extension(), $extensions)) {
@@ -664,14 +677,16 @@ class CustomersController extends DataController
 		return $this->customerSignup($request);
 	}
 
-	public function customerSignup($request)	{
+	public function customerSignup($request) {
 
 		$old_session = Session::getId();
 		  
 		//check authentication of email and password
 		$customerInfo = array("email" => $request->email, "password" => $request->password);
 
-		if(auth()->guard('customer')->attempt($customerInfo)) {
+		$remember = $request->remember ? true : false;
+
+		if(auth()->guard('customer')->attempt($customerInfo,$remember)) {
 		 						
 			$customer = auth()->guard('customer')->user();
 
@@ -685,13 +700,27 @@ class CustomersController extends DataController
 			//$alertSetting = $myVar->createUserAlert($customers);
 			
 			if (filter_var($customer->email, FILTER_VALIDATE_EMAIL)) {
-				Event::fire(new CustomerRegisterMail($customer));
+				//Event::fire(new CustomerRegisterMail($customer));
 			}
-			return redirect()->intended('/')->with('result');
 
+			if( request()->ajax() ) { 
+ 				
+     			return response()->json([ url()->previous() ], 200); 
+
+		    } else {
+
+ 				return redirect()->intended('/')->with('result');
+ 			}
 		} else {
 
-			return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
+			if( request()->ajax() ) { 
+ 				
+     			return response()->json([ url()->previous() ], 200); 
+
+		    } else {
+
+ 				return redirect('login')->with('loginError', Lang::get("website.Email or password is incorrect"));
+ 			}
 		}
   	}
 	

@@ -1,209 +1,89 @@
 @extends('layouts')
-@section('customcss')
-@if(!empty(session("theme")))
-        <link href="{!! asset('css/'.session("theme").'.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    @else
-        <link href="{!! asset('css/app.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-    @endif
-<link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}">
-<link href="{!! asset('css/responsive.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/rtl.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/font-awesome.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/owl.carousel.css') !!} " media="all" rel="stylesheet" type="text/css"/>
- <link href="{!! asset('css/bootstrap-select.css') !!} " media="all" rel="stylesheet" type="text/css"/>
-  
-@endsection
+ 
 @section('content')
-<section class="site-content">
-	<div class="container">
-    	<div class="breadcum-area">
-            <div class="breadcum-inner">
-                <h3>@lang('website.myProfile')</h3>
-                <ol class="breadcrumb">
-                    
-                    <li class="breadcrumb-item"><a href="{{ URL::to('/')}}">@lang('website.Home')</a></li>
-                    <li class="breadcrumb-item active">@lang('website.myProfile')</li>
-                </ol>
-            </div>
-        </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script> <!-- Popper plugin for Bootstrap -->
+<!-- Site Page Header -->
+<section class="page-header" style="height: 120px;">
+</section>
+<!-- Site Content -->
+<section class="content main-container" id="site-content">
+    <div class="ptb-40">
+        <div class="container">
+            <div class="row">
+                <div class="offset-md-3 col-md-6">
+                    <form name="updateprofile" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('updateprofile')}}" method="post">
+                    <input type="hidden" name="_token" value="{{csrf_token()}}">
+                    <div class="login-page user-profile">
+                        <div class="left">
+                            <img class="width-100 img-fluid" style="object-fit: cover" src="images/login-img.jpg">
 
-        <div class="registration-area">
-            
-            
-            <div class="row">            	
-                <div class="col-12 col-lg-3 spaceright-0">
-                    @include('common.sidebar_account')
-                </div>
-            	<div class="col-12 col-lg-9 new-customers">
-                	<div class="col-12 spaceright-0">
-                    	<div class="heading">
-                            <h2>@lang('website.myProfile')</h2>
-                            <hr>
                         </div>
-                        
-                         <div class="row">
-                            <div class="col-sm-12">
-                                <form name="updateprofile" class="form-validate" enctype="multipart/form-data" action="{{ URL::to('updateprofile')}}" method="post">
-
-                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                    @if( count($errors) > 0)
+                        <div class="right">
+                            <div class="row text-center">
+                                <div class="col-sm-12">
+                                    @if(!empty(auth()->guard('customer')->user()->customers_picture))
+                                        <a class="user-box" ><img src="{{getFtpImage(auth()->guard('customer')->user()->customers_picture)}}" class="upload-preview">
+                                        </a>
+                                        <input type="hidden" name="customers_old_picture" value="{{ auth()->guard('customer')->user()->customers_picture }}">
+                                    @else
+                                    <a class="user-box" >
+                                        <img class="upload-choose-icon" src="{{asset('images/user-img1.png')}}" />
+                                    </a>
+                                    @endif
+                                    <input name="picture" id="userImage" type="file" class="inputFile" onChange="showPreview(this);" />
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="login-form">
+                                        @if( count($errors) > 0)
                                         @foreach($errors->all() as $error)
-                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                                <span class="sr-only">@lang('website.Error'):</span>
-                                                {{ $error }}
-                                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
+                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                            <span class="sr-only">@lang('website.Error'):</span>
+                                            {{ $error }}
+                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
                                         @endforeach
-                                    @endif
-                                    
-                                    @if(session()->has('error'))
+                                        @endif 
+                                        @if(session()->has('error'))
                                         <div class="alert alert-success alert-dismissible fade show" role="alert">
                                             {{ session()->get('error') }}
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                    @endif
-                                    
-                                    @if(Session::has('error'))
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                            <span class="sr-only">@lang('website.Error'):</span>
-                                            {{ session()->get('error') }}
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    @endif
-                                
-                                    @if(Session::has('error'))
-                                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                            <span class="sr-only">@lang('website.Error'):</span>
-                                            {!! session('loginError') !!}
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    @endif
-                                
-                                    @if(session()->has('success') )
-                                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                            {{ session()->get('success') }}
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                    @endif                                    
-                                    
-                                    <div class="form-group row justify-content-center">						
-                                        <div class="uploader">
-                                            <h5 class="title-h5">Upload Profile Photo</h5> 
-                                            <div class="upload-picture">
-                                                <div class="uploaded-image" id="uploaded_image">
-                                                @if(!empty(auth()->guard('customer')->user()->customers_picture))
-                                                	<img src="{{getFtpImage(auth()->guard('customer')->user()->customers_picture)}}" width="150px" height="150px" class="upload-preview">
-                                                    <input type="hidden" name="customers_old_picture" value="{{ auth()->guard('customer')->user()->customers_picture }}">
-                                                @else
-                                                	<input type="hidden" name="customers_old_picture" value="">
-                                                @endif
-                                                </div>
-                                                <img class="upload-choose-icon" src="{{asset('').'images/default.png'}}" />
-                                                <div class="upload-choose-icon">
-                                                    <input name="picture" id="userImage" type="file" class="inputFile" onChange="showPreview(this);" />
-                                                </div>
-                                            </div>   
-                                        </div>                
+                                        @endif
+
+                                        <!-- <label for="uname"><b>Username</b></label> -->
+                                        <input type="text"   name="customers_firstname" class="form-control field-validate" placeholder="@lang('website.First Name')" id="firstName" value="{{ auth()->guard('customer')->user()->customers_firstname }}">
+                                        <span class="help-block error-content" hidden>@lang('website.Please enter your first name')</span>
+
+                                        <!-- <label for="psw"><b>Password</b></label> -->
+                                        <input type="text"   name="customers_lastname" placeholder="@lang('website.Last Name')" class="form-control" id="lastName" value="{{ auth()->guard('customer')->user()->customers_lastname }}">
+
+                                        <input type="text" placeholder="DOB" name="customers_dob" type="text" class="form-control" id="datepicker" placeholder="@lang('website.Date of Birth')" value="{{ auth()->guard('customer')->user()->customers_dob }}">
+                                        <span class="help-block error-content" hidden>@lang('website.Please enter your date of birth.')</span>
+
+                                        <input type="text" placeholder="Mobile No." name="customers_telephone" type="tel" class="form-control " id="phone"   value="{{ auth()->guard('customer')->user()->customers_telephone }}">
+                                        <span class="help-block error-content" hidden>@lang('website.Please enter your valid phone number')</span>
+                                        <div class="spacer-30"></div>
+                                        <button type="submit">Update</button>
                                     </div>
-                                	<h5 class="title-h5">@lang('website.Personal Information')</h5>
-                        			<hr class="featurette-divider">
-                                    
-                                    <div class="form-group row">
-                                        <label for="firstName" class="col-sm-4 col-form-label">@lang('website.First Name')</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" name="customers_firstname" class="form-control field-validate" placeholder="@lang('website.First Name')" id="firstName" value="{{ auth()->guard('customer')->user()->customers_firstname }}">
-                                            <span class="help-block error-content" hidden>@lang('website.Please enter your first name')</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-group row">
-                                        <label for="lastName" class="col-sm-4 col-form-label">@lang('website.Last Name')</label>
-                                        <div class="col-sm-8">
-                                            <input type="text" name="customers_lastname" placeholder="@lang('website.Last Name')" class="form-control" id="lastName" value="{{ auth()->guard('customer')->user()->customers_lastname }}">
-                                            
-                                        </div>
-                                    </div>
-                                  
-                                    <div class="form-group row">
-                                        <label for="gender" class="col-sm-4 col-form-label">@lang('website.Gender')</label>
-                                        <div class="col-sm-8">
-                                            <select class="custom-select field-validation" name="customers_gender" id="gender">
-                                                <option value="Male" @if(auth()->guard('customer')->user()->customers_gender == 'Male') selected @endif>@lang('website.Male')</option>
-                                                <option value="Female"  @if(auth()->guard('customer')->user()->customers_gender == 'Female') selected @endif>@lang('website.Female')</option>
-                                            </select>
-                                            <span class="help-block error-content" hidden>@lang('website.Please select your gender')</span>
-                                        </div>                                        
-                                    </div>
-                                                                 
-                                    <div class="form-group row">
-                                        <label for="datepicker" class="col-sm-4 col-form-label">@lang('website.Date of Birth')</label>
-                                        <div class="col-sm-8">
-                                            <input readonly name="customers_dob" type="text" class="form-control" id="datepicker" placeholder="@lang('website.Date of Birth')" value="{{ auth()->guard('customer')->user()->customers_dob }}">
-                                            <span class="help-block error-content" hidden>@lang('website.Please enter your date of birth.')</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="phone" class="col-sm-4 col-form-label">@lang('website.Phone Number')</label>
-                                        <div class="col-sm-8">
-                                            <input name="customers_telephone" type="tel" class="form-control " id="phone" placeholder="@lang('website.Phone Number')" value="{{ auth()->guard('customer')->user()->customers_telephone }}">
-                                            <span class="help-block error-content" hidden>@lang('website.Please enter your valid phone number')</span>
-                                        </div>
-                                    </div>
-                                    <div class="button">
-                                        <button type="submit" class="btn btn-dark">@lang('website.Update')</button>
-                                    </div>
-                                </form>
-                                                                
-                                <h5 class="title-h5" style="margin-top:30px;">@lang('website.Change Password')</h5>
-                                <hr class="featurette-divider">
-                                <form name="updatepassword" class="" enctype="multipart/form-data" action="{{ URL::to('/updatepassword')}}" method="post">
-                                    <input type="hidden" name="_token" value="{{csrf_token()}}">
-                                    <!-- <div class="form-group row">
-                                        <label for="old_password" class="col-sm-4 col-form-label">@lang('website.Old Password')</label>
-                                        <div class="col-sm-8">
-                                            <input name="old_password" type="password" class="form-control" id="old_password" placeholder="@lang('website.Old Password')">
-                                            <span class="help-block error-content" hidden>@lang('website.Please enter your old password and should be at least 6 characters long')</span>
-                                        </div>
-                                    </div> -->
-                                    <div class="form-group row">
-                                        <label for="new_password" class="col-sm-4 col-form-label">@lang('website.New Password')</label>
-                                        <div class="col-sm-8">
-                                            <input name="new_password" type="password" class="form-control" id="new_password" placeholder="@lang('website.New Password')">
-                                            <span class="help-block error-content" hidden>@lang('website.Please enter your password and should be at least 6 characters long')</span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label for="confirm_password" class="col-sm-4 col-form-label">@lang('website.Confirm Password')</label>
-                                        <div class="col-sm-8">
-                                            <input name="confirm_password" type="password" class="form-control" id="confirm_password" placeholder="@lang('website.Confirm Password')">
-                                            <span class="help-block error-content" hidden>@lang('website.Please enter your Confirm password')</span>
-                                        </div>
-                                    </div>
-                                    <div class="button">
-                                        <button type="submit" class="btn btn-dark">@lang('website.Update')</button>
-                                    </div>
-                                </form>
+                                </div>
+                                <div class="spacer-30"></div>
                             </div>
                         </div>
-                        
                     </div>
+                </form>
                 </div>
             </div>
-		</div>		
-	</div>
+        </div>
+    </div>
+    <div class="clear"></div>
+
 </section>
 <script type="text/javascript">
     

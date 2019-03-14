@@ -155,7 +155,7 @@ class ShippingAddressController extends DataController
 	}
 	
 	//get all customer addresses url 
-	public function selectExitingAddress($address_id = null)
+	public function selectExitingAddress(Request $request)
 	{	
 		$addresses = DB::table('address_book')
 					->leftJoin('countries', 'countries.countries_id', '=' ,'address_book.entry_country_id')
@@ -182,9 +182,10 @@ class ShippingAddressController extends DataController
 							'customers.customers_default_address_id as default_address'
 							)
 					->where('address_book.customers_id', auth()->guard('customer')->user()->customers_id) 
-					->where('address_book_id', '=', $address_id)->first();
+					->where('address_book_id', '=', $request->address_id)->first();
 		 
 		$state=$this->zones($addresses->countries_id);
+		
 		$result = json_encode(['address'=>$addresses,'state'=>$state]);
 		
 		return $result;

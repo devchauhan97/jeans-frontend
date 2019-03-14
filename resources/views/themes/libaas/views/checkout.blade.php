@@ -44,6 +44,7 @@
           <div class="ptb-30 border-top border-bottom">
             <div class="form">
               <h4>@lang('website.Select Exiting Address')</h4>
+              @if( count($result['address']) )
               @foreach($result['address'] as $val)
               <div class="row">
                 <a onclick="choseShippingAddress('{{$val->address_id}}')">{{$val->firstname
@@ -52,6 +53,9 @@
                <i class="fa fa-trash deleteShippingMyAddress" aria-hidden="true" address_id="{{$val->address_id}}"></i>
               </div>
               @endforeach
+              @else
+               <h4><a href="{{URL::to('/shipping/address')}}">@lang('website.Add New Address')</a></h4>
+              @endif
             </div>
           </div>
           @if( count($errors) > 0)
@@ -137,14 +141,15 @@
                   <div class="col-md-6">
                     <div class="label">
                       <span>@lang('website.Zip/Postal Code')*</span>
-                      <input type="text" placeholder="Alternate Phone (Optional)*" class="form-control field-validate" id="postcode" name="postcode" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->postcode}}@endif">
+                      <input type="text" placeholder="@lang('website.Zip/Postal Code')*" class="form-control field-validate" id="postcode" name="postcode" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->postcode}}@endif">
                       <spam class="help-block error-content" hidden>@lang('website.Please enter your Zip/Postal Code')</spam> 
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="label">
                       <span>@lang('website.Phone No') </span>
-                      <input type="text" placeholder="Phone No" id="phone_no" name="phone_no" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->phone_no}}@endif">
+                      <input type="text" class="field-validate" placeholder="Phone No" id="phone_no" name="phone_no" value="@if(count(session('shipping_address'))>0){{session('shipping_address')->phone_no}}@endif">
+                      <spam class="help-block error-content" hidden>@lang('website.Please enter phone no')</spam> 
                     </div>
                   </div>
                   <div class="col-sm-6">
@@ -195,11 +200,9 @@
                       <a class="btn" >semi stitched</a>
                       <br>
                       @endIf
-                      <!-- <div class="qty-in">
-                        <span class="fa fa-minus"></span>
-                        <input type="text" placeholder="1">
-                        <span class="fa fa-plus"></span>
-                      </div> -->
+                      <div >
+                         Qty : {{$products->products_quantity}}
+                      </div>
                     </div>
                 </div>
                 <div class="col-sm-9 col-xs-7">
@@ -209,15 +212,13 @@
                       @if( $products->semi_stitched )
                       <a class="btn" >semi stitched</a>
                       @endIf
-                     <!--  <div class="qty-in">
-                        <span class="fa fa-minus"></span>
-                        <input type="text" placeholder="1">
-                        <span class="fa fa-plus"></span>
-                      </div> -->
+                     <div >
+                         Qty : {{$products->customers_basket_quantity}}
+                      </div>
                     </div>
 
                     <p>RIF : {{$products->model}}</p>
-                    <h3>{{$web_setting[19]->value}}{{$products->final_price+0}}</h3>
+                    <h3>{{$web_setting[19]->value}}{{$products->final_price * $products->customers_basket_quantity}}</h3>
                     <a class="remove" href="{{ URL::to('/deleteCart?id='.$products->customers_basket_id)}}"><i class="fa fa-trash-o" aria-hidden="true"></i> Remove</a>
                   </div>
                 </div>
@@ -282,8 +283,14 @@
           </div>    
           @endif
           <div class="action-btn">
-            <a class="btn btn-primary btn-dark color-white" id="payment_btn" style="display: @if(session('step') != 1) none @endif">@lang('website.Payment')
-            </a>
+            @if(session('step') > 0)
+            <form action="{{ URL::to('/checkout/order/payment')}}" method="post">
+              {!! csrf_field() !!}
+              <!-- <a href="{{URL::to('/payment')}}" class="btn btn-primary btn-dark color-white" id="payment_btn" style="display: @if(session('step') != 1) none @endif">@lang('website.Payment')
+              </a> -->
+              <button class="btn btn-primary btn-dark color-white" type="submit" id="payment_btn"> @lang('website.Payment')</button>
+            </form>
+            @endif
           </div>
         </div>
       </div>
@@ -292,7 +299,19 @@
   <div class="clear"></div>
 </section>
 <script type="text/javascript">
-
+  jQuery('[name=phone_no]').keydown(function (e) {
+    var key = e.charCode || e.keyCode || 0;
+    $text = jQuery(this);
+    if (key !== 8 && key !== 9) {
+        if ($text.val().length === 3) {
+            $text.val($text.val() + '-');
+        }
+        if ($text.val().length === 7) {
+            $text.val($text.val() + '-');
+        }
+    }
+    return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+})
   jQuery(document).on('click', '.deleteShippingMyAddress', function(e){
 
       jQuery('#loader').css('display','flex');
@@ -312,9 +331,9 @@
       
       jQuery('#loader').css('display','flex');
       jQuery.ajax({
-        url: '{{ URL::to("/exiting/address")}}/'+address_id,
+        url: '{{ URL::to("/exiting/address")}}',
         type: "get",
-        data: '&_token='+jQuery('meta[name="csrf-token"]').attr('content'),
+        data: { 'address_id' : address_id ,'_token' : jQuery('meta[name="csrf-token"]').attr('content') },
         dataType: "json",
         success: function (res) {
           jQuery('#loader').css('display','none');
@@ -329,8 +348,10 @@
           var showData = [];
           res.state.forEach(function(currentValue, index, arr) {
              var selected='';
+             
             if(address.zone_id == currentValue['zone_id'])
               selected='selected';
+
             showData[index] = "<option value='"+currentValue['zone_id']+"' "+selected+">"+currentValue['zone_name']+"</option>"; 
           })
         

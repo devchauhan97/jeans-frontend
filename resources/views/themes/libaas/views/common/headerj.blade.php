@@ -20,10 +20,11 @@
             </li>
             <li class="border-left">
               @if (Auth::guard('customer')->check())
-              <a  ><img src="{{getFtpImage(auth()->guard('customer')->user()->customers_picture)}}" alt="image"/> &nbsp; &nbsp; Account <i style="font-size:16px;"  class="fas fa-angle-down"></i>
+              <a href="{{ URL::to('/profile')}}" ><img width="50px"  src="{{getFtpImage(auth()->guard('customer')->user()->customers_picture)}}" alt="image"/> &nbsp; &nbsp; Account <i style="font-size:16px;"  class="fas fa-angle-down"></i>
               </a>
               <ul class="user-account">
                 <li><a href="{{ URL::to('/profile')}}">Profile</a></li>
+                <li><a href="{{ URL::to('/changepassword')}}">Change Password</a></li>
                 <li><a href="{{ URL::to('/wishlist')}}">My Wishlist</a></li>
                 <li><a href="{{ URL::to('/orders')}}">My Orders</a></li>
                 <li><a href="{{ URL::to('/shipping/address')}}">Shipping Address</a></li>
@@ -34,13 +35,13 @@
               </a>
               @endif
             </li>
-            <li class="border-left head-cart-content">
+            <li class="border-left">
             @include('cartButton')
             </li>
           </ul>
         </div>
         <a href="{{Url::to('/')}}" class="site-logo">
-          <img src="{{getFtpImage($web_setting[15]->value)}}" alt="Logo" class="default-logo d-xs-none d-xs-none-cu">
+          <img src="{{getFtpImage($web_setting[15]->value)}}" style="width:92px;" alt="Logo" class="default-logo d-xs-none d-xs-none-cu">
         </a>
       </div>
     </div>
@@ -90,8 +91,8 @@
             <img src="{{asset('images/photo_icon.png')}}" alt="user image">
             <div class="clear"></div>
             <ul>
-              <li><a data-toggle="modal" data-target="#mobile-login">Log In</a></li>
-              <li><a >Sign Up</a></li>
+              <li><a data-toggle="modal" data-target="#mobile-signin">Log In</a></li>
+              <li><a data-toggle="modal" data-target="#mobile-signup">Sign Up</a></li>
             </ul>
             @endif
             <a class="close-nav"><i class="fa fa-arrow-left" aria-hidden="true"></i></a>
@@ -143,31 +144,30 @@
         </div>
         <!-- end site nav -->
         <div class="search-box">
-          <div class="input-group">
-              <form action="{{URL::to('/shop')}}" method="post">
-                <div class="input-group-btn search-panel">
-                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    <span id="search_concept"><span class="glyphicon glyphicon-align-justify"></span> Category</span>  <span class="caret"></span>
-                  </button>
-                  <ul class="dropdown-menu" role="menu">
-                    @foreach($result['commonContent']['categories'] as $categories_data) 
-                    <li class="border-left">
-                      <a slug="{{$categories_data->categories_slug}}" href="{{ URL::to('/shop')}}?category={{$categories_data->categories_slug}}" >{{$categories_data->categories_description->categories_name}}</a>
-                        
-                    </li>
-                    @endforeach
-                  </ul>
-                </div>
-                <input type="hidden" name="_token" value="{{csrf_token()}}">
-                <input type="hidden" name="category" value="all" id="search_param">         
-                <input type="text" class="form-control" name="search"  value="{{app('request')->input('search')}}" placeholder="Search for Product...">
-                <span class="input-group-btn">
-                  <button class="btn btn-default" id="search_btn" type="submit"><img src="{!! asset('images/search-icon.png') !!}" alt=""></button>
-                </span>
-              </form>
-          </div>
+          <form action="{{URL::to('/shop')}}" method="post">
+            <div class="input-group">
+              <div class="input-group-btn search-panel">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  <span id="search_concept"><span class="glyphicon glyphicon-align-justify"></span> Category</span>  <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                  @foreach($result['commonContent']['categories'] as $categories_data) 
+                  <li class="border-left">
+                    <a slug="{{$categories_data->categories_slug}}" href="{{ URL::to('/shop')}}?category={{$categories_data->categories_slug}}" >{{$categories_data->categories_description->categories_name}}</a>
+                      
+                  </li>
+                  @endforeach
+                </ul>
+              </div>
+              <input type="hidden" name="_token" value="{{csrf_token()}}">
+              <input type="hidden" name="category" value="all" id="search_param">         
+              <input type="text" class="form-control" name="search"  value="{{app('request')->input('search')}}" placeholder="Search for Product...">
+              <span class="input-group-btn">
+                <button class="btn btn-default" id="search_btn" type="submit"><img src="{!! asset('images/search-icon.png') !!}" alt=""></button>
+              </span>
+            </div>
+          </form>
         </div>
-  
       </div>
     </div>
   </header>

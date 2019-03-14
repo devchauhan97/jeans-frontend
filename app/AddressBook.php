@@ -37,7 +37,8 @@ class AddressBook extends Model
 							'zones.zone_name as zone_name',
 							'customers.customers_default_address_id as default_address'
 							);
-		if( auth()->check()) {
+		if( auth()->guard('customer')->check() ) {
+					 
 			$addresses->where('address_book.customers_id', auth()->guard('customer')->user()->customers_id);
 		}
 		
